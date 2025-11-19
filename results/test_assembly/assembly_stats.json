@@ -1,0 +1,13 @@
+{
+  "total_pairs": 1,
+  "successful_merges": 1,
+  "forward_only": 0,
+  "reverse_only": 0,
+  "details": [
+    {
+      "sample": "AT_ROCK",
+      "status": "merged",
+      "length": 1324
+    }
+  ]
+}

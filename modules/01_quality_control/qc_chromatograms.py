@@ -1,17 +1,60 @@
 #!/usr/bin/env python3
 """
 Quality Control for Sanger Chromatograms
-Analyzes .ab1 files and generates QC report
+Analyzes .ab1 files and generates QC report with chromatogram visualization
 """
 
 import os
 import sys
 from pathlib import Path
 from Bio import SeqIO
+from Bio.SeqIO import AbiIO
 import pandas as pd
 import json
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 
-def analyze_chromatogram(ab1_file):
+def plot_chromatogram(ab1_file, max_bases=100):
+    """Generate chromatogram plot and return as base64 PNG"""
+    try:
+        with open(ab1_file, 'rb') as f:
+            record = AbiIO.AbiIterator(f).__next__()
+
+        # Get trace data
+        channels = ['DATA9', 'DATA10', 'DATA11', 'DATA12']  # G, A, T, C
+        colors = ['black', 'green', 'red', 'blue']
+        labels = ['G', 'A', 'T', 'C']
+
+        fig, ax = plt.subplots(figsize=(15, 4))
+
+        # Plot first max_bases
+        for channel, color, label in zip(channels, colors, labels):
+            if channel in record.annotations['abif_raw']:
+                trace = record.annotations['abif_raw'][channel][:max_bases * 10]  # Approximate
+                ax.plot(trace, color=color, label=label, linewidth=0.5)
+
+        ax.set_xlabel('Position')
+        ax.set_ylabel('Signal Intensity')
+        ax.set_title(f'Chromatogram: {ab1_file.name} (first {max_bases} bases)')
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+
+        # Convert to base64
+        buf = BytesIO()
+        plt.savefig(buf, format='png', dpi=100, bbox_inches='tight')
+        buf.seek(0)
+        img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        plt.close()
+
+        return img_base64
+    except Exception as e:
+        print(f"  Warning: Could not generate chromatogram plot: {e}")
+        return None
+
+def analyze_chromatogram(ab1_file, output_dir=None):
     """Analyze a single .ab1 chromatogram file"""
     try:
         record = SeqIO.read(ab1_file, "abi")
@@ -28,7 +71,7 @@ def analyze_chromatogram(ab1_file):
         # Determine pass/fail
         qc_pass = avg_quality >= 20 and high_quality_bases / seq_length >= 0.8
 
-        return {
+        result = {
             "file": ab1_file.name,
             "length": seq_length,
             "avg_quality": round(avg_quality, 2),
@@ -38,6 +81,12 @@ def analyze_chromatogram(ab1_file):
             "qc_status": "PASS" if qc_pass else "FAIL",
             "sequence": str(record.seq)
         }
+
+        # Generate chromatogram plot if output_dir provided
+        if output_dir:
+            result["chromatogram_img"] = plot_chromatogram(ab1_file)
+
+        return result
     except Exception as e:
         return {
             "file": ab1_file.name,
@@ -47,19 +96,21 @@ def analyze_chromatogram(ab1_file):
 
 def generate_html_report(results, output_file):
     """Generate simple HTML report"""
+    from datetime import datetime
+
     html = """<!DOCTYPE html>
 <html>
 <head>
     <title>DNA Barcoding QC Report</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #333; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #4CAF50; color: white; }
-        .pass { background-color: #d4edda; }
-        .fail { background-color: #f8d7da; }
-        .error { background-color: #fff3cd; }
+        body {{ font-family: Arial, sans-serif; margin: 20px; }}
+        h1 {{ color: #333; }}
+        table {{ border-collapse: collapse; width: 100%; margin-top: 20px; }}
+        th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+        th {{ background-color: #4CAF50; color: white; }}
+        .pass {{ background-color: #d4edda; }}
+        .fail {{ background-color: #f8d7da; }}
+        .error {{ background-color: #fff3cd; }}
     </style>
 </head>
 <body>
@@ -73,10 +124,7 @@ def generate_html_report(results, output_file):
             <th>High Quality %</th>
             <th>Status</th>
         </tr>
-"""
-
-    from datetime import datetime
-    html = html.format(date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+""".format(date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     for result in results:
         if "error" in result:
@@ -97,7 +145,16 @@ def generate_html_report(results, output_file):
             <td>{result['qc_status']}</td>
         </tr>
 """
-        html += row
+            html += row
+
+            # Add chromatogram visualization if available
+            if "chromatogram_img" in result and result["chromatogram_img"]:
+                html += f"""        <tr class="{row_class}">
+            <td colspan="5">
+                <img src="data:image/png;base64,{result['chromatogram_img']}" style="width:100%; max-width:1000px;">
+            </td>
+        </tr>
+"""
 
     html += """    </table>
 </body>
@@ -115,7 +172,7 @@ def main():
 
     input_dir = Path(sys.argv[1])
     output_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("results")
-    output_dir.mkdir(exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     # Find all .ab1 files
     ab1_files = list(input_dir.glob("*.ab1"))
@@ -132,7 +189,7 @@ def main():
 
     for ab1_file in ab1_files:
         print(f"Analyzing {ab1_file.name}...")
-        result = analyze_chromatogram(ab1_file)
+        result = analyze_chromatogram(ab1_file, output_dir=output_dir)
         results.append(result)
 
         # Save passed sequences to FASTA
