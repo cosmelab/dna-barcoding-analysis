@@ -1,0 +1,266 @@
+/* Sticky Navigation Enhancements for ENTM201L */
+/* Preserves Dracula theme colors and mobile functionality */
+
+:root {
+  --nav-height: 70px;
+  --nav-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base sticky navigation */
+.navbar.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: var(--nav-transition);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Scrolled state - slightly condensed with enhanced shadow */
+.navbar.sticky-nav.scrolled {
+  padding: 0.75rem 0;
+  box-shadow: 0 4px 20px rgba(189, 147, 249, 0.3);
+  background: rgba(36, 40, 59, 0.95);
+}
+
+.navbar.sticky-nav.scrolled .nav-brand a {
+  font-size: 1.6em;
+  transition: font-size 0.3s ease;
+}
+
+.navbar.sticky-nav.scrolled .since-date {
+  font-size: 0.85em;
+}
+
+/* Active page indicator with gradient underline */
+.nav-menu li a.active {
+  color: var(--purple);
+  position: relative;
+}
+
+.nav-menu li a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--purple) 0%, var(--cyan) 100%);
+  border-radius: 2px;
+  animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Smooth hover effects for nav links */
+.nav-menu li a {
+  position: relative;
+  transition: var(--nav-transition);
+  padding-bottom: 8px;
+}
+
+.nav-menu li a::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--purple) 0%, var(--cyan) 100%);
+  border-radius: 2px;
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
+
+.nav-menu li a:hover::before {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.nav-menu li a.active:hover::before {
+  display: none; /* Don't show hover effect on active page */
+}
+
+/* Ensure content doesn't hide under sticky nav */
+.hero-section {
+  padding-top: 8rem;
+  margin-top: calc(var(--nav-height) * -1);
+}
+
+.section:first-of-type {
+  padding-top: 2rem;
+}
+
+/* Mobile sticky nav adjustments */
+@media (max-width: 768px) {
+  .navbar.sticky-nav {
+    padding: 1rem 0;
+  }
+
+  .navbar.sticky-nav.scrolled {
+    padding: 0.75rem 0;
+  }
+
+  .navbar.sticky-nav.scrolled .nav-brand a {
+    font-size: 1.4em;
+  }
+
+  .hero-section {
+    padding-top: 6rem;
+    margin-top: -60px;
+  }
+
+  /* Enhanced mobile menu for sticky nav */
+  .nav-menu.active {
+    position: fixed;
+    top: var(--nav-height);
+    right: 0;
+    background: linear-gradient(135deg, #282a36 0%, #44475a 100%);
+    height: calc(100vh - var(--nav-height));
+    overflow-y: auto;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Prevent body scroll when mobile menu is open */
+  body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+}
+
+/* Preserve hamburger menu Dracula theme colors */
+.nav-toggle span {
+  background: var(--purple);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 3px;
+  border-radius: 2px;
+}
+
+.nav-toggle.active span:nth-child(1) {
+  background: var(--cyan);
+  transform: rotate(45deg) translateY(8px);
+}
+
+.nav-toggle.active span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.nav-toggle.active span:nth-child(3) {
+  background: var(--cyan);
+  transform: rotate(-45deg) translateY(-8px);
+}
+
+/* Back to top button enhancement for sticky nav */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%);
+  color: var(--bg-dark);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  z-index: 999;
+  box-shadow: 0 4px 15px rgba(189, 147, 249, 0.4);
+}
+
+.back-to-top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(189, 147, 249, 0.6);
+}
+
+.back-to-top i {
+  font-size: 1.2rem;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-height);
+}
+
+/* Navigation visibility on scroll (optional enhancement) */
+.navbar.sticky-nav.hide-nav {
+  transform: translateY(-100%);
+}
+
+.navbar.sticky-nav.show-nav {
+  transform: translateY(0);
+}
+
+/* Loading state for page transitions */
+.page-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--purple) 0%, var(--cyan) 50%, var(--purple) 100%);
+  background-size: 200% 100%;
+  animation: loading 1.5s linear infinite;
+  z-index: 1001;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Focus states for accessibility */
+.navbar a:focus,
+.navbar button:focus {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip to main content link (accessibility) */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--purple);
+  color: var(--bg-dark);
+  padding: 8px;
+  text-decoration: none;
+  z-index: 1001;
+  border-radius: 0 0 8px 0;
+  transition: top 0.3s ease;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+/* Print styles - hide nav when printing */
+@media print {
+  .navbar.sticky-nav {
+    display: none;
+  }
+
+  .hero-section,
+  .section:first-of-type {
+    margin-top: 0;
+    padding-top: 1rem;
+  }
+}

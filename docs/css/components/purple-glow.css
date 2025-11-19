@@ -1,0 +1,181 @@
+/* 
+ * Unified Purple Glow Effect
+ * Consistent purple neon glow across all cards, modals, and interactive elements
+ */
+
+/* Standard purple glow for cards - subtle initial state */
+.dracula-card,
+.project-card,
+.member-card,
+.news-card,
+.grant-item,
+.research-card,
+.modal-content,
+.technique-card,
+.opportunity-card,
+.innovation-card,
+.lab-approach-card,
+.personal-story-card,
+.research-highlights-card,
+.focus-item {
+  /* Keep original background and padding from main.css */
+  /* Override only the glow effect */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3) !important;
+  border: 1px solid rgba(189, 147, 249, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Standard hover effect - enhanced purple neon glow */
+.dracula-card:hover,
+.project-card:hover,
+.member-card:hover,
+.news-card:hover,
+.grant-item:hover,
+.research-card:hover,
+.modal-content:hover,
+.technique-card:hover,
+.opportunity-card:hover,
+.innovation-card:hover,
+.lab-approach-card:hover,
+.personal-story-card:hover,
+.research-highlights-card:hover,
+.focus-item:hover {
+  transform: translateY(-3px) scale(1.01) !important;
+  /* Standard purple neon glow on hover - matching home page exactly */
+  box-shadow: 0 0 20px rgba(189, 147, 249, 0.6),
+              0 0 30px rgba(189, 147, 249, 0.4),
+              0 0 40px rgba(139, 233, 253, 0.2) !important;
+  border-color: rgba(189, 147, 249, 0.5) !important;
+  background: rgba(36, 40, 59, 0.85) !important;
+}
+
+/* Photos and circular elements purple glow - exclude team page */
+.area-image img,
+.timeline-marker {
+  /* Subtle initial glow */
+  box-shadow: 0 0 8px rgba(189, 147, 249, 0.3),
+              0 0 15px rgba(189, 147, 249, 0.15) !important;
+  border: 1px solid rgba(189, 147, 249, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.area-image img:hover,
+.timeline-marker:hover {
+  /* Enhanced purple neon glow on hover */
+  box-shadow: 0 0 20px rgba(189, 147, 249, 0.6),
+              0 0 35px rgba(189, 147, 249, 0.4),
+              0 0 50px rgba(189, 147, 249, 0.2) !important;
+  border-color: var(--purple) !important;
+}
+
+/* Buttons purple glow */
+.learn-more-btn,
+.home-page-button,
+.learn-more-compact,
+.btn-primary,
+.btn-submit {
+  /* Initial state with subtle shadow */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3),
+              0 1px 3px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.learn-more-btn:hover,
+.home-page-button:hover,
+.learn-more-compact:hover,
+.btn-primary:hover,
+.btn-submit:hover {
+  /* Purple glow on hover */
+  box-shadow: 0 0 15px rgba(189, 147, 249, 0.5),
+              0 6px 8px rgba(0, 0, 0, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Special enhanced glow for featured items only (PI handled in team-cards.css) */
+.featured-card {
+  /* Slightly stronger initial glow */
+  box-shadow: 0 0 12px rgba(189, 147, 249, 0.4),
+              0 0 25px rgba(189, 147, 249, 0.2),
+              0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.featured-card:hover {
+  /* Extra strong purple neon glow */
+  box-shadow: 0 0 30px rgba(189, 147, 249, 0.7),
+              0 0 50px rgba(189, 147, 249, 0.5),
+              0 0 70px rgba(189, 147, 249, 0.3) !important;
+}
+
+/* Input fields and form elements */
+.form-control:focus,
+.contact-input:focus,
+.contact-textarea:focus {
+  border-color: var(--purple) !important;
+  box-shadow: 0 0 10px rgba(189, 147, 249, 0.3),
+              0 0 20px rgba(189, 147, 249, 0.2) !important;
+}
+
+/* Active/selected state */
+.active,
+.selected,
+.filter-btn.active {
+  box-shadow: 0 0 15px rgba(189, 147, 249, 0.5),
+              0 0 25px rgba(189, 147, 249, 0.3),
+              inset 0 0 10px rgba(189, 147, 249, 0.1) !important;
+  border-color: var(--purple) !important;
+}
+
+/* Pulse animation for special elements */
+@keyframes purple-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(189, 147, 249, 0.5),
+                0 0 25px rgba(189, 147, 249, 0.3),
+                inset 0 0 10px rgba(189, 147, 249, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(189, 147, 249, 0.7),
+                0 0 35px rgba(189, 147, 249, 0.5),
+                inset 0 0 15px rgba(189, 147, 249, 0.2);
+  }
+}
+
+.pulse-glow {
+  animation: purple-pulse 2s ease-in-out infinite;
+}
+
+/* Ensure consistency by removing conflicting shadows */
+.no-glow {
+  box-shadow: none !important;
+}
+
+/* Utility classes for different glow intensities */
+.glow-subtle {
+  box-shadow: 0 0 10px rgba(189, 147, 249, 0.2),
+              0 0 20px rgba(189, 147, 249, 0.1) !important;
+}
+
+.glow-medium {
+  box-shadow: 0 0 20px rgba(189, 147, 249, 0.4),
+              0 0 35px rgba(189, 147, 249, 0.2) !important;
+}
+
+.glow-intense {
+  box-shadow: 0 0 30px rgba(189, 147, 249, 0.6),
+              0 0 50px rgba(189, 147, 249, 0.4),
+              0 0 70px rgba(189, 147, 249, 0.2) !important;
+}
+
+/* Nested cards spacing */
+.dracula-card .dracula-card {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.dracula-card .dracula-card:first-child {
+  margin-top: 0 !important;
+}
+
+.dracula-card .dracula-card:last-child {
+  margin-bottom: 0 !important;
+}

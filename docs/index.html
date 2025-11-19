@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DNA Barcoding Analysis: Automated COI Gene Analysis from Chromatogram to Discovery">
+    <meta name="keywords" content="DNA barcoding, COI gene, Sanger sequencing, phylogenetics, bioinformatics, mosquito identification">
+    <meta name="author" content="Dr. Luciano Cosme">
+    <title>DNA Barcoding Analysis | ENTM201L UCR</title>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Dracula Theme CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components/purple-glow.css">
+    <link rel="stylesheet" href="css/components/sticky-nav.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Maven+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, rgba(26, 27, 38, 0.95) 0%, rgba(22, 22, 30, 0.90) 100%);
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(189, 147, 249, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(139, 233, 253, 0.15) 0%, transparent 50%);
+            animation: pulseGradient 8s ease-in-out infinite;
+        }
+
+        @keyframes pulseGradient {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--fg-dark);
+            margin-bottom: 2rem;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--fg-light);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            color: white;
+            box-shadow: 0 4px 15px rgba(189, 147, 249, 0.3);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(189, 147, 249, 0.5);
+        }
+
+        .cta-secondary {
+            background: var(--bg-light);
+            color: var(--cyan);
+            border: 2px solid var(--cyan);
+        }
+
+        .cta-secondary:hover {
+            background: var(--cyan);
+            color: var(--bg-dark);
+        }
+
+        .features-section {
+            padding: 4rem 0;
+            background: var(--bg-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--cyan);
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(189, 147, 249, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--purple);
+            box-shadow: 0 8px 25px rgba(189, 147, 249, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--fg-dark);
+            line-height: 1.6;
+        }
+
+        .workflow-section {
+            padding: 4rem 0;
+            background: var(--bg-darker);
+        }
+
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .workflow-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            border-color: var(--purple);
+        }
+
+        .workflow-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .workflow-title {
+            color: var(--cyan);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .workflow-arrow {
+            color: var(--purple);
+            font-size: 2rem;
+        }
+
+        .stats-section {
+            padding: 3rem 0;
+            background: var(--bg-dark);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--fg-dark);
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">🧬 DNA Barcoding Analysis</h1>
+            <p class="hero-subtitle">From Chromatogram to Discovery</p>
+            <p class="hero-description">
+                Automated COI gene analysis for students with zero coding experience.
+                One command transforms raw Sanger sequences into publication-quality phylogenetic trees and species identifications.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://github.com/cosmelab/dna-barcoding-analysis" class="cta-button cta-primary">
+                    <i class="fab fa-github"></i> Get Started
+                </a>
+                <a href="#workflow" class="cta-button cta-secondary">
+                    <i class="fas fa-book"></i> View Workflow
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Zero Coding Required</h3>
+                    <p class="feature-description">
+                        Students run a single command: <code>analyze-sequences</code>.
+                        No programming knowledge needed.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Interactive Reports</h3>
+                    <p class="feature-description">
+                        Beautiful HTML dashboards with chromatograms, quality scores,
+                        alignments, and phylogenetic trees.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🦟</div>
+                    <h3 class="feature-title">Mosquito Reference Data</h3>
+                    <p class="feature-description">
+                        52 validated COI sequences from Hoque et al. 2022 covering 19 mosquito species.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🐋</div>
+                    <h3 class="feature-title">Containerized</h3>
+                    <p class="feature-description">
+                        Docker container (~700MB) with all tools pre-installed:
+                        MAFFT, IQ-TREE, BLAST, R/ggtree.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Fast Analysis</h3>
+                    <p class="feature-description">
+                        Complete pipeline (QC → Alignment → Tree → BLAST) runs in ~5 minutes per sample.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h3 class="feature-title">GitHub Classroom Ready</h3>
+                    <p class="feature-description">
+                        Auto-grading configured. Students commit results,
+                        automatic scoring based on file presence.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section class="workflow-section" id="workflow">
+        <div class="container">
+            <h2 class="section-title">Workflow</h2>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="workflow-number">1</div>
+                    <div class="workflow-title">Quality Control</div>
+                    <p>Parse .ab1 files<br>Assess quality<br>Filter sequences</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="workflow-number">2</div>
+                    <div class="workflow-title">Alignment</div>
+                    <p>MAFFT alignment<br>Visual display<br>Conservation analysis</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="workflow-number">3</div>
+                    <div class="workflow-title">Phylogeny</div>
+                    <p>IQ-TREE ML<br>1000 bootstrap<br>ggtree visualization</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="workflow-number">4</div>
+                    <div class="workflow-title">Identification</div>
+                    <p>BLAST search<br>Top hits<br>Species ID</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">~5 min</div>
+                    <div class="stat-label">Analysis Time</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">52</div>
+                    <div class="stat-label">Reference Sequences</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">700 MB</div>
+                    <div class="stat-label">Container Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Command to Run</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: var(--bg-darker); padding: 2rem 0; text-align: center; color: var(--fg-dark);">
+        <p>ENTM201L - Molecular Entomology Lab | UC Riverside</p>
+        <p>
+            <a href="https://github.com/cosmelab/dna-barcoding-analysis" style="color: var(--cyan); text-decoration: none;">
+                <i class="fab fa-github"></i> GitHub Repository
+            </a>
+        </p>
+    </footer>
+</body>
+</html>
