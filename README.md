@@ -121,17 +121,28 @@ A containerized workflow for students with **zero coding experience** to analyze
    cp ~/Desktop/*.ab1 data/my_sequences/
    ```
 
-4. **Run the analysis**:
+4. **Start the container**:
    ```bash
-   docker compose up
-   # OR
-   docker run -v $(pwd):/workspace ghcr.io/cosmelab/dna-barcoding-analysis analyze-sequences
+   docker-compose up -d
+   docker-compose exec dna-barcoding zsh
    ```
 
-5. **View results**:
+5. **Run the analysis** (inside container):
    ```bash
-   open results/index.html
-   # Your browser will open with interactive dashboard
+   analyze-sequences
+   ```
+
+6. **View results** (on your computer):
+   ```bash
+   open results/run_*/01_qc/qc_report.html
+   open results/run_*/03_phylogeny/tree.png
+   open results/run_*/04_identification/identification_report.html
+   ```
+
+7. **Exit and stop**:
+   ```bash
+   exit                      # Exit container
+   docker-compose down       # Stop container
    ```
 
 ---
