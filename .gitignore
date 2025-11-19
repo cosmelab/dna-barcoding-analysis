@@ -1,305 +1,31 @@
-# DNA Barcoding Analysis - .gitignore
+# Results directory (students will generate this)
+results/
 
-# ================================
-# Data Files (Large/Sensitive)
-# ================================
-
-# Raw sequence files (students will add their own)
-04_data/student_sequences/*.ab1
-04_data/student_sequences/*.fasta
-04_data/student_sequences/*.fastq
-04_data/student_sequences/*.seq
-
-# Reference sequences (too large for repo)
-04_data/reference_sequences/ncbi/
-04_data/reference_sequences/bold/
-
-# Processed data
-05_quality_control/cleaned/
-05_quality_control/*_trimmed.fasta
-05_quality_control/qc_reports/
-
-# Alignments (can be regenerated)
-06_alignment/*.fasta
-06_alignment/*.aln
-06_alignment/*.phy
-06_alignment/*.nex
-
-# Phylogenetic trees and outputs
-07_phylogeny/*.treefile
-07_phylogeny/*.iqtree
-07_phylogeny/*.log
-07_phylogeny/*.bionj
-07_phylogeny/*.mldist
-07_phylogeny/*.ckp.gz
-07_phylogeny/*.contree
-07_phylogeny/*.splits.nex
-07_phylogeny/*.ufboot
-
-# BLAST databases (too large)
-08_identification/databases/nt/
-08_identification/databases/bold/
-
-# ================================
-# Container and Build Artifacts
-# ================================
-
-# Docker
-container/*.sif
-container/*.img
-*.tar.gz
-
-# Build artifacts
-container/build/*.deb
-container/build/*.rpm
-container/build/cache/
-
-# ================================
 # Python
-# ================================
-
-# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Virtual environments
-venv/
-env/
-ENV/
-.venv
-
-# Jupyter Notebook
-.ipynb_checkpoints
-*/.ipynb_checkpoints/*
-
-# IPython
-profile_default/
-ipython_config.py
-
-# Distribution / packaging
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
 
-# PyInstaller
-*.manifest
-*.spec
+# Jupyter
+.ipynb_checkpoints/
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-
-# ================================
-# R
-# ================================
-
-# History files
-.Rhistory
-.Rapp.history
-
-# Session Data files
-.RData
-
-# User-specific files
-.Ruserdata
-
-# RStudio files
-.Rproj.user/
-*.Rproj
-
-# OAuth2 token
-.httr-oauth
-
-# knitr and R markdown default cache directories
-*_cache/
-/cache/
-
-# Temporary files created by R markdown
-*.utf8.md
-*.knit.md
-
-# R Environment Variables
-.Renviron
-
-# ================================
-# Operating System Files
-# ================================
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-._*
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# Linux
-*~
-.directory
-.Trash-*
-
-# ================================
-# IDE and Editor Files
-# ================================
-
-# VS Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
-
-# PyCharm
+# IDEs
+.vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim
 *.swp
 *.swo
 *~
 
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
+# OS
+.DS_Store
+Thumbs.db
 
-# ================================
-# Logs and Temporary Files
-# ================================
-
-# General logs
-*.log
-logs/
-*.out
-*.err
+# Docker
+.dockerignore
 
 # Temporary files
-tmp/
-temp/
 *.tmp
-
-# Backup files
 *.bak
-*.backup
-*~
-
-# ================================
-# Analysis Outputs (Optional)
-# ================================
-
-# Large result files that can be regenerated
-results/large_datasets/
-results/figures/*.png
-results/figures/*.jpg
-results/tables/*.csv
-
-# Intermediate files
-*.intermediate
-*.temp.fasta
-
-# ================================
-# Documentation Build Files
-# ================================
-
-# Sphinx documentation
-docs/_build/
-
-# Jekyll
-_site/
-.sass-cache/
-.jekyll-cache/
-.jekyll-metadata
-
-# ================================
-# Credentials and Secrets
-# ================================
-
-# Never commit credentials
-*.pem
-*.key
-*.cert
-credentials.json
-secrets.yaml
-.env
-.env.local
-
-# API keys
-*_api_key.txt
-api_keys/
-
-# ================================
-# Tracking (Internal Use Only)
-# ================================
-
-# Keep tracking system but not checkpoints
-.tracking/checkpoints/
-
-# ================================
-# Exceptions (Files to Keep)
-# ================================
-
-# Keep example data files
-!04_data/examples/
-!04_data/student_sequences/.gitkeep
-!04_data/reference_sequences/.gitkeep
-
-# Keep template files
-!**/template*.fasta
-!**/example*.fasta
-
-# Keep documentation
-!README.md
-!**/README.md
-!docs/
-
-# Keep scripts
-!scripts/
-!**/*.py
-!**/*.R
-!**/*.sh
-
-# Keep container definitions
-!container/Dockerfile
-!container/build.sh
-!.devcontainer/
