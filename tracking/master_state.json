@@ -1,0 +1,68 @@
+{
+  "tracking_version": "1.0",
+  "project_name": "DNA Barcoding Analysis Pipeline",
+  "created": "2025-11-17T01:00:00.000000+00:00",
+  "last_updated": "2025-11-17T09:45:00.000000+00:00",
+  "status": "ACTIVE - Initial Setup Phase",
+  "immediate_tasks": [
+    "Research and select current best GUI tools for Sanger sequencing (2025)",
+    "Research and select current best CLI tools for sequence analysis (2025)",
+    "Create Dockerfile with selected tools",
+    "Set up dual pathway structure (GUI vs CLI)",
+    "Create comprehensive README with clear instructions",
+    "Add sample data and test workflows",
+    "Create GitHub Classroom assignment template"
+  ],
+  "pathways": {
+    "gui": {
+      "description": "Graphical tools for students who prefer visual interfaces",
+      "tools_to_research": [
+        "Current Sanger sequencing viewers (alternatives to Tracy Web)",
+        "Modern alignment tools (alternatives to UGENE)",
+        "Phylogenetic tree builders with GUI",
+        "Quality control tools with visual output"
+      ],
+      "requirements": "No Docker, no command line needed"
+    },
+    "cli": {
+      "description": "Command-line tools for reproducible science",
+      "tools_to_install": [
+        "Tracy CLI (from GitHub)",
+        "MAFFT (alignment)",
+        "IQ-TREE2 (phylogenetics)",
+        "SeqKit (sequence manipulation)",
+        "BLAST+ (local BLAST)",
+        "Python with BioPython",
+        "R with required packages"
+      ],
+      "requirements": "Docker container with all tools pre-installed"
+    }
+  },
+  "docker_decisions": {
+    "base_image": "ubuntu:22.04 or mambaforge for conda packages",
+    "package_manager": "Consider mamba/conda for bioinformatics tools",
+    "size_optimization": "Multi-stage build to reduce image size",
+    "tools_organization": "Separate layers for different tool categories"
+  },
+  "deliverables": {
+    "week_8_nov_20": [
+      "Working Docker container with CLI tools",
+      "Clear GUI tool installation instructions",
+      "Sample workflow for both pathways",
+      "GitHub Classroom assignment ready"
+    ]
+  },
+  "questions_to_resolve": [
+    "What tools does the project scientist recommend?",
+    "Should we include Geneious Prime trial?",
+    "Do students have access to any commercial tools?",
+    "What's the minimum viable toolset for Week 8?"
+  ],
+  "completed_tasks": [],
+  "github_classroom": {
+    "status": "NOT_CREATED",
+    "assignment_name": "dna-barcoding-week8",
+    "starter_code": "This repository",
+    "deadline": "2025-11-27 (one week after lab)"
+  }
+}

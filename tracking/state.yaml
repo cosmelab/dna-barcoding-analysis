@@ -1,0 +1,11 @@
+project: dna-barcoding-analysis
+current_phase: container_setup
+current_task: create_minimal_dockerfile
+last_updated: '2025-11-18T12:45:00'
+active_jobs:
+  - creating minimal Dockerfile based on RNA-seq template
+blocking_issues: []
+target_ready_date: '2025-11-20'
+lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products)
+strategy: 'Minimal container (<800MB), automated scripts for non-coders, single GitHub
+  Classroom assignment, HTML dashboard output, Hoque et al 2022 reference data'

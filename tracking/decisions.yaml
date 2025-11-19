@@ -1,0 +1,143 @@
+decisions:
+- id: D001
+  date: '2025-11-17'
+  question: Which tools should be included in the Docker container for CLI pathway?
+  decision: 'Tracy CLI (basecalling, alignment, deconvolution), MAFFT (sequence alignment),
+    IQ-TREE2 (phylogenetic inference), ClipKIT (alignment trimming)'
+  rationale: These are current 2025 gold standard tools verified by web search. All
+    open-source and actively maintained.
+  status: superseded
+  superseded_by: D006
+  tags:
+  - tools
+  - docker
+  - cli
+- id: D002
+  date: '2025-11-17'
+  question: Should we support both GUI and CLI pathways?
+  decision: 'YES - Dual pathway approach. GUI: Tracy web + UGENE/SeaView (no Docker).
+    CLI: Docker container with all tools for reproducibility.'
+  rationale: Students have varying comfort levels with terminal. GUI pathway for beginners,
+    CLI for reproducible science.
+  status: superseded
+  superseded_by: D011
+  tags:
+  - pedagogy
+  - workflow
+- id: D003
+  date: '2025-11-17'
+  question: What base image should the Dockerfile use?
+  decision: 'Use Ubuntu 22.04 LTS as base. Install tools via: (1) Tracy - download
+    binary from GitHub releases, (2) MAFFT - apt-get, (3) IQ-TREE2 - download binary,
+    (4) ClipKIT - pip install.'
+  rationale: Ubuntu LTS provides stability, widely used in bioinformatics. Mix of package
+    manager and direct downloads for latest versions.
+  status: superseded
+  superseded_by: D006
+  tags:
+  - docker
+  - tools
+- id: D004
+  date: '2025-11-17'
+  question: What additional infrastructure is available for this project?
+  decision: 'Perplexity API available for literature review and citation verification.
+    API key configured in shell profiles (local + HPC). Can query for latest methods,
+    validate protocols, find references.'
+  rationale: Need to document available research tools for protocol development and
+    literature integration
+  status: active
+  tags:
+  - infrastructure
+  - api
+- id: D005
+  date: '2025-11-17'
+  question: Tool versions verified for 2025?
+  decision: 'YES - All tools verified current: Tracy (updated Mar 2025, GitHub: gear-genomics/tracy),
+    MAFFT (stable, widely used), IQ-TREE2 (current standard for phylogenetics), ClipKIT
+    (active development). Alternative GUI: Jalview, AliView for alignment visualization.'
+  rationale: WebSearch verification on 2025-11-17 confirmed all tools are actively
+    maintained and current best practices
+  status: active
+  tags:
+  - tools
+  - verification
+- id: D006
+  date: '2025-11-18'
+  question: What should be the container strategy after reviewing RNA-seq setup?
+  decision: 'Use mambaorg/micromamba:1.5.0 as base (not Ubuntu). Minimal install: BioPython,
+    MAFFT, IQTree2, BLAST, R (ape/ggtree). Copy terminal setup from RNA-seq (zsh +
+    oh-my-zsh + Dracula + colorls + lsd + starship). Target size: <800MB.'
+  rationale: RNA-seq container demonstrates excellent minimal design. Students love
+    the beautiful terminal. Micromamba faster than apt-get for bioinformatics tools.
+  status: active
+  tags:
+  - docker
+  - tools
+  - terminal
+- id: D007
+  date: '2025-11-18'
+  question: Which reference sequences should we use?
+  decision: 'Use Hoque et al 2022 mosquito COI sequences (85 sequences from 19 species,
+    6 genera). GenBank accessions in Tables 2-3. AUCOS primers have 67.5% success
+    vs 16.7% for Folmer. Create Python script to fetch from GenBank + optional Zenodo
+    dataset.'
+  rationale: Paper provides validated mosquito COI data with improved primers. Multiple
+    genera for diversity. All sequences publicly available in GenBank.
+  status: active
+  tags:
+  - data
+  - reference
+  - mosquitoes
+- id: D008
+  date: '2025-11-18'
+  question: Should we remove Tracy from the container?
+  decision: 'YES - Keep BioPython for .ab1 parsing instead. Tracy is for basecalling
+    from raw data; students will have pre-processed chromatograms. BioPython lighter
+    and sufficient for QC.'
+  rationale: Students receive chromatograms from sequencing facility, not raw data.
+    BioPython can parse .ab1 files and extract quality scores for QC. Keeps container
+    minimal.
+  status: active
+  tags:
+  - tools
+  - qc
+- id: D009
+  date: '2025-11-18'
+  question: How should alignment visualization work?
+  decision: 'Create interactive HTML visualization based on Hoque Fig 1. Large letters
+    = conserved positions, small letters = variable positions. Color-code by nucleotide.
+    Use plotly for interactivity. Students will love this visual representation of
+    variation.'
+  rationale: Visual learners benefit from seeing where variation occurs. Hoque Fig
+    1 is excellent example. Interactive HTML allows zooming and exploration.
+  status: active
+  tags:
+  - visualization
+  - alignment
+- id: D010
+  date: '2025-11-18'
+  question: What output format for results?
+  decision: 'HTML dashboard (not PDF). Tabs: QC Report, Alignment View, Phylogenetic
+    Tree, Species Identification. Interactive plots with plotly. Single index.html
+    file students can open in browser.'
+  rationale: Students have no coding experience - browser-based dashboard is familiar.
+    Interactive plots more engaging than static PDFs. Easy to share and view.
+  status: active
+  tags:
+  - output
+  - visualization
+  - html
+- id: D011
+  date: '2025-11-18'
+  question: Should we support both GUI and CLI pathways?
+  decision: 'NO - CLI only with Docker. BUT make it so simple it feels like GUI. One
+    command: analyze-sequences. Beautiful terminal makes it approachable. GitHub Classroom
+    with docker-compose.yml for easy start.'
+  rationale: Maintaining two pathways doubles work. Docker ensures reproducibility.
+    Beautiful terminal + automation scripts make CLI accessible. Students use one
+    command and get HTML dashboard - feels like GUI.
+  status: active
+  tags:
+  - pedagogy
+  - workflow
+  - ux
