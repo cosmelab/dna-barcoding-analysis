@@ -2,15 +2,18 @@
   "tracking_version": "1.0",
   "project_name": "DNA Barcoding Analysis Pipeline",
   "created": "2025-11-17T01:00:00.000000+00:00",
-  "last_updated": "2025-11-17T09:45:00.000000+00:00",
-  "status": "ACTIVE - Initial Setup Phase",
+  "last_updated": "2025-11-19T12:00:00.000000+00:00",
+  "status": "ACTIVE - Testing & Validation Phase",
   "immediate_tasks": [
-    "Research and select current best GUI tools for Sanger sequencing (2025)",
-    "Research and select current best CLI tools for sequence analysis (2025)",
-    "Create Dockerfile with selected tools",
-    "Set up dual pathway structure (GUI vs CLI)",
-    "Create comprehensive README with clear instructions",
-    "Add sample data and test workflows",
+    "Wait for container build to complete (commit 983717e)",
+    "Test QC module with data/test_data (8 .ab1 files)",
+    "Test alignment module with visual viewer",
+    "Test phylogeny module - build tree",
+    "Test BLAST identification",
+    "Run full analyze-sequences pipeline",
+    "Review all modules and scripts",
+    "Determine linear student workflow",
+    "Create comprehensive website (setup/index.html style)",
     "Create GitHub Classroom assignment template"
   ],
   "pathways": {
@@ -58,11 +61,35 @@
     "Do students have access to any commercial tools?",
     "What's the minimum viable toolset for Week 8?"
   ],
-  "completed_tasks": [],
+  "completed_tasks": [
+    "Researched and selected 2025 tools (BioPython, MAFFT, IQ-TREE, BLAST, R/ggtree)",
+    "Created minimal Dockerfile (~700MB, mambaorg/micromamba base)",
+    "Decided CLI-only pathway with automation (Per D011)",
+    "Fetched 52 mosquito COI reference sequences (Hoque et al 2022)",
+    "Created all 5 analysis modules (assembly, QC, alignment, phylogeny, identification)",
+    "Implemented QC with chromatogram visualization",
+    "Implemented F/R sequence assembly",
+    "Implemented visual alignment viewer (conserved/variable positions)",
+    "Created wrapper scripts (analyze-sequences, qc-sequences, etc.)",
+    "Set up GitHub Actions for container builds",
+    "Reorganized repository structure (data/, tutorials/, container/, modules/)",
+    "Fixed ALL CAPS filename violations",
+    "Created initial project website (docs/index.html)",
+    "Fixed Docker build context for module copying"
+  ],
   "github_classroom": {
-    "status": "NOT_CREATED",
+    "status": "IN_PROGRESS",
     "assignment_name": "dna-barcoding-week8",
     "starter_code": "This repository",
-    "deadline": "2025-11-27 (one week after lab)"
+    "deadline": "2025-11-27 (one week after lab)",
+    "autograding": "Configured in .github/classroom/autograding.json"
+  },
+  "container_status": {
+    "status": "BUILDING",
+    "last_build": "2025-11-19T12:00:00",
+    "commit": "983717e",
+    "registry": "ghcr.io/cosmelab/dna-barcoding-analysis:latest",
+    "size_target": "<800MB",
+    "issue": "Fixed Docker build context (root instead of container/)"
   }
 }

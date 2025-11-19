@@ -161,12 +161,13 @@ tasks:
     removed empty 04_data/ directory. Single clear data/ structure.'
 - id: wait-for-container-build
   phase: testing_and_validation
-  status: in_progress
+  status: done
   summary: Wait for GitHub Actions to complete container build (commit 983717e)
   agent_allowed: false
   depends_on:
   - reorganize-repository-structure
-  notes: 'Fixed Docker build context issue. Container should build successfully now.'
+  completed: '2025-11-19T12:23:00'
+  notes: 'Container built successfully. Available at ghcr.io/cosmelab/dna-barcoding-analysis:latest'
 - id: test-qc-with-real-data
   phase: testing_and_validation
   status: todo
