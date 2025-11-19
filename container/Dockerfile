@@ -164,11 +164,11 @@ RUN mkdir -p /workspace/data/my_sequences \
     /workspace/results \
     /workspace/modules
 
-# Copy analysis modules into container
-COPY ../modules/ /workspace/modules/
+# Copy analysis modules into container (from root context)
+COPY modules/ /workspace/modules/
 
-# Copy and install wrapper scripts
-COPY wrapper_scripts/* /usr/local/bin/
+# Copy and install wrapper scripts (from container/ subdirectory)
+COPY container/wrapper_scripts/* /usr/local/bin/
 RUN chmod +x /usr/local/bin/*
 
 # Add welcome message to shell

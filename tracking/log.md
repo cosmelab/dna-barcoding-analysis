@@ -243,3 +243,61 @@ next:
   - update README.md and assignment.md with new structure
   - test full pipeline with clean structure
   - prepare GitHub Classroom template
+
+## 2025-11-19 – claude-sonnet – improvements-and-commit
+actions:
+  - fixed QC report to group forward/reverse pairs together (sort by sample name)
+  - added visual alignment viewer to align_sequences.py:
+    - shows actual nucleotides side-by-side in monospace font
+    - UPPERCASE = conserved positions (≥80% identity)
+    - lowercase = variable positions (<80% identity)
+    - color-coded bases: A=green, T=red, G=yellow, C=blue
+    - displays alignment in 80bp chunks with position headers
+  - fixed Dockerfile COPY command to include modules/ directory
+  - updated docker-compose.yml paths (data/student_sequences)
+  - updated assignment.md references to data/student_sequences
+  - committed all changes (commit 3e5fe93)
+results:
+  - repository structure now clean and linear for students:
+    - data/ (reference_sequences, student_sequences, test_data)
+    - tutorials/ (00-03 optional learning materials)
+    - container/ (Docker build files)
+    - modules/ (analysis scripts - copied into container)
+  - QC HTML report will now show paired samples together
+  - alignment HTML report now shows visual sequence alignment
+  - 99 files changed: removed 16,426 lines, added 254 lines
+  - removed all test results and redundant directories
+  - fixed ALL CAPS filename violations
+next:
+  - rebuild container with updated Dockerfile (trigger GitHub Actions)
+  - test full pipeline: QC → alignment → tree → BLAST
+  - verify QC grouping works with test data
+  - verify visual alignment renders correctly
+  - update README.md with new structure
+  - create GitHub Classroom assignment
+  - test with student workflow
+
+## 2025-11-19 – claude-sonnet – project-website-creation
+actions:
+  - created project website in docs/ directory
+  - copied Dracula theme CSS from main course website (entm201l-fall2025)
+  - built responsive landing page with:
+    - hero section with gradient animations
+    - features grid (6 cards: zero coding, reports, data, container, speed, classroom)
+    - workflow visualization (4 steps with arrows)
+    - stats section (analysis time, references, size, commands)
+    - matching ENTM201L color scheme (purple #bd93f9, cyan #8be9fd, UCR gold)
+  - cleaned empty directories from tutorials/ (removed 7 empty dirs)
+  - committed: "Add project website with Dracula theme"
+  - pushed commit 2c51aeb
+results:
+  - project website ready at docs/index.html
+  - uses same professional design as course site
+  - mobile-responsive, modern animations
+  - ready for GitHub Pages deployment
+  - tutorials directory cleaned (no empty dirs)
+next:
+  - enable GitHub Pages (Settings → Pages → Source: main branch, /docs folder)
+  - website will be live at: https://cosmelab.github.io/dna-barcoding-analysis/
+  - test website navigation and responsiveness
+  - consider adding: workflow details page, tutorial pages, examples gallery
