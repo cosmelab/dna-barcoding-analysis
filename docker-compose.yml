@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   dna-barcoding:
-    image: ghcr.io/cosmelab/dna-barcoding-analysis:latest
+    image: docker.io/cosmelab/dna-barcoding-analysis:latest
     container_name: dna-barcoding
     volumes:
       # Mount your local data directory

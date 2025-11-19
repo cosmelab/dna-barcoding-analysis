@@ -66,17 +66,17 @@ def generate_html_report(results, output_file):
 <head>
     <title>Species Identification Report</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #333; }
-        h2 { color: #666; margin-top: 30px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #4CAF50; color: white; }
-        .success { background-color: #d4edda; }
-        .error { background-color: #f8d7da; }
-        .match-high { background-color: #d4edda; }
-        .match-medium { background-color: #fff3cd; }
-        .match-low { background-color: #f8d7da; }
+        body {{ font-family: Arial, sans-serif; margin: 20px; }}
+        h1 {{ color: #333; }}
+        h2 {{ color: #666; margin-top: 30px; }}
+        table {{ border-collapse: collapse; width: 100%; margin-top: 10px; }}
+        th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+        th {{ background-color: #4CAF50; color: white; }}
+        .success {{ background-color: #d4edda; }}
+        .error {{ background-color: #f8d7da; }}
+        .match-high {{ background-color: #d4edda; }}
+        .match-medium {{ background-color: #fff3cd; }}
+        .match-low {{ background-color: #f8d7da; }}
     </style>
 </head>
 <body>

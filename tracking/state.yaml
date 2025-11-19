@@ -16,10 +16,12 @@ completed_today:
   - Fixed Dockerfile build context (root instead of container/)
   - Created initial website landing page (docs/index.html)
   - Removed empty directories
+  - Enabled multi-architecture container builds (linux/amd64 + linux/arm64)
 current_status:
-  - Container rebuilding with correct module paths
+  - Multi-arch container building in GitHub Actions (commit 12f7ebf)
+  - All bioconda packages verified for arm64 compatibility
   - Repository structure clean and linear
-  - Ready for pipeline testing
+  - Ready for pipeline testing once build completes
 next_up:
   - Wait for container build to complete
   - Test full pipeline: QC → alignment → tree → BLAST with data/test_data
