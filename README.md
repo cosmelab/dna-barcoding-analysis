@@ -1,27 +1,106 @@
-# DNA Barcoding Analysis for COI Gene Sequencing
+<div align="center">
 
-**Simple, automated analysis of Sanger sequences from the COI gene**
+# 🧬 DNA Barcoding Analysis
 
-A containerized workflow for students with no coding experience to analyze their DNA barcoding data from chromatograms to phylogenetic trees and species identification.
+### From Chromatogram to Discovery: Automated COI Gene Analysis
 
-![Status](https://img.shields.io/badge/Status-In_Development-orange?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Course Status](https://img.shields.io/badge/Status-In_Development-bd93f9?style=for-the-badge)
+![Fall 2025](https://img.shields.io/badge/Quarter-Fall_2025-bd93f9?style=for-the-badge)
+![UC Riverside](https://img.shields.io/badge/UC-Riverside-FFB81C?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-8be9fd?style=for-the-badge)
+![Docker](https://img.shields.io/badge/Docker-Ready-8be9fd?style=for-the-badge&logo=docker&logoColor=white)
+
+**[🚀 Quick Start](#quick-start)** | **[📦 Installation](#installation)** | **[📚 Usage](#usage)** | **[🎨 Features](#features)** | **[🐛 Troubleshooting](#troubleshooting)**
+
+</div>
 
 ---
 
-## What This Does
+## 🎯 Overview
 
-**One Command. Complete Analysis.**
+**One Command. Complete Analysis. No Coding Required.**
 
-Drop your `.ab1` chromatogram files into a folder → Run one command → Get a beautiful HTML report with:
+A containerized workflow for students with **zero coding experience** to analyze DNA barcoding data from `.ab1` chromatograms to phylogenetic trees and species identification.
 
-- ✅ Quality control metrics
-- ✅ Sequence alignment visualization
-- ✅ Phylogenetic tree
-- ✅ Species identification (BLAST)
+---
 
-**No coding required.** Everything runs in a Docker container with all tools pre-installed.
+<table>
+<tr>
+<td><strong>🧪 Input</strong></td>
+<td>Sanger chromatograms (.ab1 files)</td>
+</tr>
+<tr>
+<td><strong>⚙️ Process</strong></td>
+<td>One command: <code>analyze-sequences</code></td>
+</tr>
+<tr>
+<td><strong>📊 Output</strong></td>
+<td>Interactive HTML dashboard</td>
+</tr>
+<tr>
+<td><strong>👨‍🎓 Skill Level</strong></td>
+<td>Beginner (no coding required)</td>
+</tr>
+<tr>
+<td><strong>⏱️ Time</strong></td>
+<td>~5 minutes per analysis</td>
+</tr>
+<tr>
+<td><strong>🎓 Course</strong></td>
+<td>ENTM201L, UC Riverside</td>
+</tr>
+</table>
+
+---
+
+## ✨ What You Get
+
+<details>
+<summary><strong>📊 Quality Control Report</strong></summary>
+<br>
+
+- Per-base quality scores (Phred)
+- Read length distribution
+- Pass/fail assessment
+- Trimming recommendations
+- Interactive plots
+
+</details>
+
+<details>
+<summary><strong>🧬 Sequence Alignment</strong></summary>
+<br>
+
+- Multiple sequence alignment (MAFFT)
+- **LARGE letters** = conserved positions
+- **small letters** = variable positions
+- Color-coded nucleotides
+- Based on Hoque et al. 2022 methodology
+
+</details>
+
+<details>
+<summary><strong>🌳 Phylogenetic Tree</strong></summary>
+<br>
+
+- Maximum likelihood tree (IQ-TREE2)
+- Bootstrap support values (1000 replicates)
+- Automatic model selection
+- Publication-quality figures (ggtree)
+- Your samples highlighted
+
+</details>
+
+<details>
+<summary><strong>🔍 Species Identification</strong></summary>
+<br>
+
+- Automatic BLAST against NCBI
+- Top 5 matches with % identity
+- Confidence assessment
+- Reference comparison with 85 mosquito COI sequences
+
+</details>
 
 ---
 
@@ -57,31 +136,43 @@ Drop your `.ab1` chromatogram files into a folder → Run one command → Get a 
 
 ---
 
-## Features
+## 🎨 Features
 
-### Automated Quality Control
-- Parse `.ab1` chromatogram files
-- Calculate quality metrics (Phred scores)
-- Identify low-quality regions
-- Generate interactive QC plots
+### 🛠️ Tools & Technologies
 
-### Alignment Visualization
-- Multiple sequence alignment with MAFFT
-- Visual representation of conserved vs variable positions
-- Interactive HTML plots (zoom, pan, explore)
-- Based on Hoque et al. 2022 methodology
+<table>
+<tr>
+<td><strong>🔬 Analysis Tools</strong></td>
+<td>BioPython • MAFFT • IQ-TREE2 • BLAST+</td>
+</tr>
+<tr>
+<td><strong>📊 Visualization</strong></td>
+<td>R (ape, ggtree) • Python (plotly, matplotlib)</td>
+</tr>
+<tr>
+<td><strong>🎨 Terminal</strong></td>
+<td>zsh • oh-my-zsh • Dracula theme • colorls</td>
+</tr>
+<tr>
+<td><strong>🐋 Container</strong></td>
+<td>~700MB • mambaorg/micromamba base</td>
+</tr>
+<tr>
+<td><strong>📱 Output</strong></td>
+<td>Interactive HTML dashboard (mobile-friendly)</td>
+</tr>
+</table>
 
-### Phylogenetic Analysis
-- IQ-TREE2 with automatic model selection
-- Bootstrap support values (1000 replicates)
-- Publication-quality tree figures
-- R visualization with ggtree
+### 📚 Reference Dataset
 
-### Species Identification
-- Automatic BLAST against NCBI database
-- Top 5 matches with % identity
-- Confidence assessment
-- Reference comparison with mosquito COI sequences
+**85 mosquito COI sequences** from Hoque et al. 2022:
+
+| Metric | Value |
+|--------|-------|
+| 📝 Species | 19 species from 6 genera |
+| 🦟 Genera | *Aedes*, *Anopheles*, *Culex*, *Deinocerites*, *Psorophora*, *Uranotaenia* |
+| 🧬 Primers | AUCOS (67.5% success) vs Folmer (16.7%) |
+| ✅ Validation | All sequences published and verified |
 
 ---
 
@@ -291,22 +382,38 @@ git push origin main
 
 ---
 
-## Citation
+## 📜 Citation
 
 If you use this workflow in your research, please cite:
 
-```
-Cosme, L. (2025). DNA Barcoding Analysis: Automated COI Gene Analysis Workflow.
-GitHub: https://github.com/cosmelab/dna-barcoding-analysis
+<div align="center">
+
+[![DOI](https://img.shields.io/badge/GitHub-cosmelab%2Fdna--barcoding--analysis-8be9fd?style=for-the-badge&logo=github)](https://github.com/cosmelab/dna-barcoding-analysis)
+
+</div>
+
+```bibtex
+@software{cosme2025dnabarcoding,
+  author = {Cosme, Luciano},
+  title = {DNA Barcoding Analysis: Automated COI Gene Analysis Workflow},
+  year = {2025},
+  url = {https://github.com/cosmelab/dna-barcoding-analysis}
+}
 ```
 
-And the reference dataset:
+**Reference Dataset**:
 
-```
-Hoque MM, Valentine MJ, Kelly PJ, Barua S, Murillo DFB, Wang C. Modification
-of the Folmer primers for the cytochrome c oxidase gene facilitates
-identification of mosquitoes. Parasites Vectors. 2022;15(1):437.
-doi:10.1186/s13071-022-05494-2
+```bibtex
+@article{hoque2022modification,
+  title={Modification of the Folmer primers for the cytochrome c oxidase gene facilitates identification of mosquitoes},
+  author={Hoque, Md Monirul and Valentine, Matthew John and Kelly, Patrick John and Barua, Subarna and Murillo, Daniel Felipe Barrantes and Wang, Chengming},
+  journal={Parasites \& Vectors},
+  volume={15},
+  number={1},
+  pages={437},
+  year={2022},
+  doi={10.1186/s13071-022-05494-2}
+}
 ```
 
 ---
@@ -342,16 +449,28 @@ We welcome contributions! Areas where you can help:
 
 ---
 
-## Support
+## 💬 Support
 
-**Questions?** Open an issue: https://github.com/cosmelab/dna-barcoding-analysis/issues
+<div align="center">
 
-**Instructor**: Luciano Cosme
-**Course**: ENTM201L - Molecular Biology Laboratory
-**Institution**: UC Riverside, Department of Entomology
+**Questions?** Open an issue: [GitHub Issues](https://github.com/cosmelab/dna-barcoding-analysis/issues)
 
 ---
 
-**Status**: 🚧 In Development | Target: Week 8, Fall 2025
+### 👨‍🏫 Instructor Information
 
-**Last Updated**: November 18, 2025
+**Luciano Cosme**
+Department of Entomology
+University of California, Riverside
+
+**Course**: ENTM201L - Molecular Biology Laboratory
+**Quarter**: Fall 2025
+**Target Week**: Week 8 (Sanger Sequencing Analysis)
+
+---
+
+![UCR Entomology](https://img.shields.io/badge/UCR-Entomology-FFB81C?style=for-the-badge)
+
+**Last Updated**: November 18, 2025 | **Status**: 🚧 In Development
+
+</div>
