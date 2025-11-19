@@ -1,7 +1,7 @@
 FROM mambaorg/micromamba:1.5.0
 
 ENV MAMBA_ROOT_PREFIX=/opt/conda \
-    PATH=/opt/conda/bin:/usr/local/bin:/usr/bin:$PATH \
+    PATH=/opt/conda/bin:/usr/bin:$PATH \
     MAMBA_EXTRACT_THREADS=4
 
 SHELL ["bash", "-lc"]
@@ -10,16 +10,29 @@ USER root
 # Update micromamba and all packages to latest versions
 RUN micromamba update --all -y
 
-# Install system dependencies in a single layer
+# Install system dependencies in a single layer (COPY FROM RNA-SEQ)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \
     python3-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libfontconfig1-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
     ca-certificates \
     curl \
     git \
     unzip \
     zsh \
     bash \
+    libcairo2-dev \
+    libbz2-dev \
+    liblzma-dev \
     wget \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
