@@ -2,23 +2,23 @@ version: '3.8'
 
 services:
   dna-barcoding:
-    build:
-      context: .
-      dockerfile: container/Dockerfile
+    image: ghcr.io/cosmelab/dna-barcoding-analysis:latest
     container_name: dna-barcoding
-    image: dna-barcoding:latest
     volumes:
-      # Mount the entire project directory
-      - .:/workspace
-      # Persist shell history
-      - zsh-history:/root/.zsh_history
+      # Mount your local data directory
+      - ./data:/workspace/data
+      # Mount results directory to save outputs
+      - ./results:/workspace/results
     working_dir: /workspace
     stdin_open: true
     tty: true
-    environment:
-      - TERM=xterm-256color
-      - COLORTERM=truecolor
     command: zsh
 
-volumes:
-  zsh-history:
+# Usage:
+# 1. Place your .ab1 files in: ./data/my_sequences/
+# 2. Start container: docker-compose up -d
+# 3. Enter container: docker-compose exec dna-barcoding zsh
+# 4. Run analysis: analyze-sequences
+# 5. View results in: ./results/
+# 6. Exit: exit
+# 7. Stop container: docker-compose down

@@ -162,10 +162,15 @@ WORKDIR /workspace
 RUN mkdir -p /workspace/data/my_sequences \
     /workspace/data/reference \
     /workspace/results \
-    /workspace/scripts
+    /workspace/modules
 
-# Create wrapper scripts directory
-RUN mkdir -p /usr/local/bin
+# Copy modules
+COPY ../modules /workspace/modules
+COPY ../data/reference /workspace/data/reference
+
+# Copy and install wrapper scripts
+COPY wrapper_scripts/* /usr/local/bin/
+RUN chmod +x /usr/local/bin/*
 
 # Add welcome message to shell
 RUN echo '' >> ~/.zshrc && \
