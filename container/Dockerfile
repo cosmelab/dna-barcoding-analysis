@@ -10,7 +10,7 @@ USER root
 # Update micromamba and all packages to latest versions
 RUN micromamba update --all -y
 
-# Install system dependencies in a single layer (COPY FROM RNA-SEQ)
+# Install system dependencies in a single layer
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \
     python3-dev \
@@ -34,6 +34,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libbz2-dev \
     liblzma-dev \
     wget \
+    software-properties-common \
+    dirmngr \
+    lsb-release \
+    gnupg2 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install core system packages first (conda-forge only)
@@ -42,6 +46,10 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
     libstdcxx-ng \
     python=3.10 \
     starship \
+    cmake \
+    make \
+    gcc \
+    gxx \
     pip \
     -y && micromamba clean --all --yes
 
