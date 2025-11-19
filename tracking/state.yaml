@@ -1,27 +1,26 @@
 project: dna-barcoding-analysis
-current_phase: documentation
-current_task: create-module-readmes
-last_updated: '2025-11-18T18:30:00'
-active_jobs:
-  - GitHub Actions container build (should be complete - check status)
+current_phase: repository_reorganization
+current_task: consolidate-directories
+last_updated: '2025-11-19T11:00:00'
+active_jobs: []
 blocking_issues: []
 target_ready_date: '2025-11-19'
-lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products)
+lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products from UC genomics)
 strategy: 'Minimal container (<800MB), automated scripts for non-coders, single GitHub
   Classroom assignment, simple HTML output, Hoque et al 2022 reference data'
 completed_today:
-  - Minimal Dockerfile (168 lines, <800MB target)
-  - Reference sequences fetched (52 mosquito COI)
-  - Module 0: F/R sequence assembly with consensus generation
-  - Module 1: QC script with chromatogram visualization (collapsible HTML, bases 50-200)
-  - Module 2: MAFFT alignment wrapper
-  - Module 3: IQ-TREE phylogeny with Bio.Phylo visualization
-  - Module 4: BLAST identification script
-  - Master pipeline script (basic version)
-  - GitHub Actions workflow configured and triggered
-  - Tested with real UC genomics data (8 samples, 4 passed QC)
+  - Fixed Dockerfile system library dependencies (container now builds successfully)
+  - Container available at ghcr.io/cosmelab/dna-barcoding-analysis:latest
+  - Reviewed entire repository structure for student usability
+  - Designed simplified linear directory structure for beginners
+  - Renamed ASSIGNMENT.md → assignment.md, STATUS.md → status.md (only README.md stays caps)
+  - Consolidated data directories (data/reference_sequences, data/test_data, data/student_sequences)
+  - Removed duplicate 04_data/ directory
 remaining_tasks:
-  - Create module README files (00-04)
-  - Update master pipeline to include all modules
+  - Move 01-03_basics to tutorials/ folder
+  - Remove redundant directories (05-08_, modules/, scripts/)
+  - Clean up test results from results/ directory
+  - Update docker-compose.yml to use data/student_sequences
+  - Update README.md and assignment.md with new structure
+  - Test full pipeline with clean structure
   - Create GitHub Classroom template
-  - Optional: alignment visualization with variation plots

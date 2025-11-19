@@ -123,15 +123,50 @@ tasks:
   completed: '2025-11-18T14:45:00'
   notes: 'Created .github/workflows/docker-build.yml. Adapted from RNA-seq workflow. Pushes
     to ghcr.io and Docker Hub. Triggered on push to main.'
+- id: fix-dockerfile-libraries
+  phase: container_setup
+  status: done
+  summary: Fix Docker build by adding missing system libraries from RNA-seq container
+  agent_allowed: true
+  depends_on:
+  - setup-github-actions
+  completed: '2025-11-19T10:00:00'
+  notes: 'Added libcurl4-openssl-dev, libssl-dev, libxml2-dev, font libs, image libs, compression
+    libs. Container now builds successfully in 1m16s.'
+- id: reorganize-repository-structure
+  phase: repository_reorganization
+  status: in_progress
+  summary: Simplify and consolidate directory structure for student usability
+  agent_allowed: true
+  depends_on:
+  - fix-dockerfile-libraries
+  notes: 'Consolidate data dirs, move tutorials, remove redundant numbered directories (04-08_),
+    remove duplicates (modules/, scripts/). Make structure linear for beginners.'
+- id: rename-caps-files
+  phase: repository_reorganization
+  status: done
+  summary: Fix ALL CAPS filenames (only README.md should be caps)
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-19T10:50:00'
+  notes: 'Renamed ASSIGNMENT.md → assignment.md, STATUS.md → status.md per assistant_rules.md'
+- id: consolidate-data-directories
+  phase: repository_reorganization
+  status: done
+  summary: Consolidate multiple data directories into single data/ structure
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-19T11:00:00'
+  notes: 'Renamed data/reference → data/reference_sequences, created data/student_sequences,
+    removed empty 04_data/ directory. Single clear data/ structure.'
 - id: create-classroom-template
   phase: github_classroom
   status: todo
   summary: Create GitHub Classroom assignment template structure
   agent_allowed: true
   depends_on:
-  - create-master-pipeline
-  - create-html-dashboard
-  notes: 'Single assignment for entire quarter. Structure: data/, results/, scripts/,
+  - reorganize-repository-structure
+  notes: 'Single assignment for Week 8. Clean structure: data/, tutorials/, container/,
     docker-compose.yml. See D011.'
 - id: test-with-chromatograms
   phase: testing

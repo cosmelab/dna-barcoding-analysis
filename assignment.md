@@ -27,11 +27,11 @@ By the end of this lab, you will:
    docker-compose --version
    ```
 
-**Deliverable**: Repository cloned with `.ab1` files in `data/my_sequences/`
+**Deliverable**: Repository cloned with `.ab1` files in `data/student_sequences/`
 
 ### 2. Upload Your Chromatograms (10 points)
 
-Place your `.ab1` chromatogram files from the UC Genomics Core in the `data/my_sequences/` directory.
+Place your `.ab1` chromatogram files from the UC Genomics Core in the `data/student_sequences/` directory.
 
 **Required**:
 - Minimum 2 samples (Forward + Reverse for at least 1 mosquito specimen)
@@ -92,7 +92,7 @@ Create a file `RESULTS.md` in your repository answering these questions:
    ```
 
 2. Verify your submission on GitHub - you should see:
-   - ✅ Your `.ab1` files in `data/my_sequences/`
+   - ✅ Your `.ab1` files in `data/student_sequences/`
    - ✅ Results in `results/run_*/`
    - ✅ `RESULTS.md` with your interpretations
 

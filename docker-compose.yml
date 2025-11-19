@@ -9,15 +9,13 @@ services:
       - ./data:/workspace/data
       # Mount results directory to save outputs
       - ./results:/workspace/results
-      # Mount analysis modules
-      - ./modules:/workspace/modules
     working_dir: /workspace
     stdin_open: true
     tty: true
     command: zsh
 
 # Usage:
-# 1. Place your .ab1 files in: ./data/my_sequences/
+# 1. Place your .ab1 files in: ./data/student_sequences/
 # 2. Start container: docker-compose up -d
 # 3. Enter container: docker-compose exec dna-barcoding zsh
 # 4. Run analysis: analyze-sequences

@@ -182,3 +182,64 @@ next:
   - user to test full pipeline with real student data
   - optional: test with Hoque reference sequences
   - ready for Week 8 lab deployment!
+
+## 2025-11-19 – claude-sonnet – post-deployment-fixes
+actions:
+  - debugged post-deployment container build failures (5 builds failed)
+  - user reported all builds failing after "finalization" entry
+  - compared RNA-seq Dockerfile (working) with DNA-barcoding Dockerfile (failing)
+  - identified missing critical system libraries for matplotlib/visualization
+  - added missing dependencies from RNA-seq version:
+    - libcurl4-openssl-dev, libssl-dev, libxml2-dev (networking/SSL)
+    - libfontconfig1-dev, libharfbuzz-dev, libfribidi-dev, libfreetype6-dev (fonts)
+    - libpng-dev, libtiff5-dev, libjpeg-dev, libcairo2-dev (images)
+    - libbz2-dev, liblzma-dev (compression)
+    - software-properties-common, dirmngr, lsb-release, gnupg2 (apt)
+  - fixed COPY paths that were causing build errors
+  - committed fixes: "Fix Docker build + add R basics tutorial"
+results:
+  - BUILD SUCCESS! Latest 2 builds succeeded:
+    - "Mount modules directory in docker-compose" - 1m16s (success)
+    - "Fix Docker build + add R basics tutorial" - 1m41s (success)
+  - Container now available at: ghcr.io/cosmelab/dna-barcoding-analysis:latest
+  - System libraries match working RNA-seq configuration exactly
+  - Verified: /workspace working directory consistent across Dockerfile + docker-compose
+next:
+  - user to test container locally with docker-compose up -d
+  - address sequence trimming workflow (QC → Trim → Assemble → Align → Extract → Phylogeny)
+  - clarify COI barcode region extraction (~658bp)
+  - test full pipeline with real data from UC genomics core
+  - deploy to GitHub Classroom for Week 8 lab
+
+## 2025-11-19 – claude-sonnet – repository-reorganization-planning
+actions:
+  - reviewed entire repository structure after container build success
+  - identified major organizational issues for student use:
+    - duplicate directories: modules/ AND numbered dirs (05-08_)
+    - multiple data directories: ./data, ./04_data, plus 01-03_basics/data
+    - many empty directories (scripts/, examples/, etc.)
+    - test results committed in results/ directory
+  - analyzed GitHub Classroom workflow requirements
+  - confirmed ASSIGNMENT.md expects: data/my_sequences/ → results/run_*/ → RESULTS.md
+  - user feedback: "students have no experience with coding, make this linear and easy"
+  - user feedback: "no reason to have two data dirs"
+  - user feedback: fix ALL CAPS filenames (only README.md should be caps)
+  - designed simplified linear structure for beginners
+results:
+  - proposed clean structure:
+    - SINGLE data/ directory (student_sequences, reference_sequences, test_data)
+    - tutorials/ folder (optional learning materials from 01-03_basics)
+    - container/ (students don't modify)
+    - remove: modules/, scripts/, 04-08_ numbered dirs, results/
+  - identified files needing case fixes: ASSIGNMENT.md → assignment.md, STATUS.md → status.md
+  - user approved reorganization plan
+next:
+  - rename ASSIGNMENT.md → assignment.md, STATUS.md → status.md
+  - consolidate all data directories into single data/ structure
+  - move 01-03_basics tutorials into tutorials/ folder
+  - remove redundant directories (04-08_, modules/, scripts/)
+  - clean up test results from results/ directory
+  - update docker-compose.yml to use data/student_sequences
+  - update README.md and assignment.md with new structure
+  - test full pipeline with clean structure
+  - prepare GitHub Classroom template

@@ -54,21 +54,117 @@ def generate_alignment_stats(alignment_file):
 
     return stats
 
+def generate_visual_alignment(alignment_file, max_seqs=20, chunk_size=80):
+    """Generate visual alignment with conserved/variable positions"""
+    alignment = AlignIO.read(alignment_file, "fasta")
+
+    # Limit display to max_seqs sequences
+    display_seqs = alignment[:max_seqs] if len(alignment) > max_seqs else alignment
+    aln_length = alignment.get_alignment_length()
+
+    # Calculate conservation for each position
+    conservation = []
+    for i in range(aln_length):
+        column = alignment[:, i]
+        # Position is conserved if all non-gap characters are the same
+        bases = [b for b in column if b != '-']
+        if bases:
+            most_common = max(set(bases), key=bases.count)
+            conservation_rate = bases.count(most_common) / len(bases)
+            conservation.append(conservation_rate)
+        else:
+            conservation.append(0)
+
+    # Generate HTML alignment view in chunks
+    html_chunks = []
+    for chunk_start in range(0, aln_length, chunk_size):
+        chunk_end = min(chunk_start + chunk_size, aln_length)
+
+        chunk_html = f'<div class="alignment-chunk"><div class="position-header">Position {chunk_start+1}-{chunk_end}</div>'
+
+        for record in display_seqs:
+            seq_chunk = str(record.seq[chunk_start:chunk_end])
+
+            # Format sequence with conservation styling
+            formatted_seq = '<span class="sequence">'
+            for i, base in enumerate(seq_chunk):
+                pos = chunk_start + i
+                cons = conservation[pos]
+
+                # Conserved (>80%) = UPPERCASE, Variable (<80%) = lowercase
+                if cons >= 0.8:
+                    display_base = base.upper()
+                    css_class = 'conserved'
+                else:
+                    display_base = base.lower()
+                    css_class = 'variable'
+
+                # Color code bases
+                if base == '-':
+                    color_class = 'gap'
+                elif base.upper() == 'A':
+                    color_class = 'base-a'
+                elif base.upper() == 'T':
+                    color_class = 'base-t'
+                elif base.upper() == 'G':
+                    color_class = 'base-g'
+                elif base.upper() == 'C':
+                    color_class = 'base-c'
+                else:
+                    color_class = 'base-n'
+
+                formatted_seq += f'<span class="{css_class} {color_class}">{display_base}</span>'
+
+            formatted_seq += '</span>'
+
+            # Truncate long IDs
+            seq_id = record.id[:30] + '...' if len(record.id) > 30 else record.id
+            chunk_html += f'<div class="alignment-row"><span class="seq-id">{seq_id}</span>{formatted_seq}</div>'
+
+        chunk_html += '</div>'
+        html_chunks.append(chunk_html)
+
+    return '\n'.join(html_chunks)
+
 def generate_html_report(stats, alignment_file, output_file):
-    """Generate simple HTML report"""
+    """Generate comprehensive HTML report with visual alignment"""
     from datetime import datetime
+
+    visual_alignment = generate_visual_alignment(alignment_file)
 
     html = f"""<!DOCTYPE html>
 <html>
 <head>
     <title>Sequence Alignment Report</title>
     <style>
-        body {{ font-family: Arial, sans-serif; margin: 20px; }}
+        body {{ font-family: Arial, sans-serif; margin: 20px; max-width: 1400px; }}
         h1 {{ color: #333; }}
+        h2 {{ color: #555; margin-top: 30px; }}
         table {{ border-collapse: collapse; width: 100%; margin-top: 20px; }}
         th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
         th {{ background-color: #4CAF50; color: white; }}
         .summary {{ background-color: #f0f0f0; padding: 15px; margin: 20px 0; border-radius: 5px; }}
+        .legend {{ background-color: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 5px; border: 1px solid #ffc107; }}
+        .legend-item {{ display: inline-block; margin-right: 20px; }}
+
+        /* Alignment visualization */
+        .alignment-chunk {{ margin: 20px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; overflow-x: auto; }}
+        .position-header {{ font-weight: bold; color: #666; margin-bottom: 10px; }}
+        .alignment-row {{ font-family: 'Courier New', monospace; margin: 2px 0; white-space: nowrap; }}
+        .seq-id {{ display: inline-block; width: 200px; padding-right: 10px; font-weight: bold; color: #333; }}
+        .sequence {{ letter-spacing: 1px; }}
+
+        /* Conservation styling */
+        .conserved {{ font-weight: bold; font-size: 1.1em; }}
+        .variable {{ font-size: 0.9em; opacity: 0.8; }}
+
+        /* Base colors */
+        .base-a {{ color: #00C851; }}
+        .base-t {{ color: #ff4444; }}
+        .base-g {{ color: #ffbb33; }}
+        .base-c {{ color: #33b5e5; }}
+        .base-n {{ color: #999; }}
+        .gap {{ color: #ddd; }}
     </style>
 </head>
 <body>
@@ -82,7 +178,23 @@ def generate_html_report(stats, alignment_file, output_file):
         <p><strong>Alignment file:</strong> {Path(alignment_file).name}</p>
     </div>
 
-    <h2>Sequence Details</h2>
+    <div class="legend">
+        <h3>Legend</h3>
+        <div class="legend-item"><strong>UPPERCASE</strong> = Conserved position (≥80% identity)</div>
+        <div class="legend-item"><strong>lowercase</strong> = Variable position (&lt;80% identity)</div>
+        <br>
+        <div class="legend-item"><span class="base-a">A</span> = Adenine</div>
+        <div class="legend-item"><span class="base-t">T</span> = Thymine</div>
+        <div class="legend-item"><span class="base-g">G</span> = Guanine</div>
+        <div class="legend-item"><span class="base-c">C</span> = Cytosine</div>
+        <div class="legend-item"><span class="gap">-</span> = Gap</div>
+    </div>
+
+    <h2>Visual Alignment</h2>
+    <p><em>Scroll right to see full alignment. Conserved positions (UPPERCASE) vs variable positions (lowercase).</em></p>
+    {visual_alignment}
+
+    <h2>Sequence Statistics</h2>
     <table>
         <tr>
             <th>Sequence ID</th>

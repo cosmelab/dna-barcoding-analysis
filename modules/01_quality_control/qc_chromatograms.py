@@ -271,12 +271,26 @@ def main():
     output_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("results")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Find all .ab1 files
+    # Find all .ab1 files and sort to group F/R pairs
     ab1_files = list(input_dir.glob("*.ab1"))
 
     if not ab1_files:
         print(f"No .ab1 files found in {input_dir}")
         sys.exit(1)
+
+    # Sort files to group forward/reverse pairs together
+    # Example: AT99_F, AT99_R, AT83_F, AT83_R (not AT99_F, AT83_F, AT99_R, AT83_R)
+    def sort_key(filepath):
+        stem = filepath.stem
+        # Try to extract sample name and direction (F/R)
+        parts = stem.rsplit('_', 1)
+        if len(parts) == 2:
+            sample_name, direction = parts
+            # Sort by sample name first, then by direction (F before R)
+            return (sample_name, direction)
+        return (stem, '')
+
+    ab1_files = sorted(ab1_files, key=sort_key)
 
     print(f"Found {len(ab1_files)} chromatogram files")
 
