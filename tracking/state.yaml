@@ -1,26 +1,30 @@
 project: dna-barcoding-analysis
-current_phase: repository_reorganization
-current_task: consolidate-directories
-last_updated: '2025-11-19T11:00:00'
-active_jobs: []
+current_phase: testing_and_validation
+current_task: test-pipeline-with-real-data
+last_updated: '2025-11-19T12:00:00'
+active_jobs:
+  - GitHub Actions container build (commit 983717e - fixing module COPY issue)
 blocking_issues: []
 target_ready_date: '2025-11-19'
 lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products from UC genomics)
 strategy: 'Minimal container (<800MB), automated scripts for non-coders, single GitHub
   Classroom assignment, simple HTML output, Hoque et al 2022 reference data'
 completed_today:
-  - Fixed Dockerfile system library dependencies (container now builds successfully)
-  - Container available at ghcr.io/cosmelab/dna-barcoding-analysis:latest
-  - Reviewed entire repository structure for student usability
-  - Designed simplified linear directory structure for beginners
-  - Renamed ASSIGNMENT.md → assignment.md, STATUS.md → status.md (only README.md stays caps)
-  - Consolidated data directories (data/reference_sequences, data/test_data, data/student_sequences)
-  - Removed duplicate 04_data/ directory
-remaining_tasks:
-  - Move 01-03_basics to tutorials/ folder
-  - Remove redundant directories (05-08_, modules/, scripts/)
-  - Clean up test results from results/ directory
-  - Update docker-compose.yml to use data/student_sequences
-  - Update README.md and assignment.md with new structure
-  - Test full pipeline with clean structure
-  - Create GitHub Classroom template
+  - Repository reorganization (data/, tutorials/, container/, modules/)
+  - Fixed ALL CAPS filename violations (only README.md caps)
+  - QC report now groups F/R pairs together
+  - Added visual alignment viewer (conserved=UPPERCASE, variable=lowercase, color-coded)
+  - Fixed Dockerfile build context (root instead of container/)
+  - Created initial website landing page (docs/index.html)
+  - Removed empty directories
+current_status:
+  - Container rebuilding with correct module paths
+  - Repository structure clean and linear
+  - Ready for pipeline testing
+next_up:
+  - Wait for container build to complete
+  - Test full pipeline: QC → alignment → tree → BLAST with data/test_data
+  - Review all created modules and scripts
+  - Determine best linear workflow for students
+  - Create comprehensive website with tutorial HTML pages
+  - Configure GitHub Classroom assignment

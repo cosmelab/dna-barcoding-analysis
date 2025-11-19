@@ -301,3 +301,30 @@ next:
   - website will be live at: https://cosmelab.github.io/dna-barcoding-analysis/
   - test website navigation and responsiveness
   - consider adding: workflow details page, tutorial pages, examples gallery
+
+## 2025-11-19 – claude-sonnet – pause-and-plan
+actions:
+  - user requested pause on website development
+  - focus shifted to: finish container → test pipeline → review → then website
+  - updated tracking system with comprehensive task list:
+    - testing_and_validation phase: test each module individually
+    - documentation phase: determine workflow, create website
+    - github_classroom phase: setup assignment
+  - fixed Docker build context issue (root instead of container/)
+  - commit 983717e pushed: "Fix Docker build: use root context to access modules/"
+results:
+  - tracking system updated with 10 clear tasks in tasks.yaml
+  - state.yaml updated to testing_and_validation phase
+  - todo list created with priorities
+  - container building on GitHub Actions
+next_steps:
+  1. WAIT for container build to complete (~2-3 min)
+  2. TEST pipeline with data/test_data:
+     - QC: verify F/R grouping, check 4 pass vs 4 fail
+     - Alignment: verify visual viewer with color-coding
+     - Tree: build phylogeny with passed sequences + references
+     - BLAST: test species identification
+  3. REVIEW all modules for quality and student-friendliness
+  4. DETERMINE linear workflow (simplest path for beginners)
+  5. CREATE comprehensive website using ENTM201L style (setup/index.html naming)
+  6. SETUP GitHub Classroom assignment with autograding

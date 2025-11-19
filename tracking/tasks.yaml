@@ -159,15 +159,89 @@ tasks:
   completed: '2025-11-19T11:00:00'
   notes: 'Renamed data/reference → data/reference_sequences, created data/student_sequences,
     removed empty 04_data/ directory. Single clear data/ structure.'
+- id: wait-for-container-build
+  phase: testing_and_validation
+  status: in_progress
+  summary: Wait for GitHub Actions to complete container build (commit 983717e)
+  agent_allowed: false
+  depends_on:
+  - reorganize-repository-structure
+  notes: 'Fixed Docker build context issue. Container should build successfully now.'
+- id: test-qc-with-real-data
+  phase: testing_and_validation
+  status: todo
+  summary: Test QC module with data/test_data (8 .ab1 files)
+  agent_allowed: true
+  depends_on:
+  - wait-for-container-build
+  notes: 'Run qc-sequences on test_data. Verify F/R grouping works. Check HTML report quality.'
+- id: test-alignment-module
+  phase: testing_and_validation
+  status: todo
+  summary: Test alignment module with QC-passed sequences
+  agent_allowed: true
+  depends_on:
+  - test-qc-with-real-data
+  notes: 'Run align-sequences. Verify visual alignment viewer works. Check conserved/variable positions.'
+- id: test-phylogeny-module
+  phase: testing_and_validation
+  status: todo
+  summary: Test phylogeny module - build tree with student + reference sequences
+  agent_allowed: true
+  depends_on:
+  - test-alignment-module
+  notes: 'Run build-tree. Generate phylogenetic tree. Verify ggtree visualization.'
+- id: test-blast-module
+  phase: testing_and_validation
+  status: todo
+  summary: Test BLAST identification module
+  agent_allowed: true
+  depends_on:
+  - test-qc-with-real-data
+  notes: 'Run blast-identify. Verify species ID works. Check HTML report.'
+- id: test-full-pipeline
+  phase: testing_and_validation
+  status: todo
+  summary: Run complete analyze-sequences pipeline end-to-end
+  agent_allowed: true
+  depends_on:
+  - test-qc-with-real-data
+  - test-alignment-module
+  - test-phylogeny-module
+  - test-blast-module
+  notes: 'Run full automated pipeline. Verify all outputs generated correctly.'
+- id: review-all-modules
+  phase: testing_and_validation
+  status: todo
+  summary: Review all created modules and scripts for correctness
+  agent_allowed: true
+  depends_on:
+  - test-full-pipeline
+  notes: 'Check code quality, error handling, student-friendly messages, documentation.'
+- id: determine-linear-workflow
+  phase: documentation
+  status: todo
+  summary: Determine best linear, easy-to-follow workflow for students
+  agent_allowed: true
+  depends_on:
+  - review-all-modules
+  notes: 'Simplify student instructions. Ensure workflow is foolproof for beginners.'
+- id: create-website-pages
+  phase: documentation
+  status: todo
+  summary: Create comprehensive website with HTML pages for all tutorials
+  agent_allowed: true
+  depends_on:
+  - determine-linear-workflow
+  notes: 'Use ENTM201L website style (setup/index.html naming). Convert all markdown to HTML. Create navigation.'
 - id: create-classroom-template
   phase: github_classroom
   status: todo
   summary: Create GitHub Classroom assignment template structure
   agent_allowed: true
   depends_on:
-  - reorganize-repository-structure
-  notes: 'Single assignment for Week 8. Clean structure: data/, tutorials/, container/,
-    docker-compose.yml. See D011.'
+  - create-website-pages
+  notes: 'Single assignment for Week 8. Configure autograding. Test student workflow.'
 - id: test-with-chromatograms
   phase: testing
   status: done
