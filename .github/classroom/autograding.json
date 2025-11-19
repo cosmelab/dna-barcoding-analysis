@@ -1,0 +1,54 @@
+{
+  "tests": [
+    {
+      "name": "Chromatograms Uploaded",
+      "setup": "",
+      "run": "test -n \"$(find data/my_sequences -name '*.ab1' 2>/dev/null)\"",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 10
+    },
+    {
+      "name": "QC Report Generated",
+      "setup": "",
+      "run": "test -f results/*/01_qc/qc_report.html",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 20
+    },
+    {
+      "name": "Sequences Passed QC",
+      "setup": "",
+      "run": "test -f results/*/01_qc/passed_sequences.fasta",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 20
+    },
+    {
+      "name": "Phylogenetic Tree Created",
+      "setup": "",
+      "run": "test -f results/*/03_phylogeny/tree.png",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 25
+    },
+    {
+      "name": "Species Identification Complete",
+      "setup": "",
+      "run": "test -f results/*/04_identification/identification_report.html",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 25
+    }
+  ]
+}
