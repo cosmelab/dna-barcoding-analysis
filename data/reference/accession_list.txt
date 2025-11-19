@@ -1,0 +1,190 @@
+GenBank Accession Numbers from Hoque et al. 2022
+=================================================
+
+Source: Hoque MM, et al. (2022) Parasites & Vectors 15:437
+Tables: 2 and 3
+Total accessions extracted: 53 unique IDs
+Successfully retrieved: 52 sequences (98.1% success rate)
+
+SOUTHERN CALIFORNIA PRIORITY SPECIES (9 species, 26 sequences)
+================================================================
+
+AEDES (3 species, 8 sequences)
+-------------------------------
+Aedes aegypti (Yellow fever mosquito)
+  MN299002.1    ✓ Retrieved (686 bp)
+  MK300221.1    ✓ Retrieved (709 bp)
+  MN298992.1    ✓ Retrieved (695 bp)
+  MN298993.1    ✓ Retrieved (693 bp)
+  MK300224.1    ✓ Retrieved (709 bp)
+
+Aedes albopictus (Asian tiger mosquito)
+  KF211505      ✓ Retrieved (709 bp)
+  MN513368      ✓ Retrieved (1537 bp)
+
+Aedes taeniorhynchus (Black salt marsh mosquito)
+  MN626442.1    ✓ Retrieved (1534 bp)
+
+CULEX (4 species, 13 sequences)
+--------------------------------
+Culex pipiens (Northern house mosquito)
+  KP293422.1    ✓ Retrieved (1536 bp)
+  MK714012.1    ✓ Retrieved (699 bp)
+  KP293425.1    ✓ Retrieved (1521 bp)
+  MK714001.1    ✓ Retrieved (700 bp)
+
+Culex quinquefasciatus (Southern house mosquito)
+  MW509603      ✓ Retrieved (694 bp)
+  MH463059.1    ✓ Retrieved (709 bp)
+  MN389462.1    ✓ Retrieved (1537 bp)
+  MN005046.1    ✓ Retrieved (679 bp)
+
+Culex tarsalis (Western encephalitis mosquito)
+  NC_036006.1   ✓ Retrieved (1537 bp)
+  AF425847      ✓ Retrieved (2306 bp)
+
+Culex erraticus
+  MH129001      ✓ Retrieved (673 bp)
+  MH128999.1    ✓ Retrieved (673 bp)
+  MN389459      ✓ Retrieved (1537 bp)
+
+ANOPHELES (2 species, 3 sequences)
+-----------------------------------
+Anopheles quadrimaculatus (Common malaria mosquito)
+  L04272        ✓ Retrieved (1542 bp)
+  L04272.1      ✓ Retrieved (1542 bp)
+
+Anopheles punctipennis
+  KR653634.100  ✗ FAILED (malformed accession)
+  KR666470.1    ✓ Retrieved (658 bp)
+
+
+ADDITIONAL REFERENCE SPECIES (26 species, 26 sequences)
+=========================================================
+
+AEDES (5 additional species, 7 sequences)
+------------------------------------------
+Aedes busckii
+  MN626443.1    ✓ Retrieved (1537 bp)
+
+Aedes japonicus
+  KF211494.1    ✓ Retrieved (709 bp)
+
+Aedes tortilis
+  JX259682.1    ✓ Retrieved (658 bp)
+
+Aedes vexans
+  MH032639      ✓ Retrieved (1542 bp)
+  KP954638.1    ✓ Retrieved (684 bp)
+
+Aedes triseriatus
+  MG242523.1    ✓ Retrieved (676 bp)
+
+ANOPHELES (5 additional species, 6 sequences)
+----------------------------------------------
+Anopheles crucians
+  MT040812.1    ✓ Retrieved (675 bp)
+
+Anopheles albimanus
+  KC354824      ✓ Retrieved (1510 bp)
+
+Anopheles funestus
+  MT917175      ✓ Retrieved (1537 bp)
+
+Anopheles gambiae
+  MG753769      ✓ Retrieved (1537 bp)
+
+Anopheles pseudopunctipennis
+  KC354820      ✓ Retrieved (1510 bp)
+
+Anopheles stephensi
+  KT899888      ✓ Retrieved (1537 bp)
+
+CULEX (3 additional species, 5 sequences)
+------------------------------------------
+Culex nigripalpus
+  NC_037823.1   ✓ Retrieved (1537 bp)
+
+Culex usquatissimus
+  NC_036007.1   ✓ Retrieved (1537 bp)
+
+Culex coronator
+  NC_036006.1   ✓ Retrieved (1537 bp)
+
+Culex sitiens
+  NC_054318     ✓ Retrieved (1537 bp)
+
+Culex tritaeniorhynchus
+  KT852976      ✓ Retrieved (1537 bp)
+
+OTHER GENERA (8 species, 10 sequences)
+---------------------------------------
+Deinocerites magnus
+  MH376751.1    ✓ Retrieved (709 bp)
+
+Psorophora howardii
+  MG242538.1    ✓ Retrieved (657 bp)
+
+Psorophora ferox
+  KY782650      ✓ Retrieved (639 bp)
+  MK575485      ✓ Retrieved (1539 bp)
+
+Psorophora pygmaea
+  JX260116.1    ✓ Retrieved (658 bp)
+
+Psorophora cingulata
+  KM592989.1    ✓ Retrieved (698 bp)
+
+Psorophora confinis
+  KY859921.1    ✓ Retrieved (658 bp)
+
+Uranotaenia sapphirina
+  GU908127.1    ✓ Retrieved (639 bp)
+
+Culiseta annulata
+  MN626442      ✓ Retrieved (1534 bp)
+
+Mansonia annulata
+  HQ341635      ✓ Retrieved (1517 bp)
+
+Ochlerotatus taeniorhynchus
+  MN626442      ✓ Retrieved (1534 bp)
+
+
+SUMMARY STATISTICS
+==================
+Total accessions listed: 53
+Successfully retrieved: 52
+Failed: 1
+Success rate: 98.1%
+
+Genera represented: 9
+  - Aedes: 8 species, 14 sequences
+  - Anopheles: 7 species, 9 sequences
+  - Culex: 7 species, 18 sequences
+  - Psorophora: 5 species, 6 sequences
+  - Deinocerites: 1 species, 1 sequence
+  - Uranotaenia: 1 species, 1 sequence
+  - Culiseta: 1 species, 1 sequence
+  - Mansonia: 1 species, 1 sequence
+  - Ochlerotatus: 1 species, 1 sequence
+
+Sequence length range: 639-2306 bp
+Average sequence length: 1123 bp
+
+
+FAILED ACCESSIONS
+=================
+1. KR653634.100 (Anopheles punctipennis)
+   Reason: HTTP Error 400 - Bad Request (likely malformed accession number in original paper)
+   Note: Alternative accession KR666470.1 was successfully retrieved for this species
+
+
+NOTES
+=====
+- All accessions extracted from Tables 2 and 3 of Hoque et al. 2022
+- Sequences represent COI barcode region (partial to complete)
+- Some accessions appear multiple times in original tables (same ID, same species)
+- Duplicates were removed in final dataset
+- Downloaded: November 2025
+- NCBI GenBank database version: Current as of download date

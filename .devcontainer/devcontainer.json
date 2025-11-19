@@ -1,0 +1,45 @@
+{
+  "name": "DNA Barcoding Analysis",
+  "build": {
+    "dockerfile": "../container/Dockerfile",
+    "context": ".."
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "python.defaultInterpreterPath": "/opt/conda/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "r.rterm.linux": "/opt/conda/bin/R",
+        "files.watcherExclude": {
+          "**/.git/objects/**": true,
+          "**/.git/subtree-cache/**": true,
+          "**/node_modules/*/**": true,
+          "**/.tracking/checkpoints/**": true
+        }
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "REditorSupport.r",
+        "REditorSupport.r-lsp",
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "streetsidesoftware.code-spell-checker",
+        "eamodio.gitlens",
+        "mhutchie.git-graph"
+      ]
+    }
+  },
+  "forwardPorts": [8888, 4000],
+  "postCreateCommand": "echo '\\n=================================\\nDNA Barcoding Analysis Container\\n=================================\\n\\nWelcome! You are now in a fully configured bioinformatics environment.\\n\\nAvailable tools:\\n- MAFFT, MUSCLE, IQ-TREE, BLAST\\n- Python 3.10 + BioPython\\n- R 4.3 + ape, ggtree\\n- Jupyter Lab\\n\\nGet started:\\n  cd 01_linux_basics     # Start learning\\n  jupyter lab            # Launch Jupyter\\n  python --version       # Check Python\\n  R --version            # Check R\\n\\nHappy Barcoding!\\n'",
+  "remoteUser": "root",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "workspaceFolder": "/workspace",
+  "features": {}
+}
