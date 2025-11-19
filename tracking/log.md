@@ -124,3 +124,26 @@ next:
   - create GitHub Classroom template repository
   - check GitHub Actions container build status
   - optional: create alignment variation visualization (large/small letters)
+
+## 2025-11-18 – claude-sonnet – dockerfile-debugging
+actions:
+  - debugged repeated GitHub Actions build failures (6+ attempts)
+  - investigated actual error logs: colorls gem native extension compilation failing
+  - identified root cause: missing C/C++ compilers (cmake, make, gcc, gxx)
+  - systematically compared RNA-seq Dockerfile vs DNA-barcoding Dockerfile
+  - added missing dependencies:
+    - compilers: cmake, make, gcc, gxx (conda)
+    - system libs: software-properties-common, dirmngr, lsb-release, gnupg2 (apt)
+  - removed unnecessary packages (datamash, openjdk - not needed for DNA barcoding)
+  - verified tool availability in conda channels (mafft, iqtree, blast all available)
+results:
+  - Fixed Dockerfile now matches RNA-seq structure for critical dependencies
+  - Commit ca42519 pushed with compiler fixes
+  - Build #7 triggered on GitHub Actions
+  - Learned: colorls requires native C extension compilation (clocale gem)
+next:
+  - monitor build #7 for success
+  - if successful: test container locally, deploy agents for module READMEs
+  - if failed: investigate missing Ruby development headers
+  - update master pipeline
+  - create GitHub Classroom template
