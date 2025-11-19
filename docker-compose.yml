@@ -9,6 +9,8 @@ services:
       - ./data:/workspace/data
       # Mount results directory to save outputs
       - ./results:/workspace/results
+      # Mount analysis modules
+      - ./modules:/workspace/modules
     working_dir: /workspace
     stdin_open: true
     tty: true
