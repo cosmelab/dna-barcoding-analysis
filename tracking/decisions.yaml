@@ -141,3 +141,33 @@ decisions:
   - pedagogy
   - workflow
   - ux
+- id: D012
+  date: '2025-11-19'
+  question: Should containers ever be built locally on Mac?
+  decision: 'ABSOLUTELY NOT. NEVER build Linux containers on Mac. ONLY use GitHub Actions
+    for builds. Container available at ghcr.io/cosmelab/dna-barcoding-analysis:latest
+    and docker.io/cosmelab/dna-barcoding-analysis:latest. Pull only, never build.'
+  rationale: 'Building Linux containers on Mac causes platform issues. GitHub Actions
+    builds for correct platform (linux/amd64). Students and developers MUST pull
+    pre-built images.'
+  status: superseded
+  superseded_by: D013
+  tags:
+  - docker
+  - build
+  - mac
+- id: D013
+  date: '2025-11-19'
+  question: Should we build multi-architecture containers to support Apple Silicon Macs?
+  decision: 'YES - Build for both linux/amd64 and linux/arm64. All required packages
+    verified available: bioconda packages (mafft, iqtree, blast) and lsd-rs binaries
+    exist for both architectures. Docker automatically pulls correct architecture.'
+  rationale: 'Apple Silicon Macs (M1/M2/M3) are arm64 architecture. Building native
+    arm64 images eliminates emulation overhead. All dependencies confirmed available
+    for linux-aarch64. No performance penalty, better user experience.'
+  status: active
+  tags:
+  - docker
+  - build
+  - multi-arch
+  - arm64

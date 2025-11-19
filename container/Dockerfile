@@ -53,12 +53,20 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
     pip \
     -y && micromamba clean --all --yes
 
-# Install lsd manually (not available in conda-forge)
-RUN wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 3 \
-    https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-x86_64-unknown-linux-gnu.tar.gz && \
-    tar -xzf lsd-v1.1.5-x86_64-unknown-linux-gnu.tar.gz && \
-    mv lsd-v1.1.5-x86_64-unknown-linux-gnu/lsd /usr/local/bin/ && \
-    rm -rf lsd-v1.1.5-*
+# Install lsd manually (not available in conda-forge) - multi-arch support
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        LSD_ARCH="x86_64-unknown-linux-gnu"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        LSD_ARCH="aarch64-unknown-linux-gnu"; \
+    else \
+        echo "Unsupported architecture: $ARCH"; exit 1; \
+    fi && \
+    wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 3 \
+    https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-${LSD_ARCH}.tar.gz && \
+    tar -xzf lsd-v1.2.0-${LSD_ARCH}.tar.gz && \
+    mv lsd-v1.2.0-${LSD_ARCH}/lsd /usr/local/bin/ && \
+    rm -rf lsd-v1.2.0-*
 
 # Install Ruby and colorls
 RUN --mount=type=cache,target=/opt/conda/pkgs \
