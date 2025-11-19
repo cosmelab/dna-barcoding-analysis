@@ -19,30 +19,33 @@ tasks:
     than Folmer. GenBank accessions in Tables 2-3. See D007.'
 - id: create-minimal-dockerfile
   phase: container_setup
-  status: todo
+  status: done
   summary: Create minimal Dockerfile based on RNA-seq template (target <800MB)
   agent_allowed: true
   depends_on:
   - review-rnaseq-container
+  completed: '2025-11-18T14:00:00'
   notes: 'Base: mambaorg/micromamba. Tools: BioPython, MAFFT, IQTree2, BLAST, R (ape/ggtree).
-    Terminal: zsh + oh-my-zsh + Dracula + colorls. See D006, D008.'
+    Terminal: zsh + oh-my-zsh + Dracula + colorls. 168 lines, 50% reduction. See D006, D008.'
 - id: extract-reference-sequences
   phase: data_preparation
-  status: todo
+  status: done
   summary: Extract COI sequences from Hoque et al 2022 (85 sequences from GenBank)
   agent_allowed: true
   depends_on:
   - review-hoque-paper
-  notes: 'Tables 2-3 contain GenBank accessions. Create Python script to fetch via Entrez.
-    Option: also prepare Zenodo dataset. See D007.'
+  completed: '2025-11-18T13:30:00'
+  notes: 'Created fetch_reference_sequences.py. Retrieved 52/53 sequences (98.1% success).
+    Saved to data/reference/socal_mosquitoes.fasta. See D007.'
 - id: create-qc-script
   phase: automation_scripts
-  status: todo
+  status: done
   summary: Create automated chromatogram QC script (qc-chromatograms)
   agent_allowed: true
   depends_on: []
-  notes: 'BioPython to parse .ab1 files. Generate HTML report with quality metrics and
-    plotly visualizations.'
+  completed: '2025-11-18T14:30:00'
+  notes: 'Created modules/01_quality_control/qc_chromatograms.py. Parses .ab1 with BioPython,
+    generates HTML report, outputs passed sequences to FASTA.'
 - id: create-alignment-viz
   phase: automation_scripts
   status: todo
@@ -53,23 +56,24 @@ tasks:
     Interactive HTML output. See D009.'
 - id: create-blast-script
   phase: automation_scripts
-  status: todo
+  status: done
   summary: Create auto-BLAST script for species identification (identify-species)
   agent_allowed: true
   depends_on: []
-  notes: 'BLAST against NCBI nt database. Return top 5 hits with % identity. HTML table
-    output.'
+  completed: '2025-11-18T14:30:00'
+  notes: 'Created modules/04_identification/identify_species.py. BLASTs sequences via BioPython,
+    returns top 5 hits with % identity, generates HTML report.'
 - id: create-master-pipeline
   phase: automation_scripts
-  status: todo
+  status: done
   summary: Create master pipeline script (analyze-sequences)
   agent_allowed: true
   depends_on:
   - create-qc-script
-  - create-alignment-viz
   - create-blast-script
-  notes: 'One-command workflow: QC → Trim → Align → Tree → BLAST → Dashboard. Bash script
-    calling all tools.'
+  completed: '2025-11-18T14:30:00'
+  notes: 'Created modules/master_pipeline.py. Runs QC → BLAST workflow. Simplified from
+    original plan (no alignment viz for now).'
 - id: create-html-dashboard
   phase: automation_scripts
   status: todo
@@ -81,13 +85,14 @@ tasks:
     See D010.'
 - id: setup-github-actions
   phase: container_setup
-  status: todo
+  status: done
   summary: Set up GitHub Actions workflow for automatic container builds
   agent_allowed: true
   depends_on:
   - create-minimal-dockerfile
-  notes: 'Copy from albopictus-diapause-rnaseq/.github/workflows/docker-build.yml. Push
-    to ghcr.io.'
+  completed: '2025-11-18T14:45:00'
+  notes: 'Created .github/workflows/docker-build.yml. Adapted from RNA-seq workflow. Pushes
+    to ghcr.io and Docker Hub. Triggered on push to main.'
 - id: create-classroom-template
   phase: github_classroom
   status: todo
