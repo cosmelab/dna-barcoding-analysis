@@ -1,0 +1,16 @@
+label,wing_length_mm,body_size_mm,biting_rate,flight_distance_km,insecticide_resistance,temp_preference_C
+Aedes_aegypti_CA_2023,2.48,4.2,8,0.4,0.82,28
+Aedes_aegypti_FL_2023,2.55,4.3,7,0.5,0.75,29
+Aedes_albopictus_HI_2023,2.35,3.8,9,0.8,0.88,26
+Aedes_albopictus_TX_2023,2.42,3.9,8,0.7,0.85,27
+Culex_pipiens_NY_2023,3.15,5.1,6,2.5,0.58,22
+Culex_pipiens_IL_2023,3.08,5.0,5,2.3,0.42,21
+Culex_pipiens_CA_2022,3.22,5.2,6,2.8,0.55,23
+Culex_quinquefasciatus_CA_2023,3.05,4.9,7,2.0,0.68,25
+Culex_quinquefasciatus_TX_2023,3.18,5.1,7,2.2,0.62,26
+Anopheles_gambiae_Kenya_2022,2.85,4.5,9,3.5,0.28,24
+Anopheles_gambiae_Lab_2022,2.92,4.6,8,3.2,0.22,25
+Anopheles_stephensi_India_2022,2.75,4.3,9,3.8,0.35,26
+Anopheles_stephensi_Lab_2022,2.82,4.4,9,3.5,0.25,25
+Anopheles_quadrimaculatus_USA_2023,2.95,4.7,7,4.0,0.18,22
+Anopheles_freeborni_CA_2023,2.88,4.6,8,3.7,0.32,23

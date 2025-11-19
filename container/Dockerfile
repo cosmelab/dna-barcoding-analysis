@@ -164,10 +164,6 @@ RUN mkdir -p /workspace/data/my_sequences \
     /workspace/results \
     /workspace/modules
 
-# Copy modules
-COPY ../modules /workspace/modules
-COPY ../data/reference /workspace/data/reference
-
 # Copy and install wrapper scripts
 COPY wrapper_scripts/* /usr/local/bin/
 RUN chmod +x /usr/local/bin/*

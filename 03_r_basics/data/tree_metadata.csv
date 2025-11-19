@@ -1,0 +1,16 @@
+label,genus,species,location,country,year,collector,disease_vector,habitat,sample_quality
+Aedes_aegypti_CA_2023,Aedes,aegypti,California,USA,2023,Smith J,Dengue,Urban,High
+Aedes_aegypti_FL_2023,Aedes,aegypti,Florida,USA,2023,Johnson M,Dengue,Urban,High
+Aedes_albopictus_HI_2023,Aedes,albopictus,Hawaii,USA,2023,Williams R,Dengue,Urban,Medium
+Aedes_albopictus_TX_2023,Aedes,albopictus,Texas,USA,2023,Brown K,Dengue,Suburban,High
+Culex_pipiens_NY_2023,Culex,pipiens,New York,USA,2023,Davis L,West Nile,Urban,High
+Culex_pipiens_IL_2023,Culex,pipiens,Illinois,USA,2023,Miller P,West Nile,Urban,Medium
+Culex_pipiens_CA_2022,Culex,pipiens,California,USA,2022,Wilson T,West Nile,Suburban,High
+Culex_quinquefasciatus_CA_2023,Culex,quinquefasciatus,California,USA,2023,Moore A,West Nile,Urban,High
+Culex_quinquefasciatus_TX_2023,Culex,quinquefasciatus,Texas,USA,2023,Taylor B,West Nile,Urban,Medium
+Anopheles_gambiae_Kenya_2022,Anopheles,gambiae,Kilifi,Kenya,2022,Ochieng P,Malaria,Rural,High
+Anopheles_gambiae_Lab_2022,Anopheles,gambiae,Laboratory,USA,2022,Lab Colony,Malaria,Laboratory,High
+Anopheles_stephensi_India_2022,Anopheles,stephensi,Maharashtra,India,2022,Patel R,Malaria,Urban,Medium
+Anopheles_stephensi_Lab_2022,Anopheles,stephensi,Laboratory,USA,2022,Lab Colony,Malaria,Laboratory,High
+Anopheles_quadrimaculatus_USA_2023,Anopheles,quadrimaculatus,Arkansas,USA,2023,Anderson C,None,Rural,High
+Anopheles_freeborni_CA_2023,Anopheles,freeborni,California,USA,2023,Garcia E,None,Agricultural,Medium
