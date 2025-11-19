@@ -17,34 +17,80 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 
-def plot_chromatogram(ab1_file, max_bases=100):
-    """Generate chromatogram plot and return as base64 PNG"""
+def plot_chromatogram(ab1_file, start_base=50, num_bases=150):
+    """Generate chromatogram plot with sequence overlay
+
+    Shows middle region by default (skipping poor quality start/end)
+    """
     try:
         with open(ab1_file, 'rb') as f:
             record = AbiIO.AbiIterator(f).__next__()
 
-        # Get trace data
-        channels = ['DATA9', 'DATA10', 'DATA11', 'DATA12']  # G, A, T, C
-        colors = ['black', 'green', 'red', 'blue']
-        labels = ['G', 'A', 'T', 'C']
+        # Get trace data and base calls
+        channels = {'DATA9': 'G', 'DATA10': 'A', 'DATA11': 'T', 'DATA12': 'C'}
+        colors = {'G': 'black', 'A': 'green', 'T': 'red', 'C': 'blue'}
 
-        fig, ax = plt.subplots(figsize=(15, 4))
+        # Get base calls and positions
+        seq_record = SeqIO.read(ab1_file, 'abi')
+        sequence = str(seq_record.seq)
+        quality = seq_record.letter_annotations.get('phred_quality', [])
 
-        # Plot first max_bases
-        for channel, color, label in zip(channels, colors, labels):
+        # Get peak positions (where each base was called)
+        peak_positions = record.annotations['abif_raw'].get('PLOC1', [])
+
+        # Determine region to show
+        end_base = min(start_base + num_bases, len(sequence))
+        if start_base >= len(sequence):
+            start_base = max(0, len(sequence) - num_bases)
+            end_base = len(sequence)
+
+        # Get trace region
+        if peak_positions and len(peak_positions) > end_base:
+            trace_start = peak_positions[start_base] if start_base < len(peak_positions) else 0
+            trace_end = peak_positions[end_base-1] if end_base-1 < len(peak_positions) else len(record.annotations['abif_raw']['DATA9'])
+        else:
+            # Approximate if no peak positions
+            trace_start = start_base * 10
+            trace_end = end_base * 10
+
+        fig, ax = plt.subplots(figsize=(18, 5))
+
+        # Plot traces
+        for channel, base in channels.items():
             if channel in record.annotations['abif_raw']:
-                trace = record.annotations['abif_raw'][channel][:max_bases * 10]  # Approximate
-                ax.plot(trace, color=color, label=label, linewidth=0.5)
+                trace = record.annotations['abif_raw'][channel][trace_start:trace_end]
+                ax.plot(trace, color=colors[base], label=base, linewidth=0.8, alpha=0.7)
 
-        ax.set_xlabel('Position')
-        ax.set_ylabel('Signal Intensity')
-        ax.set_title(f'Chromatogram: {ab1_file.name} (first {max_bases} bases)')
-        ax.legend()
-        ax.grid(True, alpha=0.3)
+        # Add base calls on top
+        if peak_positions and len(peak_positions) > end_base:
+            for i in range(start_base, end_base):
+                if i < len(sequence) and i < len(peak_positions):
+                    pos = peak_positions[i] - trace_start
+                    base = sequence[i]
+
+                    # Color code by quality
+                    qual = quality[i] if i < len(quality) else 0
+                    if qual >= 30:
+                        qual_color = 'darkgreen'
+                    elif qual >= 20:
+                        qual_color = 'orange'
+                    else:
+                        qual_color = 'red'
+
+                    ax.text(pos, ax.get_ylim()[1] * 0.95, base,
+                           ha='center', va='top', fontsize=8,
+                           color=qual_color, fontweight='bold')
+
+        ax.set_xlabel('Trace Position', fontsize=10)
+        ax.set_ylabel('Signal Intensity', fontsize=10)
+        ax.set_title(f'{ab1_file.name} - Bases {start_base}-{end_base} (green=Q≥30, orange=Q≥20, red=Q<20)',
+                    fontsize=11, fontweight='bold')
+        ax.legend(loc='upper right')
+        ax.grid(True, alpha=0.2)
 
         # Convert to base64
         buf = BytesIO()
-        plt.savefig(buf, format='png', dpi=100, bbox_inches='tight')
+        plt.savefig(buf, format='png', dpi=120, bbox_inches='tight')
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close()
@@ -95,7 +141,7 @@ def analyze_chromatogram(ab1_file, output_dir=None):
         }
 
 def generate_html_report(results, output_file):
-    """Generate simple HTML report"""
+    """Generate improved HTML report with collapsible chromatograms"""
     from datetime import datetime
 
     html = """<!DOCTYPE html>
@@ -103,19 +149,56 @@ def generate_html_report(results, output_file):
 <head>
     <title>DNA Barcoding QC Report</title>
     <style>
-        body {{ font-family: Arial, sans-serif; margin: 20px; }}
+        body {{ font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }}
         h1 {{ color: #333; }}
-        table {{ border-collapse: collapse; width: 100%; margin-top: 20px; }}
-        th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
-        th {{ background-color: #4CAF50; color: white; }}
+        .summary {{ background-color: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+        table {{ border-collapse: collapse; width: 100%; background-color: white; }}
+        th, td {{ border: 1px solid #ddd; padding: 12px; text-align: left; }}
+        th {{ background-color: #4CAF50; color: white; position: sticky; top: 0; }}
         .pass {{ background-color: #d4edda; }}
         .fail {{ background-color: #f8d7da; }}
         .error {{ background-color: #fff3cd; }}
+        .chromatogram-row {{ background-color: #fafafa; }}
+        .chromatogram-container {{
+            padding: 20px;
+            overflow-x: auto;
+            max-width: 100%;
+        }}
+        .chromatogram-container img {{
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }}
+        details {{ margin: 10px 0; }}
+        summary {{
+            cursor: pointer;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 4px;
+            font-weight: bold;
+        }}
+        summary:hover {{ background-color: #c8e6c9; }}
+        .sequence-display {{
+            font-family: 'Courier New', monospace;
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre;
+            font-size: 11px;
+        }}
     </style>
 </head>
 <body>
-    <h1>Quality Control Report</h1>
-    <p>Generated: {date}</p>
+    <div class="summary">
+        <h1>DNA Barcoding Quality Control Report</h1>
+        <p><strong>Generated:</strong> {date}</p>
+        <p><strong>Note:</strong> Chromatograms show middle region (bases 50-200) where quality is typically highest.
+        Click "Show Chromatogram" to view sequence traces.</p>
+    </div>
     <table>
         <tr>
             <th>File</th>
@@ -147,11 +230,23 @@ def generate_html_report(results, output_file):
 """
             html += row
 
-            # Add chromatogram visualization if available
+            # Add chromatogram visualization in collapsible section
             if "chromatogram_img" in result and result["chromatogram_img"]:
-                html += f"""        <tr class="{row_class}">
+                # Show first 60 bases of sequence as preview
+                seq_preview = result.get('sequence', '')[:60] + '...' if len(result.get('sequence', '')) > 60 else result.get('sequence', '')
+
+                html += f"""        <tr class="chromatogram-row">
             <td colspan="5">
-                <img src="data:image/png;base64,{result['chromatogram_img']}" style="width:100%; max-width:1000px;">
+                <details>
+                    <summary>📊 Show Chromatogram & Sequence</summary>
+                    <div class="chromatogram-container">
+                        <h4>Chromatogram View (Bases 50-200)</h4>
+                        <p><em>Base colors indicate quality: Green (Q≥30), Orange (Q≥20), Red (Q&lt;20)</em></p>
+                        <img src="data:image/png;base64,{result['chromatogram_img']}" alt="Chromatogram">
+                        <h4>Full Sequence ({result['length']} bp)</h4>
+                        <div class="sequence-display">{result.get('sequence', 'N/A')}</div>
+                    </div>
+                </details>
             </td>
         </tr>
 """

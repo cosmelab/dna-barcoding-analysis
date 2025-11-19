@@ -1,10 +1,9 @@
 project: dna-barcoding-analysis
-current_phase: automation_scripts
-current_task: create-alignment-viz
-last_updated: '2025-11-18T15:00:00'
+current_phase: documentation
+current_task: create-module-readmes
+last_updated: '2025-11-18T18:30:00'
 active_jobs:
-  - GitHub Actions building container (triggered at 14:45)
-  - waiting for user to provide test chromatograms
+  - GitHub Actions container build (should be complete - check status)
 blocking_issues: []
 target_ready_date: '2025-11-19'
 lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products)
@@ -13,7 +12,16 @@ strategy: 'Minimal container (<800MB), automated scripts for non-coders, single 
 completed_today:
   - Minimal Dockerfile (168 lines, <800MB target)
   - Reference sequences fetched (52 mosquito COI)
-  - QC script with HTML reports
-  - BLAST identification script
-  - Master pipeline script
+  - Module 0: F/R sequence assembly with consensus generation
+  - Module 1: QC script with chromatogram visualization (collapsible HTML, bases 50-200)
+  - Module 2: MAFFT alignment wrapper
+  - Module 3: IQ-TREE phylogeny with Bio.Phylo visualization
+  - Module 4: BLAST identification script
+  - Master pipeline script (basic version)
   - GitHub Actions workflow configured and triggered
+  - Tested with real UC genomics data (8 samples, 4 passed QC)
+remaining_tasks:
+  - Create module README files (00-04)
+  - Update master pipeline to include all modules
+  - Create GitHub Classroom template
+  - Optional: alignment visualization with variation plots

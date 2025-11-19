@@ -40,12 +40,42 @@ tasks:
 - id: create-qc-script
   phase: automation_scripts
   status: done
-  summary: Create automated chromatogram QC script (qc-chromatograms)
+  summary: Create automated chromatogram QC script with visualization
   agent_allowed: true
   depends_on: []
-  completed: '2025-11-18T14:30:00'
+  completed: '2025-11-18T18:00:00'
   notes: 'Created modules/01_quality_control/qc_chromatograms.py. Parses .ab1 with BioPython,
-    generates HTML report, outputs passed sequences to FASTA.'
+    embeds chromatogram plots with sequence overlay, collapsible HTML report. Shows bases 50-200
+    (middle region) to avoid poor quality ends. Quality-colored bases (green/orange/red).'
+- id: create-assembly-script
+  phase: automation_scripts
+  status: done
+  summary: Create F/R sequence assembly script (merge-forward-reverse)
+  agent_allowed: true
+  depends_on:
+  - create-qc-script
+  completed: '2025-11-18T17:30:00'
+  notes: 'Created modules/00_assembly/merge_forward_reverse.py. Pairs F/R sequences by sample
+    name, generates consensus via reverse-complement merging. Tested with AT_ROCK samples.'
+- id: create-alignment-script
+  phase: automation_scripts
+  status: done
+  summary: Create MAFFT alignment wrapper (align-sequences)
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-18T17:00:00'
+  notes: 'Created modules/02_alignment/align_sequences.py. Runs MAFFT, generates alignment
+    stats (gaps, lengths), HTML report.'
+- id: create-phylogeny-script
+  phase: automation_scripts
+  status: done
+  summary: Create IQ-TREE phylogeny script with Bio.Phylo visualization
+  agent_allowed: true
+  depends_on:
+  - create-alignment-script
+  completed: '2025-11-18T17:00:00'
+  notes: 'Created modules/03_phylogeny/build_tree.py. Runs IQ-TREE with auto model selection
+    and 1000 ultrafast bootstrap. Generates tree.png with Bio.Phylo. Includes FigTree instructions.'
 - id: create-alignment-viz
   phase: automation_scripts
   status: todo
@@ -53,7 +83,7 @@ tasks:
   agent_allowed: true
   depends_on: []
   notes: 'Based on Hoque Fig 1 - large/small letters for conserved/variable positions.
-    Interactive HTML output. See D009.'
+    Interactive HTML output. Optional enhancement. See D009.'
 - id: create-blast-script
   phase: automation_scripts
   status: done
@@ -105,9 +135,36 @@ tasks:
     docker-compose.yml. See D011.'
 - id: test-with-chromatograms
   phase: testing
-  status: todo
+  status: done
   summary: Test complete pipeline with real chromatogram data
   agent_allowed: true
   depends_on:
-  - create-classroom-template
-  notes: 'User will provide sample chromatograms. Test end-to-end workflow and debug.'
+  - create-qc-script
+  - create-assembly-script
+  completed: '2025-11-18T18:00:00'
+  notes: 'Tested with 8 UC genomics core samples (Nov 13, 2025). Results: 4 passed (AT99, AT_ROCK),
+    4 failed (AT83, AT94). Successfully merged AT_ROCK F+R. Chromatogram visualization working.'
+- id: create-module-readmes
+  phase: documentation
+  status: todo
+  summary: Create README files for each module (00-04)
+  agent_allowed: true
+  depends_on:
+  - create-assembly-script
+  - create-qc-script
+  - create-alignment-script
+  - create-phylogeny-script
+  - create-blast-script
+  notes: 'Write student-friendly README for each module explaining usage, inputs, outputs,
+    examples. Include troubleshooting tips.'
+- id: update-master-pipeline
+  phase: automation_scripts
+  status: todo
+  summary: Update master pipeline to include all modules
+  agent_allowed: true
+  depends_on:
+  - create-assembly-script
+  - create-alignment-script
+  - create-phylogeny-script
+  notes: 'Update master_pipeline.py to run: Assembly → QC → Alignment → Phylogeny → BLAST.
+    Add command-line flags to skip optional steps.'

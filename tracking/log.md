@@ -94,3 +94,33 @@ next:
   - create module README files for students
   - create GitHub Classroom template repository structure
   - test end-to-end with real chromatograms when user provides samples
+
+## 2025-11-18 – claude-sonnet – testing-and-visualization
+actions:
+  - received real test data from UC genomics core (8 .ab1 files from Nov 13)
+  - tested QC script with real chromatograms
+  - created Module 0: F/R sequence assembly (merge_forward_reverse.py)
+  - created Module 2: MAFFT alignment wrapper (align_sequences.py)
+  - created Module 3: IQ-TREE phylogeny with Bio.Phylo (build_tree.py)
+  - improved chromatogram visualization based on user feedback:
+    - added sequence overlay on traces (color-coded by quality)
+    - show middle region (bases 50-200) avoiding poor quality ends
+    - collapsible HTML sections for better layout
+    - full sequence display with horizontal scroll
+    - quality legend: green (Q≥30), orange (Q≥20), red (Q<20)
+  - updated tracking system with all completed tasks
+results:
+  - All 5 modules complete (00-04): Assembly, QC, Alignment, Phylogeny, Identification
+  - Real data test results:
+    - 8 samples analyzed
+    - 4 passed QC: AT99F/R (93% high quality), AT_ROCK_F/R (83% high quality)
+    - 4 failed QC: AT83F/R, AT94F/R (2-10% high quality)
+    - AT_ROCK F+R successfully merged into consensus
+  - Improved HTML layout: professional, clean, student-friendly
+  - Chromatogram visualization shows actual base calls with quality scores
+next:
+  - create README files for each module (student documentation)
+  - update master pipeline to integrate all 5 modules
+  - create GitHub Classroom template repository
+  - check GitHub Actions container build status
+  - optional: create alignment variation visualization (large/small letters)
