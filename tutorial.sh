@@ -87,7 +87,7 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/01_quality_control/qc_chromatograms.py \
   data/test_data/ \
-  results/tutorial/qc/ \
+  results/tutorial/01_qc/ \
   --open
 
 echo ""
@@ -139,8 +139,8 @@ echo ""
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/02_consensus/create_consensus.py \
-  results/tutorial/qc/passed_sequences.fasta \
-  results/tutorial/consensus/ \
+  results/tutorial/01_qc/passed_sequences.fasta \
+  results/tutorial/02_consensus/ \
   --pairs-only \
   --open
 
@@ -186,11 +186,11 @@ echo ""
 echo -e "${BLUE}Combining your sequences with reference database...${NC}"
 echo ""
 
-cat results/tutorial/consensus/consensus_sequences.fasta \
+cat results/tutorial/02_consensus/consensus_sequences.fasta \
     data/reference_sequences/socal_mosquitoes.fasta \
-    > results/tutorial/consensus/combined_with_references.fasta
+    > results/tutorial/02_consensus/combined_with_references.fasta
 
-NUM_SEQS=$(grep -c "^>" results/tutorial/consensus/combined_with_references.fasta)
+NUM_SEQS=$(grep -c "^>" results/tutorial/02_consensus/combined_with_references.fasta)
 
 echo -e "${GREEN}✓ Combined sequences successfully!${NC}"
 echo ""
@@ -241,8 +241,8 @@ echo ""
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/03_alignment/align_sequences.py \
-  results/tutorial/consensus/combined_with_references.fasta \
-  results/tutorial/alignment/
+  results/tutorial/02_consensus/combined_with_references.fasta \
+  results/tutorial/03_alignment/
 
 echo ""
 echo -e "${GREEN}✓ Alignment complete!${NC}"
@@ -253,15 +253,15 @@ echo ""
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/04_phylogeny/build_tree.py \
-  results/tutorial/alignment/aligned_sequences.fasta \
-  results/tutorial/phylogeny/
+  results/tutorial/03_alignment/aligned_sequences.fasta \
+  results/tutorial/04_phylogeny/
 
 echo ""
 echo -e "${GREEN}✓ Tree construction complete!${NC}"
 echo ""
 echo "Your tree has been saved as:"
-echo "  • results/tutorial/phylogeny/tree.png (simple visualization)"
-echo "  • results/tutorial/phylogeny/tree.treefile (for FigTree)"
+echo "  • results/tutorial/04_phylogeny/tree.png (simple visualization)"
+echo "  • results/tutorial/04_phylogeny/tree.treefile (for FigTree)"
 echo ""
 echo "LOOK AT THE TREE! See where your samples cluster with known species."
 echo ""
@@ -308,8 +308,8 @@ echo ""
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/05_identification/identify_species.py \
-  results/tutorial/consensus/consensus_sequences.fasta \
-  results/tutorial/blast/
+  results/tutorial/02_consensus/consensus_sequences.fasta \
+  results/tutorial/05_blast/
 
 echo ""
 echo -e "${GREEN}✓ Species identification complete!${NC}"
@@ -345,11 +345,11 @@ CONGRATULATIONS! You've learned the complete DNA barcoding workflow:
 
 All your results are saved in: results/tutorial/
 
-  📊 QC report:        results/tutorial/qc/qc_report.html
-  🎯 Consensus report: results/tutorial/consensus/consensus_report.html
-  📐 Alignment report: results/tutorial/alignment/alignment_report.html
-  🌳 Tree files:       results/tutorial/phylogeny/
-  🏷️  BLAST results:   results/tutorial/blast/identification_report.html
+  📊 QC report:        results/tutorial/01_qc/qc_report.html
+  🎯 Consensus report: results/tutorial/02_consensus/consensus_report.html
+  📐 Alignment report: results/tutorial/03_alignment/alignment_report.html
+  🌳 Tree files:       results/tutorial/04_phylogeny/
+  🏷️  BLAST results:   results/tutorial/05_blast/identification_report.html
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  NEXT STEPS:

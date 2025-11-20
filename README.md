@@ -6,32 +6,19 @@ Complete workflow for analyzing Sanger sequencing chromatograms (.ab1 files) to 
 
 ---
 
-## 🎯 Quick Start for Students
+## 🎯 For Students: READ THIS FIRST
 
-### Prerequisites
+**👉 See [start_here.md](start_here.md) for the complete beginner's guide**
 
-1. **Docker Desktop** must be running on your computer
-2. **Docker login** (required to pull the container):
-   ```bash
-   docker login
-   ```
-3. **Pull the analysis container**:
-   ```bash
-   docker pull cosmelab/dna-barcoding-analysis:latest
-   ```
-
-**Linux users:** You can use Podman instead of Docker Desktop:
-```bash
-sudo apt-get install podman
-podman pull ghcr.io/cosmelab/dna-barcoding-analysis:latest
-```
-
-### Get the Repository
+### Quick Version (3 commands):
 
 ```bash
-git clone https://github.com/cosmelab/dna-barcoding-analysis.git
-cd dna-barcoding-analysis
+./tutorial.sh              # STEP 1: Learn with test data (15 min)
+./run-analysis.sh          # STEP 2: Analyze YOUR data (5 min)
+# STEP 3: Fill out assignment.md
 ```
+
+**That's it!** Everything else below is reference documentation.
 
 ---
 
@@ -177,24 +164,42 @@ Look at the HTML report to see species matches and % identity scores.
 
 ```
 dna-barcoding-analysis/
+├── start_here.md                # 👈 START HERE! Complete beginner's guide
+├── tutorial.sh                  # Step 1: Interactive tutorial (test data)
+├── run-analysis.sh              # Step 2: Analyze YOUR data
+├── assignment.md                # Step 3: Fill this out
+│
 ├── data/
 │   ├── student_sequences/       # PUT YOUR .ab1 FILES HERE
-│   ├── test_data/               # Tutorial test data (8 .ab1 files)
-│   └── reference_sequences/     # 52 SoCal mosquito COI sequences
+│   ├── test_data/               # Tutorial uses this (8 .ab1 files)
+│   └── reference_sequences/     # 52 known SoCal mosquito sequences
+│
 ├── results/
-│   ├── tutorial/                # Tutorial results (from tutorial.sh)
-│   └── my_analysis/             # Your real analysis results
-├── modules/
+│   ├── tutorial/                # Tutorial output (test data)
+│   │   ├── 01_qc/
+│   │   ├── 02_consensus/
+│   │   ├── 03_alignment/
+│   │   ├── 04_phylogeny/
+│   │   └── 05_blast/
+│   └── my_analysis/             # YOUR analysis output
+│       ├── 01_qc/
+│       ├── 02_consensus/
+│       ├── 03_alignment/
+│       ├── 04_phylogeny/
+│       └── 05_blast/
+│
+├── modules/                     # Analysis scripts (used by container)
 │   ├── 01_quality_control/
 │   ├── 02_consensus/
 │   ├── 03_alignment/
 │   ├── 04_phylogeny/
 │   └── 05_identification/
-├── docs/
-│   ├── pipeline_workflow.md     # Visual guide to the workflow
-│   └── iqtree_guide.md          # Understanding phylogenetic trees
-├── tutorial.sh                  # INTERACTIVE TUTORIAL (RUN THIS FIRST!)
-└── assignment.md                # Assignment worksheet
+│
+├── docs/                        # Reference documentation
+│   ├── pipeline_workflow.md
+│   └── iqtree_guide.md
+│
+└── intro_to_cli/                # Optional CLI tutorials (separate course)
 ```
 
 ---
