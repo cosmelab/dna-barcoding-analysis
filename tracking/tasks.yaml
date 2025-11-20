@@ -321,3 +321,11 @@ tasks:
   agent_allowed: true
   depends_on: []
   notes: 'Students must: 1) Have Docker Desktop running, 2) Be logged in via CLI (docker login), 3) Pull cosmelab/dna-barcoding-analysis:latest. Document this clearly.'
+- id: create-simple-linear-instructions
+  phase: documentation
+  status: todo
+  summary: Create simple, linear instructions document - students copy/paste commands into terminal
+  agent_allowed: true
+  depends_on:
+  - create-getting-started-guide
+  notes: 'Very simple step-by-step. Students just copy commands and paste in terminal. No decisions, no branching. Linear workflow from start to finish. Include ASCII visual guide showing each step.'
