@@ -278,3 +278,46 @@ tasks:
   - create-phylogeny-script
   notes: 'Update master_pipeline.py to run: Assembly → QC → Alignment → Phylogeny → BLAST.
     Add command-line flags to skip optional steps.'
+- id: investigate-missing-tree-sample
+  phase: bug_investigation
+  status: todo
+  summary: Investigate if one of 4 consensus samples is missing from phylogenetic tree visualization
+  agent_allowed: true
+  depends_on: []
+  notes: 'User reported tree seems to be missing one sample. All 4 are in tree.treefile (AT-HV1, AT-HV3, AT-JM2, AT-WL2) but may not be visible in PNG. Check tree.png visualization.'
+- id: rename-results-directories
+  phase: repository_reorganization  
+  status: todo
+  summary: Rename results directories with linear numbering (01_qc, 02_consensus, 03_alignment, etc)
+  agent_allowed: true
+  depends_on: []
+  notes: 'Current: results/qc/, results/consensus/, results/alignment/, results/phylogeny/, results/blast/. Want: results/01_qc/, results/02_consensus/, results/03_alignment/, results/04_phylogeny/, results/05_blast/ for clarity'
+- id: create-scripts-directory
+  phase: repository_reorganization
+  status: todo
+  summary: Create scripts/ directory and organize helper scripts
+  agent_allowed: true
+  depends_on: []
+  notes: 'Move tutorial.sh and other scripts to scripts/ directory. Keep modules/ for analysis modules only.'
+- id: fix-tutorial-confusion
+  phase: repository_reorganization
+  status: todo
+  summary: Fix confusion between /tutorials/ directory and tutorial.sh script
+  agent_allowed: true
+  depends_on: []
+  notes: 'Currently have both /tutorials/ directory AND tutorial.sh in root. Very confusing! Decide on one approach and consolidate.'
+- id: create-getting-started-guide
+  phase: documentation
+  status: todo
+  summary: Create ASCII visual protocol for getting started (git clone → docker → tutorial)
+  agent_allowed: true
+  depends_on:
+  - fix-tutorial-confusion
+  notes: 'Students need clear step-by-step: 1) git clone, 2) docker login + pull container, 3) run tutorial with test_data, 4) run analysis on their data. Make it impossible to mess up.'
+- id: verify-docker-workflow
+  phase: documentation
+  status: todo
+  summary: Document and verify docker workflow (running, logged in, pull container)
+  agent_allowed: true
+  depends_on: []
+  notes: 'Students must: 1) Have Docker Desktop running, 2) Be logged in via CLI (docker login), 3) Pull cosmelab/dna-barcoding-analysis:latest. Document this clearly.'
