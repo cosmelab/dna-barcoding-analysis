@@ -328,3 +328,35 @@ next_steps:
   4. DETERMINE linear workflow (simplest path for beginners)
   5. CREATE comprehensive website using ENTM201L style (setup/index.html naming)
   6. SETUP GitHub Classroom assignment with autograding
+
+## 2025-11-19 – claude-sonnet – consensus-workflow-implementation
+actions:
+  - created consensus sequence module (modules/01b_consensus/)
+  - added --pairs-only flag to require complete F+R pairs
+  - updated workflow from 4 steps to 5 steps (QC → Consensus → Combine+Refs → Align+Tree → BLAST)
+  - tested complete pipeline on 30 student .ab1 files
+  - created interactive tutorial script (tutorial.sh) using test_data
+  - updated ASSIGNMENT.md with new 5-step workflow
+  - updated docs/pipeline_workflow.md with visual ASCII guide
+  - added decision D014 documenting consensus approach
+  - tested multi-arch container (docker.io/cosmelab/dna-barcoding-analysis:latest)
+results:
+  - consensus module working - pairs F/R reads, creates consensus sequences
+  - student data tested: 30 .ab1 files → 12 passed QC → 4 consensus sequences (26.7% success rate)
+  - phylogenetic tree includes 4 student samples + 52 reference mosquitoes (56 total)
+  - species identified: 1 Aedes albopictus (99.55%), 3 Culex pipiens (98-99%)
+  - tutorial script ready for student use (15-20 minutes, uses test_data)
+  - all documentation updated to reflect 5-step workflow
+blocking_issues:
+  - tree visualization may be missing one of 4 consensus samples (needs investigation)
+  - tutorial vs tutorials directory confusion (need to consolidate)
+  - results directories need linear numbering (01_qc, 02_consensus, etc)
+  - need ASCII getting started protocol for students
+next:
+  - investigate tree PNG to verify all 4 samples visible
+  - rename results directories with linear numbering
+  - create scripts/ directory and reorganize
+  - fix tutorial/tutorials confusion
+  - create simple linear getting started guide (git clone → docker → tutorial → analysis)
+  - document docker workflow clearly (Docker Desktop, docker login, pull container)
+  - create copy/paste instructions for students
