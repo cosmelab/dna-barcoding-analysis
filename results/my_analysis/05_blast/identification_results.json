@@ -1,0 +1,242 @@
+[
+  {
+    "sequence_id": "AT-HV1",
+    "status": "SUCCESS",
+    "top_hit": {
+      "accession": "PV252420",
+      "definition": "gi|2925820978|gb|PV252420.1| Aedes albopictus voucher Ab20CHV002 mitochondrion, complete genome",
+      "length": 16219,
+      "e_value": 0.0,
+      "identity": 657,
+      "alignment_length": 660,
+      "percent_identity": 99.55
+    },
+    "all_hits": [
+      {
+        "accession": "PV252420",
+        "definition": "gi|2925820978|gb|PV252420.1| Aedes albopictus voucher Ab20CHV002 mitochondrion, complete genome",
+        "length": 16219,
+        "e_value": 0.0,
+        "identity": 657,
+        "alignment_length": 660,
+        "percent_identity": 99.55
+      },
+      {
+        "accession": "PV252403",
+        "definition": "gi|2925820740|gb|PV252403.1| Aedes albopictus voucher Ab21FMDC002 mitochondrion, complete genome",
+        "length": 15562,
+        "e_value": 0.0,
+        "identity": 657,
+        "alignment_length": 660,
+        "percent_identity": 99.55
+      },
+      {
+        "accession": "PV252406",
+        "definition": "gi|2925820782|gb|PV252406.1| Aedes albopictus voucher Ab21FJLH002 mitochondrion, complete genome",
+        "length": 15931,
+        "e_value": 0.0,
+        "identity": 657,
+        "alignment_length": 660,
+        "percent_identity": 99.55
+      },
+      {
+        "accession": "PV252418",
+        "definition": "gi|2925820950|gb|PV252418.1| Aedes albopictus voucher Ab20GEPHL002 mitochondrion, complete genome",
+        "length": 16311,
+        "e_value": 0.0,
+        "identity": 657,
+        "alignment_length": 660,
+        "percent_identity": 99.55
+      },
+      {
+        "accession": "PV252430",
+        "definition": "gi|2925821118|gb|PV252430.1| Aedes albopictus voucher Ab15KWAJ004 mitochondrion, complete genome",
+        "length": 16583,
+        "e_value": 0.0,
+        "identity": 656,
+        "alignment_length": 660,
+        "percent_identity": 99.39
+      }
+    ]
+  },
+  {
+    "sequence_id": "AT-HV3",
+    "status": "SUCCESS",
+    "top_hit": {
+      "accession": "PV094723",
+      "definition": "gi|2923984190|gb|PV094723.1| Culex pipiens voucher RMNH.INS.1271356 mitochondrion, complete genome",
+      "length": 15587,
+      "e_value": 0.0,
+      "identity": 679,
+      "alignment_length": 692,
+      "percent_identity": 98.12
+    },
+    "all_hits": [
+      {
+        "accession": "PV094723",
+        "definition": "gi|2923984190|gb|PV094723.1| Culex pipiens voucher RMNH.INS.1271356 mitochondrion, complete genome",
+        "length": 15587,
+        "e_value": 0.0,
+        "identity": 679,
+        "alignment_length": 692,
+        "percent_identity": 98.12
+      },
+      {
+        "accession": "PQ588186",
+        "definition": "gi|2851468440|gb|PQ588186.1| Culex pipiens voucher Cx_pip_2 mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 679,
+        "alignment_length": 692,
+        "percent_identity": 98.12
+      },
+      {
+        "accession": "PV094722",
+        "definition": "gi|2923984176|gb|PV094722.1| Culex pipiens voucher RMNH.INS.1271355 mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 679,
+        "alignment_length": 692,
+        "percent_identity": 98.12
+      },
+      {
+        "accession": "NC_085461",
+        "definition": "gi|2666689003|ref|NC_085461.1| Culex hutchinsoni mitochondrion, complete genome >gi|2634332717|gb|OR127147.1| Culex hutchinsoni mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 679,
+        "alignment_length": 692,
+        "percent_identity": 98.12
+      },
+      {
+        "accession": "PQ587027",
+        "definition": "gi|2851464349|gb|PQ587027.1| Culex erraticus mitochondrion, complete genome",
+        "length": 15621,
+        "e_value": 0.0,
+        "identity": 679,
+        "alignment_length": 692,
+        "percent_identity": 98.12
+      }
+    ]
+  },
+  {
+    "sequence_id": "AT-JM2",
+    "status": "SUCCESS",
+    "top_hit": {
+      "accession": "PV094723",
+      "definition": "gi|2923984190|gb|PV094723.1| Culex pipiens voucher RMNH.INS.1271356 mitochondrion, complete genome",
+      "length": 15587,
+      "e_value": 0.0,
+      "identity": 663,
+      "alignment_length": 668,
+      "percent_identity": 99.25
+    },
+    "all_hits": [
+      {
+        "accession": "PV094723",
+        "definition": "gi|2923984190|gb|PV094723.1| Culex pipiens voucher RMNH.INS.1271356 mitochondrion, complete genome",
+        "length": 15587,
+        "e_value": 0.0,
+        "identity": 663,
+        "alignment_length": 668,
+        "percent_identity": 99.25
+      },
+      {
+        "accession": "MN389462",
+        "definition": "gi|1938538232|gb|MN389462.1| Culex quinquefasciatus isolate MC32 mitochondrion, complete genome",
+        "length": 15584,
+        "e_value": 0.0,
+        "identity": 663,
+        "alignment_length": 668,
+        "percent_identity": 99.25
+      },
+      {
+        "accession": "PQ588186",
+        "definition": "gi|2851468440|gb|PQ588186.1| Culex pipiens voucher Cx_pip_2 mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 663,
+        "alignment_length": 668,
+        "percent_identity": 99.25
+      },
+      {
+        "accession": "PV094722",
+        "definition": "gi|2923984176|gb|PV094722.1| Culex pipiens voucher RMNH.INS.1271355 mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 663,
+        "alignment_length": 668,
+        "percent_identity": 99.25
+      },
+      {
+        "accession": "PP558244",
+        "definition": "gi|2706109872|gb|PP558244.1| Culex pipiens isolate Cx.pi-5 cytochrome c oxidase subunit I (COX1) gene, partial cds; mitochondrial",
+        "length": 710,
+        "e_value": 0.0,
+        "identity": 663,
+        "alignment_length": 668,
+        "percent_identity": 99.25
+      }
+    ]
+  },
+  {
+    "sequence_id": "AT-WL2",
+    "status": "SUCCESS",
+    "top_hit": {
+      "accession": "PV094723",
+      "definition": "gi|2923984190|gb|PV094723.1| Culex pipiens voucher RMNH.INS.1271356 mitochondrion, complete genome",
+      "length": 15587,
+      "e_value": 0.0,
+      "identity": 669,
+      "alignment_length": 678,
+      "percent_identity": 98.67
+    },
+    "all_hits": [
+      {
+        "accession": "PV094723",
+        "definition": "gi|2923984190|gb|PV094723.1| Culex pipiens voucher RMNH.INS.1271356 mitochondrion, complete genome",
+        "length": 15587,
+        "e_value": 0.0,
+        "identity": 669,
+        "alignment_length": 678,
+        "percent_identity": 98.67
+      },
+      {
+        "accession": "MN389462",
+        "definition": "gi|1938538232|gb|MN389462.1| Culex quinquefasciatus isolate MC32 mitochondrion, complete genome",
+        "length": 15584,
+        "e_value": 0.0,
+        "identity": 669,
+        "alignment_length": 678,
+        "percent_identity": 98.67
+      },
+      {
+        "accession": "PQ588186",
+        "definition": "gi|2851468440|gb|PQ588186.1| Culex pipiens voucher Cx_pip_2 mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 669,
+        "alignment_length": 678,
+        "percent_identity": 98.67
+      },
+      {
+        "accession": "PV094722",
+        "definition": "gi|2923984176|gb|PV094722.1| Culex pipiens voucher RMNH.INS.1271355 mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 669,
+        "alignment_length": 678,
+        "percent_identity": 98.67
+      },
+      {
+        "accession": "PP558244",
+        "definition": "gi|2706109872|gb|PP558244.1| Culex pipiens isolate Cx.pi-5 cytochrome c oxidase subunit I (COX1) gene, partial cds; mitochondrial",
+        "length": 710,
+        "e_value": 0.0,
+        "identity": 669,
+        "alignment_length": 678,
+        "percent_identity": 98.67
+      }
+    ]
+  }
+]
