@@ -410,3 +410,85 @@ next:
   - decide on tutorials/ directory (keep for separate coding tutorials? rename? document clearly?)
   - optionally: rename results subdirs with linear numbering (or document that tutorial/ and my_analysis/ are student workspaces)
   - optionally: archive/remove modules/00_assembly/ and master_pipeline.py (or document as legacy)
+
+## 2025-11-19 – claude-sonnet – workflow-simplification-and-cleanup
+actions:
+  - fixed module numbering inconsistency (01b → 02, renumbered rest)
+  - removed ALL CAPS filename violations (WORKFLOW_SUMMARY.md → tracking/student_data_results.md)
+  - deleted duplicate tutorial script (learn-the-pipeline.sh)
+  - renamed tutorials/ → intro_to_cli/ (separate CLI course content)
+  - cleaned up results/ directory (deleted all testing artifacts)
+  - created run-analysis.sh (automated 5-step workflow script)
+  - created start_here.md (dead-simple 3-step guide for students)
+  - updated README.md with clear "START HERE" section
+  - updated tutorial.sh to use numbered results dirs (01_qc, 02_consensus, etc.)
+results:
+  - **modules now consistently numbered:** 01, 02, 03, 04, 05 (no more "01b")
+  - **no CAPS violations:** only README.md allowed in caps
+  - **clear data separation:**
+    - data/test_data/ → tutorial.sh → results/tutorial/
+    - data/student_sequences/ → run-analysis.sh → results/my_analysis/
+  - **linear numbering everywhere:** modules AND results use 01→05
+  - **student workflow simplified to 3 commands:**
+    1. ./tutorial.sh (learn with test data)
+    2. ./run-analysis.sh (analyze your data)
+    3. Fill out assignment.md
+  - **repository structure crystal clear:**
+    - start_here.md → entry point for students
+    - No way to get lost with numbered directories
+    - Clean separation of tutorial vs real analysis
+commits:
+  - d4b2688: Fix module numbering and cleanup repository
+  - 0064fd2: Simplify student workflow - make it impossible to get lost
+next:
+  - create modules/02_consensus/README.md (missing documentation)
+  - test run-analysis.sh end-to-end with student data
+  - verify tutorial.sh works with new numbered paths
+  - investigate tree visualization (all 4 samples visible?)
+  - update state.yaml with current status
+
+## 2025-11-20 – claude-sonnet – complete-workflow-testing
+actions:
+  - created modules/02_consensus/README.md (comprehensive documentation)
+  - fixed CRLF line endings in run-analysis.sh and tutorial.sh
+  - tested run-analysis.sh end-to-end with 30 student .ab1 files
+  - tested tutorial.sh with 8 test .ab1 files
+  - investigated tree visualization - confirmed all 4 samples present
+  - verified numbered result directories work correctly
+results:
+  - **run-analysis.sh tested successfully:**
+    - Step 1 (QC): 12/30 sequences passed
+    - Step 2 (Consensus): 4 complete F+R pairs created
+    - Step 3 (Combine): 56 sequences (4 student + 52 reference)
+    - Step 4 (Alignment + Tree): tree with 56 sequences, all 4 students visible
+    - Step 5 (BLAST): species identified:
+      - AT-HV1: Aedes albopictus (99.55%)
+      - AT-HV3: Culex pipiens (98.12%)
+      - AT-JM2: Culex pipiens (99.25%)
+      - AT-WL2: Culex pipiens (98.67%)
+  - **tutorial.sh tested successfully:**
+    - Uses data/test_data/ (8 .ab1 files)
+    - Creates results/tutorial/ with numbered subdirs
+    - 2 complete F+R pairs from test data
+    - All steps functional
+  - **tree visualization verified:**
+    - All 4 consensus samples present in tree.treefile
+    - tree.png generated (903KB, 3531x2370)
+    - No missing samples - previous concern resolved
+  - **directory structure clean:**
+    - results/my_analysis/01_qc, 02_consensus, 03_alignment, 04_phylogeny, 05_blast
+    - results/tutorial/01_qc, 02_consensus (+ more created during full run)
+    - Linear numbering throughout
+commits:
+  - 3a39674: Add consensus module README and fix line endings
+issues_resolved:
+  - Module numbering inconsistency (01b→02)
+  - CAPS filename violations
+  - Tutorial confusion (renamed tutorials/→intro_to_cli/)
+  - Results directory mess (cleaned up)
+  - CRLF line endings (/bin/bash^M error)
+  - Tree visualization concern (all 4 samples confirmed present)
+next:
+  - Repository ready for students
+  - All workflows tested and functional
+  - Documentation complete
