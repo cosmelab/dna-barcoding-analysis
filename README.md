@@ -1,487 +1,289 @@
-<div align="center">
-
 # 🧬 DNA Barcoding Analysis
 
-### From Chromatogram to Discovery: Automated COI Gene Analysis
+**ENTM201L Week 8 - Mosquito Species Identification**
 
-![Course Status](https://img.shields.io/badge/Status-In_Development-bd93f9?style=for-the-badge)
-![Fall 2025](https://img.shields.io/badge/Quarter-Fall_2025-bd93f9?style=for-the-badge)
-![UC Riverside](https://img.shields.io/badge/UC-Riverside-FFB81C?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-8be9fd?style=for-the-badge)
-![Docker](https://img.shields.io/badge/Docker-Ready-8be9fd?style=for-the-badge&logo=docker&logoColor=white)
-
-**[🚀 Quick Start](#quick-start)** | **[📦 Installation](#installation)** | **[📚 Usage](#usage)** | **[🎨 Features](#features)** | **[🐛 Troubleshooting](#troubleshooting)**
-
-</div>
+Complete workflow for analyzing Sanger sequencing chromatograms (.ab1 files) to identify mosquito species using COI barcoding.
 
 ---
 
-## 🎯 Overview
+## 🎯 Quick Start for Students
 
-**One Command. Complete Analysis. No Coding Required.**
+### Prerequisites
 
-A containerized workflow for students with **zero coding experience** to analyze DNA barcoding data from `.ab1` chromatograms to phylogenetic trees and species identification.
-
----
-
-<table>
-<tr>
-<td><strong>🧪 Input</strong></td>
-<td>Sanger chromatograms (.ab1 files)</td>
-</tr>
-<tr>
-<td><strong>⚙️ Process</strong></td>
-<td>One command: <code>analyze-sequences</code></td>
-</tr>
-<tr>
-<td><strong>📊 Output</strong></td>
-<td>Interactive HTML dashboard</td>
-</tr>
-<tr>
-<td><strong>👨‍🎓 Skill Level</strong></td>
-<td>Beginner (no coding required)</td>
-</tr>
-<tr>
-<td><strong>⏱️ Time</strong></td>
-<td>~5 minutes per analysis</td>
-</tr>
-<tr>
-<td><strong>🎓 Course</strong></td>
-<td>ENTM201L, UC Riverside</td>
-</tr>
-</table>
-
----
-
-## ✨ What You Get
-
-<details>
-<summary><strong>📊 Quality Control Report</strong></summary>
-<br>
-
-- Per-base quality scores (Phred)
-- Read length distribution
-- Pass/fail assessment
-- Trimming recommendations
-- Interactive plots
-
-</details>
-
-<details>
-<summary><strong>🧬 Sequence Alignment</strong></summary>
-<br>
-
-- Multiple sequence alignment (MAFFT)
-- **LARGE letters** = conserved positions
-- **small letters** = variable positions
-- Color-coded nucleotides
-- Based on Hoque et al. 2022 methodology
-
-</details>
-
-<details>
-<summary><strong>🌳 Phylogenetic Tree</strong></summary>
-<br>
-
-- Maximum likelihood tree (IQ-TREE2)
-- Bootstrap support values (1000 replicates)
-- Automatic model selection
-- Publication-quality figures (ggtree)
-- Your samples highlighted
-
-</details>
-
-<details>
-<summary><strong>🔍 Species Identification</strong></summary>
-<br>
-
-- Automatic BLAST against NCBI
-- Top 5 matches with % identity
-- Confidence assessment
-- Reference comparison with 85 mosquito COI sequences
-
-</details>
-
----
-
-## Quick Start
-
-### For Students (GitHub Classroom)
-
-1. **Accept the assignment** (link provided by instructor)
-2. **Clone your repo**:
+1. **Docker Desktop** must be running on your computer
+2. **Docker login** (required to pull the container):
    ```bash
-   git clone https://github.com/entm201l-fall2025/dna-barcoding-YOUR-USERNAME.git
-   cd dna-barcoding-YOUR-USERNAME
+   docker login
+   ```
+3. **Pull the analysis container**:
+   ```bash
+   docker pull cosmelab/dna-barcoding-analysis:latest
    ```
 
-3. **Add your chromatograms**:
-   ```bash
-   # Copy your .ab1 files to the data folder
-   cp ~/Desktop/*.ab1 data/my_sequences/
-   ```
-
-4. **Start the container**:
-   ```bash
-   docker-compose up -d
-   docker-compose exec dna-barcoding zsh
-   ```
-
-5. **Run the analysis** (inside container):
-   ```bash
-   analyze-sequences
-   ```
-
-6. **View results** (on your computer):
-   ```bash
-   open results/run_*/01_qc/qc_report.html
-   open results/run_*/03_phylogeny/tree.png
-   open results/run_*/04_identification/identification_report.html
-   ```
-
-7. **Exit and stop**:
-   ```bash
-   exit                      # Exit container
-   docker-compose down       # Stop container
-   ```
-
----
-
-## 🎨 Features
-
-### 🛠️ Tools & Technologies
-
-<table>
-<tr>
-<td><strong>🔬 Analysis Tools</strong></td>
-<td>BioPython • MAFFT • IQ-TREE2 • BLAST+</td>
-</tr>
-<tr>
-<td><strong>📊 Visualization</strong></td>
-<td>R (ape, ggtree) • Python (plotly, matplotlib)</td>
-</tr>
-<tr>
-<td><strong>🎨 Terminal</strong></td>
-<td>zsh • oh-my-zsh • Dracula theme • colorls</td>
-</tr>
-<tr>
-<td><strong>🐋 Container</strong></td>
-<td>~700MB • mambaorg/micromamba base</td>
-</tr>
-<tr>
-<td><strong>📱 Output</strong></td>
-<td>Interactive HTML dashboard (mobile-friendly)</td>
-</tr>
-</table>
-
-### 📚 Reference Dataset
-
-**85 mosquito COI sequences** from Hoque et al. 2022:
-
-| Metric | Value |
-|--------|-------|
-| 📝 Species | 19 species from 6 genera |
-| 🦟 Genera | *Aedes*, *Anopheles*, *Culex*, *Deinocerites*, *Psorophora*, *Uranotaenia* |
-| 🧬 Primers | AUCOS (67.5% success) vs Folmer (16.7%) |
-| ✅ Validation | All sequences published and verified |
-
----
-
-## What's Inside
-
-### Container (~700MB)
-
-Built on `mambaorg/micromamba:1.5.0` with:
-
-**Analysis Tools**:
-- BioPython (chromatogram parsing)
-- MAFFT (sequence alignment)
-- IQ-TREE2 (phylogenetic inference)
-- BLAST+ (species identification)
-
-**Visualization**:
-- R with ape, ggtree, tidyverse
-- Python with plotly, matplotlib
-- Interactive HTML dashboard
-
-**Beautiful Terminal**:
-- zsh with oh-my-zsh
-- Dracula theme
-- colorls, lsd, starship prompt
-- Auto-completion and syntax highlighting
-
-### Reference Data
-
-**85 mosquito COI sequences** from Hoque et al. 2022:
-- 19 species from 6 genera
-- *Aedes*, *Anopheles*, *Culex*, *Deinocerites*, *Psorophora*, *Uranotaenia*
-- Improved AUCOS primers (67.5% success vs 16.7% Folmer)
-- All sequences validated and published
-
-**Citation**: Hoque MM, Valentine MJ, Kelly PJ, et al. Modification of the Folmer primers for the cytochrome c oxidase gene facilitates identification of mosquitoes. Parasites Vectors. 2022;15:437. doi:[10.1186/s13071-022-05494-2](https://doi.org/10.1186/s13071-022-05494-2)
-
----
-
-## Repository Structure
-
-```
-dna-barcoding-analysis/
-├── data/
-│   ├── my_sequences/          # Put your .ab1 files here
-│   └── reference/             # Mosquito COI sequences (Hoque et al)
-├── results/                   # Auto-generated outputs
-│   ├── qc_report.html        # Quality control metrics
-│   ├── alignment.html        # Sequence alignment visualization
-│   ├── tree.pdf              # Phylogenetic tree
-│   ├── species_id.html       # BLAST results
-│   └── index.html            # Main dashboard (open this!)
-├── scripts/
-│   ├── qc-chromatograms      # Quality control script
-│   ├── align-sequences       # MAFFT wrapper
-│   ├── build-tree            # IQTree2 wrapper
-│   ├── identify-species      # BLAST automation
-│   └── analyze-sequences     # Master pipeline (run this!)
-├── container/
-│   ├── Dockerfile            # Container definition
-│   └── README.md             # Container documentation
-├── docker-compose.yml        # Easy container startup
-└── README.md                 # This file
+**Linux users:** You can use Podman instead of Docker Desktop:
+```bash
+sudo apt-get install podman
+podman pull ghcr.io/cosmelab/dna-barcoding-analysis:latest
 ```
 
----
-
-## Installation
-
-### Option 1: Docker Desktop (Recommended)
-
-1. **Install Docker Desktop**: https://www.docker.com/products/docker-desktop/
-2. **Pull the container**:
-   ```bash
-   docker pull ghcr.io/cosmelab/dna-barcoding-analysis:latest
-   ```
-3. **Ready to go!**
-
-### Option 2: Build Locally
+### Get the Repository
 
 ```bash
 git clone https://github.com/cosmelab/dna-barcoding-analysis.git
 cd dna-barcoding-analysis
-docker build -t dna-barcoding container/
 ```
 
 ---
 
-## Usage
+## ⚠️ STEP 0: Complete the Tutorial FIRST (REQUIRED!)
 
-### Full Pipeline (One Command)
+**Before analyzing your own data, you MUST run the tutorial:**
 
 ```bash
-# Inside the container or via docker run
-analyze-sequences
-
-# This runs:
-# 1. QC your chromatograms
-# 2. Trim low-quality regions
-# 3. Align with reference sequences
-# 4. Build phylogenetic tree
-# 5. BLAST for species ID
-# 6. Generate HTML dashboard
+./tutorial.sh
 ```
 
-### Individual Steps
+**This tutorial:**
+- Uses test data (you can't break anything)
+- Takes 15-20 minutes
+- Teaches you all 5 steps of the workflow
+- Shows you what results should look like
+- Makes the actual assignment much easier
+
+**DO NOT SKIP THIS!** Students who skip the tutorial get confused.
+
+---
+
+## 📋 The 5-Step Workflow
+
+Once you've completed the tutorial, here's how to analyze YOUR mosquito sequences:
+
+### Your Data
+
+Put your `.ab1` chromatogram files in: `data/student_sequences/`
+
+You should have pairs:
+- Forward reads (ending in F): `AT-HV1F_A01.ab1`
+- Reverse reads (ending in R): `AT-HV1R_B01.ab1`
+
+### Step 1: Quality Control
+
+Check which sequences are good enough to use:
 
 ```bash
-# Quality control only
-qc-chromatograms data/my_sequences/
-
-# Alignment only
-align-sequences data/my_sequences/ data/reference/
-
-# Tree only
-build-tree results/alignment.fasta
-
-# Species ID only
-identify-species results/cleaned/
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/01_quality_control/qc_chromatograms.py \
+  data/student_sequences/ \
+  results/my_analysis/qc/ \
+  --open
 ```
 
----
+**Look at the HTML report:**
+- How many sequences passed QC?
+- How many samples have BOTH F and R that passed?
 
-## Output Explained
+### Step 2: Create Consensus Sequences
 
-### index.html Dashboard
-
-Open `results/index.html` in your browser to see:
-
-**Tab 1: Quality Control**
-- Per-base quality scores
-- Read length distribution
-- Pass/fail summary
-- Trimming recommendations
-
-**Tab 2: Alignment View**
-- Conserved positions (LARGE letters)
-- Variable positions (small letters)
-- Color-coded nucleotides
-- Interactive zoom and pan
-
-**Tab 3: Phylogenetic Tree**
-- Maximum likelihood tree
-- Bootstrap support values
-- Your samples highlighted
-- Reference species labeled
-
-**Tab 4: Species Identification**
-- BLAST top hits table
-- % Identity scores
-- GenBank accessions
-- Confidence assessment
-
----
-
-## GitHub Classroom Workflow
-
-### For Instructors
-
-1. **Create assignment** from this template repo
-2. **Students accept link** → get personal copy
-3. **Students analyze data** → commit results
-4. **Review student repos** for grading
-
-### For Students
+Combine forward and reverse reads:
 
 ```bash
-# 1. Clone your assignment repo
-git clone <your-classroom-repo-url>
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/01b_consensus/create_consensus.py \
+  results/my_analysis/qc/passed_sequences.fasta \
+  results/my_analysis/consensus/ \
+  --pairs-only \
+  --open
+```
 
-# 2. Add your data
-cp ~/Desktop/*.ab1 data/my_sequences/
+The `--pairs-only` flag keeps only samples where BOTH F and R passed QC.
 
-# 3. Run analysis
-docker compose up
+### Step 3: Combine with Reference Sequences
 
-# 4. Commit results
-git add results/
-git commit -m "Complete DNA barcoding analysis"
-git push origin main
+Add your sequences to the database of known Southern California mosquitoes:
+
+```bash
+cat results/my_analysis/consensus/consensus_sequences.fasta \
+    data/reference_sequences/socal_mosquitoes.fasta \
+    > results/my_analysis/consensus/combined_with_references.fasta
+```
+
+This creates a file with your sequences + 52 reference sequences.
+
+### Step 4: Alignment and Phylogenetic Tree
+
+**Part A: Align sequences**
+
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/02_alignment/align_sequences.py \
+  results/my_analysis/consensus/combined_with_references.fasta \
+  results/my_analysis/alignment/
+```
+
+**Part B: Build tree** (takes ~2-3 minutes)
+
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/03_phylogeny/build_tree.py \
+  results/my_analysis/alignment/aligned_sequences.fasta \
+  results/my_analysis/phylogeny/
+```
+
+Look at `results/my_analysis/phylogeny/tree.png` to see where your samples cluster!
+
+### Step 5: Species Identification (BLAST)
+
+Compare your sequences to GenBank database:
+
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/04_identification/identify_species.py \
+  results/my_analysis/consensus/consensus_sequences.fasta \
+  results/my_analysis/blast/
+```
+
+Look at the HTML report to see species matches and % identity scores.
+
+---
+
+## 📊 Understanding Your Results
+
+### Quality Control
+- **PASSED**: Sequence is good quality (>500bp, good Phred scores)
+- **FAILED**: Too short, low quality, or unreadable
+
+### Consensus Sequences
+- Combines F+R reads for better accuracy
+- Only keeps samples with complete pairs (both F and R passed)
+
+### Phylogenetic Tree
+- Shows evolutionary relationships
+- Your samples cluster near related species
+- Bootstrap values show confidence (higher = better)
+
+### BLAST Results
+- **>98% identity**: Same species
+- **95-98% identity**: Same genus, possibly different species
+- **<95% identity**: Different genus or poor quality
+
+---
+
+## 📁 Repository Structure
+
+```
+dna-barcoding-analysis/
+├── data/
+│   ├── student_sequences/       # PUT YOUR .ab1 FILES HERE
+│   ├── test_data/               # Tutorial test data (8 .ab1 files)
+│   └── reference_sequences/     # 52 SoCal mosquito COI sequences
+├── results/
+│   ├── tutorial/                # Tutorial results (from tutorial.sh)
+│   └── my_analysis/             # Your real analysis results
+├── modules/
+│   ├── 01_quality_control/
+│   ├── 01b_consensus/
+│   ├── 02_alignment/
+│   ├── 03_phylogeny/
+│   └── 04_identification/
+├── docs/
+│   ├── pipeline_workflow.md     # Visual guide to the workflow
+│   └── iqtree_guide.md          # Understanding phylogenetic trees
+├── tutorial.sh                  # INTERACTIVE TUTORIAL (RUN THIS FIRST!)
+└── assignment.md                # Assignment worksheet
 ```
 
 ---
 
-## Troubleshooting
+## 🛠️ Tools Included in Container
 
-### Container Issues
+- **BioPython**: Chromatogram parsing and sequence handling
+- **MAFFT**: Multiple sequence alignment
+- **IQ-TREE2**: Maximum likelihood phylogenetic inference
+- **BLAST+**: Species identification via NCBI
+- **R packages**: ape, ggtree for tree visualization
 
-**Problem**: Docker won't start
-- **Solution**: Restart Docker Desktop, check system resources
+---
 
-**Problem**: Permission denied
-- **Solution**: On Linux, add user to docker group: `sudo usermod -aG docker $USER`
+## 📚 Reference Dataset
+
+85 mosquito COI sequences from **Hoque et al. 2022**:
+- 19 species from 6 genera
+- Genera: *Aedes*, *Anopheles*, *Culex*, *Deinocerites*, *Psorophora*, *Uranotaenia*
+- All sequences validated and published
+
+**Citation**: Hoque MM, Valentine MJ, Kelly PJ, et al. Modification of the Folmer primers for the cytochrome c oxidase gene facilitates identification of mosquitoes. *Parasites Vectors*. 2022;15:437. doi:[10.1186/s13071-022-05494-2](https://doi.org/10.1186/s13071-022-05494-2)
+
+---
+
+## 🐛 Troubleshooting
+
+### Docker Issues
+
+**Problem**: "Cannot connect to the Docker daemon"
+- **Solution**: Make sure Docker Desktop is running
+
+**Problem**: "permission denied"
+- **Solution**: Run `docker login` and enter your credentials
 
 **Problem**: Container is slow
-- **Solution**: Allocate more RAM (4GB+) in Docker Desktop settings
+- **Solution**: Allocate more RAM to Docker (4GB+) in Docker Desktop settings
 
 ### Analysis Issues
 
 **Problem**: No sequences pass QC
-- **Solution**: Check chromatogram quality, may need re-sequencing
+- **Solution**: Check chromatogram quality - may need re-sequencing
 
 **Problem**: BLAST returns no hits
-- **Solution**: Sequence may be contamination, check chromatogram
+- **Solution**: Sequence may be contamination or poor quality
 
 **Problem**: Tree has low bootstrap values
 - **Solution**: Need more sequences or higher quality data
 
 ---
 
-## 📜 Citation
+## 🆘 Need Help?
 
-If you use this workflow in your research, please cite:
-
-<div align="center">
-
-[![DOI](https://img.shields.io/badge/GitHub-cosmelab%2Fdna--barcoding--analysis-8be9fd?style=for-the-badge&logo=github)](https://github.com/cosmelab/dna-barcoding-analysis)
-
-</div>
-
-```bibtex
-@software{cosme2025dnabarcoding,
-  author = {Cosme, Luciano},
-  title = {DNA Barcoding Analysis: Automated COI Gene Analysis Workflow},
-  year = {2025},
-  url = {https://github.com/cosmelab/dna-barcoding-analysis}
-}
-```
-
-**Reference Dataset**:
-
-```bibtex
-@article{hoque2022modification,
-  title={Modification of the Folmer primers for the cytochrome c oxidase gene facilitates identification of mosquitoes},
-  author={Hoque, Md Monirul and Valentine, Matthew John and Kelly, Patrick John and Barua, Subarna and Murillo, Daniel Felipe Barrantes and Wang, Chengming},
-  journal={Parasites \& Vectors},
-  volume={15},
-  number={1},
-  pages={437},
-  year={2022},
-  doi={10.1186/s13071-022-05494-2}
-}
-```
+1. **Re-run the tutorial**: `./tutorial.sh`
+2. **Read the visual workflow**: `docs/pipeline_workflow.md`
+3. **Understand IQ-TREE**: `docs/iqtree_guide.md`
+4. **Check assignment**: `assignment.md`
+5. **Ask your TA or instructor**
 
 ---
 
-## Contributing
+## 🎓 Learning Goals
 
-We welcome contributions! Areas where you can help:
-
-- 🐛 Report bugs or issues
-- 📚 Improve documentation
-- 🧪 Add example datasets
-- 🎨 Enhance visualizations
-- 🔧 Optimize scripts
-
-**See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines**
+This workflow teaches you:
+- How DNA barcoding identifies species
+- Why quality control matters in sequencing
+- How consensus sequences improve accuracy
+- How to interpret phylogenetic trees
+- How to use bioinformatics tools for real research
 
 ---
 
-## License
+## 📜 License
 
 **Code**: MIT License
 **Educational Materials**: CC BY 4.0
-**Reference Data**: See individual dataset citations
+**Reference Data**: See individual citations
 
 ---
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
 - **UC Riverside Department of Entomology**
-- **ENTM201L Students** (beta testers)
+- **ENTM201L Students** (Fall 2025)
 - **Hoque et al. 2022** for mosquito COI reference sequences
-- **Tool developers**: MAFFT, IQ-TREE, BioPython, ggtree
+- **Tool developers**: BioPython, MAFFT, IQ-TREE, BLAST+
 
 ---
 
-## 💬 Support
-
-<div align="center">
-
-**Questions?** Open an issue: [GitHub Issues](https://github.com/cosmelab/dna-barcoding-analysis/issues)
-
----
-
-### 👨‍🏫 Instructor Information
-
-**Luciano Cosme**
-Department of Entomology
-University of California, Riverside
-
-**Course**: ENTM201L - Molecular Biology Laboratory
-**Quarter**: Fall 2025
-**Target Week**: Week 8 (Sanger Sequencing Analysis)
-
----
-
-![UCR Entomology](https://img.shields.io/badge/UCR-Entomology-FFB81C?style=for-the-badge)
-
-**Last Updated**: November 18, 2025 | **Status**: 🚧 In Development
-
-</div>
+**Last Updated**: November 19, 2025
+**Status**: Ready for Deployment
+**Container**: `cosmelab/dna-barcoding-analysis:latest` (multi-architecture: amd64 + arm64)
