@@ -329,3 +329,11 @@ tasks:
   depends_on:
   - create-getting-started-guide
   notes: 'Very simple step-by-step. Students just copy commands and paste in terminal. No decisions, no branching. Linear workflow from start to finish. Include ASCII visual guide showing each step.'
+- id: add-podman-option-for-linux
+  phase: documentation
+  status: todo
+  summary: Add Podman as alternative option for Linux users (no Docker Desktop needed)
+  agent_allowed: true
+  depends_on:
+  - create-getting-started-guide
+  notes: 'Podman is Linux-only alternative to Docker Desktop. Add to getting started guide as option for Linux users: sudo apt-get install podman, then podman pull ghcr.io/cosmelab/dna-barcoding-analysis:latest (works since container on both GHCR and Docker Hub). Benefits: free, rootless, no Docker Desktop. Reference entm201l setup/github-setup.html.'
