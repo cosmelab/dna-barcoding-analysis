@@ -16,6 +16,40 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
+import webbrowser
+import argparse
+
+def print_header(text):
+    """Print a formatted header"""
+    width = 70
+    print("\n" + "=" * width)
+    print(f"  {text}")
+    print("=" * width)
+
+def print_step(step_num, total_steps, description):
+    """Print a step indicator"""
+    print(f"\n[Step {step_num}/{total_steps}] {description}")
+    print("-" * 70)
+
+def print_success(message):
+    """Print a success message"""
+    print(f"✓ {message}")
+
+def print_info(message, indent=True):
+    """Print an info message"""
+    prefix = "  " if indent else ""
+    print(f"{prefix}{message}")
+
+def open_in_browser(file_path):
+    """Open HTML file in default web browser (cross-platform)"""
+    try:
+        # Convert to absolute path and use file:// URL
+        abs_path = Path(file_path).resolve()
+        webbrowser.open(f'file://{abs_path}')
+        return True
+    except Exception as e:
+        print(f"Could not auto-open browser: {e}")
+        return False
 
 def plot_chromatogram(ab1_file, start_base=50, num_bases=150):
     """Generate chromatogram plot with sequence overlay
@@ -262,44 +296,66 @@ def generate_html_report(results, output_file):
 
 def main():
     """Main QC function"""
-    if len(sys.argv) < 2:
-        print("Usage: python qc_chromatograms.py <input_directory> [output_directory]")
-        print("Example: python qc_chromatograms.py data/my_sequences/ results/")
-        sys.exit(1)
+    # Parse arguments
+    parser = argparse.ArgumentParser(
+        description='Quality Control for Sanger Chromatograms',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python qc_chromatograms.py data/my_sequences/
+  python qc_chromatograms.py data/my_sequences/ results/ --open
+        """
+    )
+    parser.add_argument('input_dir', type=str, help='Directory containing .ab1 files')
+    parser.add_argument('output_dir', type=str, nargs='?', default='results',
+                       help='Output directory for results (default: results/)')
+    parser.add_argument('--open', action='store_true',
+                       help='Automatically open HTML report in web browser')
 
-    input_dir = Path(sys.argv[1])
-    output_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("results")
+    args = parser.parse_args()
+
+    input_dir = Path(args.input_dir)
+    output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Find all .ab1 files and sort to group F/R pairs
+    # Header
+    print_header("DNA BARCODING QUALITY CONTROL")
+    print_info(f"Analyzing Sanger chromatograms (.ab1 files)", indent=False)
+    print_info(f"Input: {input_dir}", indent=False)
+    print_info(f"Output: {output_dir}", indent=False)
+
+    # Step 1: Find files
+    print_step(1, 3, "Finding chromatogram files")
     ab1_files = list(input_dir.glob("*.ab1"))
 
     if not ab1_files:
-        print(f"No .ab1 files found in {input_dir}")
+        print(f"\nERROR: No .ab1 files found in {input_dir}")
+        print("Please check that your chromatogram files are in the correct directory.")
         sys.exit(1)
 
     # Sort files to group forward/reverse pairs together
-    # Example: AT99_F, AT99_R, AT83_F, AT83_R (not AT99_F, AT83_F, AT99_R, AT83_R)
     def sort_key(filepath):
         stem = filepath.stem
-        # Try to extract sample name and direction (F/R)
         parts = stem.rsplit('_', 1)
         if len(parts) == 2:
             sample_name, direction = parts
-            # Sort by sample name first, then by direction (F before R)
             return (sample_name, direction)
         return (stem, '')
 
     ab1_files = sorted(ab1_files, key=sort_key)
+    print_success(f"Found {len(ab1_files)} chromatogram files")
+    for f in ab1_files:
+        print_info(f"• {f.name}")
 
-    print(f"Found {len(ab1_files)} chromatogram files")
+    # Step 2: Analyze each file
+    print_step(2, 3, f"Analyzing chromatograms")
+    print_info("Checking sequence quality, length, and reading frames...")
 
-    # Analyze each file
     results = []
     passed_sequences = []
 
-    for ab1_file in ab1_files:
-        print(f"Analyzing {ab1_file.name}...")
+    for i, ab1_file in enumerate(ab1_files, 1):
+        print_info(f"[{i}/{len(ab1_files)}] {ab1_file.name}...", indent=True)
         result = analyze_chromatogram(ab1_file, output_dir=output_dir)
         results.append(result)
 
@@ -309,20 +365,24 @@ def main():
                 'id': ab1_file.stem,
                 'seq': result['sequence']
             })
+            print_info(f"    ✓ PASSED (length: {result['length']} bp, avg quality: {result['avg_quality']:.1f})", indent=True)
+        else:
+            print_info(f"    ✗ FAILED ({result.get('fail_reason', 'Unknown reason')})", indent=True)
 
-    # Generate outputs
-    print("\nGenerating reports...")
+    # Step 3: Generate outputs
+    print_step(3, 3, "Generating reports")
 
     # HTML report
     html_file = output_dir / "qc_report.html"
+    print_info("Creating HTML report with chromatogram visualizations...")
     generate_html_report(results, html_file)
-    print(f"HTML report: {html_file}")
+    print_success(f"HTML report: {html_file}")
 
     # JSON report
     json_file = output_dir / "qc_results.json"
     with open(json_file, 'w') as f:
         json.dump(results, f, indent=2)
-    print(f"JSON report: {json_file}")
+    print_success(f"JSON data: {json_file}")
 
     # FASTA file for passed sequences
     if passed_sequences:
@@ -330,18 +390,40 @@ def main():
         with open(fasta_file, 'w') as f:
             for seq in passed_sequences:
                 f.write(f">{seq['id']}\n{seq['seq']}\n")
-        print(f"Passed sequences: {fasta_file}")
+        print_success(f"Passed sequences: {fasta_file}")
 
-    # Summary
+    # Final Summary
     passed = sum(1 for r in results if r['qc_status'] == "PASS")
     failed = sum(1 for r in results if r['qc_status'] == "FAIL")
     errors = sum(1 for r in results if r['qc_status'] == "ERROR")
 
-    print(f"\nSummary:")
-    print(f"  Total: {len(results)}")
-    print(f"  Passed: {passed}")
-    print(f"  Failed: {failed}")
-    print(f"  Errors: {errors}")
+    print_header("QUALITY CONTROL COMPLETE")
+    print_info(f"Total sequences analyzed: {len(results)}", indent=False)
+    print_info(f"✓ Passed QC: {passed} sequences", indent=False)
+    print_info(f"✗ Failed QC: {failed} sequences", indent=False)
+    if errors > 0:
+        print_info(f"⚠ Errors: {errors} sequences", indent=False)
+
+    print("\n" + "=" * 70)
+    print("  NEXT STEPS:")
+    print("=" * 70)
+    print_info("1. Open the HTML report to view detailed results:", indent=False)
+    print_info(f"   {html_file.resolve()}", indent=False)
+    print_info("", indent=False)
+    print_info("2. Passed sequences are ready for alignment:", indent=False)
+    if passed_sequences:
+        print_info(f"   {fasta_file.resolve()}", indent=False)
+    else:
+        print_info("   (No sequences passed QC)", indent=False)
+    print("=" * 70 + "\n")
+
+    # Auto-open browser if requested
+    if args.open:
+        print_info("Opening HTML report in your web browser...", indent=False)
+        if open_in_browser(html_file):
+            print_success("Report opened successfully")
+        else:
+            print_info(f"Please open manually: {html_file.resolve()}", indent=False)
 
 if __name__ == "__main__":
     main()
