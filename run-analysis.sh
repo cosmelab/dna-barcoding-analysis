@@ -10,6 +10,42 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
+# Function to prompt user to open HTML report with timeout
+prompt_open_report() {
+    local report_path="$1"
+    local timeout_seconds=5
+
+    echo ""
+    echo -n "Press ENTER to open report in your browser (auto-continues in ${timeout_seconds}s)... "
+
+    if read -t $timeout_seconds 2>/dev/null; then
+        # User pressed ENTER within timeout
+        echo "Opening report..."
+
+        # Convert to absolute path
+        local abs_path=$(cd "$(dirname "$report_path")" && pwd)/$(basename "$report_path")
+
+        # Detect OS and open file
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            open "file://${abs_path}" 2>/dev/null && echo "✓ Report opened successfully" || echo "Could not open browser"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            # Linux
+            xdg-open "file://${abs_path}" 2>/dev/null && echo "✓ Report opened successfully" || echo "Could not open browser"
+        elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+            # Windows Git Bash
+            start "file://${abs_path}" 2>/dev/null && echo "✓ Report opened successfully" || echo "Could not open browser"
+        else
+            echo "Could not auto-open browser. Please open manually: ${abs_path}"
+        fi
+    else
+        # Timeout - continue without opening
+        echo ""
+        echo "(continuing without opening...)"
+    fi
+    echo ""
+}
+
 clear
 echo "╔══════════════════════════════════════════════════════════════════════╗"
 echo "║                   DNA BARCODING ANALYSIS                             ║"
@@ -36,8 +72,10 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   $CONTAINER \
   python3 modules/01_quality_control/qc_chromatograms.py \
   data/student_sequences/ \
-  $OUTPUT_DIR/01_qc/ \
-  --open
+  $OUTPUT_DIR/01_qc/
+
+# Prompt to open the HTML report with timeout
+prompt_open_report "$OUTPUT_DIR/01_qc/qc_report.html"
 
 echo -e "${GREEN}✓ Step 1 complete!${NC}"
 echo ""
@@ -54,8 +92,10 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   python3 modules/02_consensus/create_consensus.py \
   $OUTPUT_DIR/01_qc/passed_sequences.fasta \
   $OUTPUT_DIR/02_consensus/ \
-  --pairs-only \
-  --open
+  --pairs-only
+
+# Prompt to open the HTML report with timeout
+prompt_open_report "$OUTPUT_DIR/02_consensus/consensus_report.html"
 
 echo -e "${GREEN}✓ Step 2 complete!${NC}"
 echo ""

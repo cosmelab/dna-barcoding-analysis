@@ -1,7 +1,7 @@
 project: dna-barcoding-analysis
-current_phase: ready_for_deployment
-current_task: ready_for_students
-last_updated: '2025-11-20T10:06:00'
+current_phase: public_release_preparation
+current_task: polish_for_public_release
+last_updated: '2025-11-20T10:30:00'
 active_jobs: []
 blocking_issues: []
 target_ready_date: '2025-11-19'
@@ -15,6 +15,7 @@ completed_today:
   - Verified tree visualization (all 4 samples present)
   - Confirmed numbered directory structure works
   - All blocking issues resolved
+  - Updated tracking/decisions.yaml with D015-D018 (interactive prompts, GitHub Classroom, public release, website)
 current_status:
   - 5-step consensus workflow tested and working
   - Student data results (30 .ab1 files, 15 samples)
@@ -23,10 +24,12 @@ current_status:
   - Species identified (1 Aedes albopictus, 3 Culex pipiens, all >98% identity)
   - Tutorial script ready for students (uses test_data, 15-20 min)
   - Assignment updated with clear instructions and grading rubric
+  - Repository ready for public release after polish
 next_up:
-  - Create modules/02_consensus/README.md (explain F+R pairing, --pairs-only)
-  - Test run-analysis.sh with data/student_sequences/ (30 .ab1 files)
-  - Test tutorial.sh with data/test_data/ (verify numbered dirs work)
-  - Investigate tree PNG (verify all 4 consensus samples visible)
-  - Optional: archive modules/00_assembly/ and master_pipeline.py (legacy code)
-  - Optional: verify Windows compatibility
+  - Add interactive prompts with timeout to tutorial.sh and run-analysis.sh (D015)
+  - Update README.md with prerequisites and platform-specific setup instructions
+  - Review all documentation for professional tone and moderate emoji usage (D017)
+  - Create GitHub Actions workflow for auto-grading (D016)
+  - Setup GitHub Classroom assignment from template repo (D016)
+  - Create documentation website similar to entm201l-fall2025 (D018)
+  - Test complete workflow on Windows (optional, low priority)

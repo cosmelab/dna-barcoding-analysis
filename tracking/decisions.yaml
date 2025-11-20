@@ -182,3 +182,44 @@ decisions:
   - consensus
   - quality
   - pedagogy
+- id: D015
+  date: '2025-11-20'
+  question: Should scripts have interactive prompts to open HTML reports?
+  decision: 'YES - Add "Press ENTER to open report" prompts with timeout fallback. If student does not press ENTER within a few seconds, script auto-continues without opening. Makes it interactive but does not block automation or testing.'
+  rationale: 'Students benefit from interactive experience ("Press ENTER..."), but automated testing and CI/CD require non-blocking execution. Timeout ensures best of both worlds: engagement for students, automation for developers.'
+  status: active
+  tags:
+  - ux
+  - scripts
+  - automation
+- id: D016
+  date: '2025-11-20'
+  question: How should GitHub Classroom be integrated for this assignment?
+  decision: 'Create assignment from template repo. Students get private forks. Use GitHub Actions to verify completion: (1) Check that tutorial.sh results exist in results/tutorial/, (2) Check that run-analysis.sh results exist in results/my_analysis/, (3) Verify required output files (QC report, tree, BLAST results). Auto-grading checks completion, not correctness.'
+  rationale: 'GitHub Classroom provides private student repos with auto-grading. We want to verify students completed the workflow, not grade their mosquito species identification (that is biology, not bioinformatics). Actions can check for presence of result files.'
+  status: active
+  tags:
+  - github
+  - classroom
+  - grading
+  - pedagogy
+- id: D017
+  date: '2025-11-20'
+  question: Should repository be polished before public release?
+  decision: 'YES - Review all documentation for professional tone, moderate emoji usage (keep student-friendly but not excessive), remove any sensitive information, ensure consistent formatting. Create comprehensive documentation website similar to entm201l-fall2025 site.'
+  rationale: 'Repository will be public GitHub Classroom template. Must be professional, well-documented, and accessible to beginners. Website provides better UX than GitHub markdown for students.'
+  status: active
+  tags:
+  - public-release
+  - documentation
+  - website
+- id: D018
+  date: '2025-11-20'
+  question: Should we create a documentation website for this project?
+  decision: 'YES - Create website similar to cosmelab.github.io/entm201l-fall2025 with Dracula theme. Include: setup guides, tutorial walkthrough, detailed module documentation, troubleshooting, FAQs. Professional presentation for public consumption.'
+  rationale: 'Website provides better navigation and visual presentation than GitHub README. Students can bookmark and reference throughout lab. Matches existing course infrastructure and branding.'
+  status: active
+  tags:
+  - website
+  - documentation
+  - public-release

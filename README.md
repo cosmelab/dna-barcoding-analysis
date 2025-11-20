@@ -6,7 +6,29 @@ Complete workflow for analyzing Sanger sequencing chromatograms (.ab1 files) to 
 
 ---
 
-## 🎯 For Students: READ THIS FIRST
+## ⚠️ PREREQUISITES (Complete BEFORE Starting)
+
+**You must have these installed and configured:**
+
+1. **Docker Desktop** - Must be running before you start
+   - See: [Docker Setup Guide](https://cosmelab.github.io/entm201l-fall2025/setup/cli-tools.html)
+
+2. **GitHub Account** - For accessing your assignment
+   - See: [GitHub Setup Guide](https://cosmelab.github.io/entm201l-fall2025/setup/github-setup.html)
+
+3. **Git** - For cloning the repository
+   - See: [Software Setup Guide](https://cosmelab.github.io/entm201l-fall2025/setup/index.html)
+
+**Platform-specific notes:**
+- **Windows**: Use PowerShell or Git Bash (WSL2 recommended for Docker)
+- **macOS**: Use Terminal (included with macOS)
+- **Linux**: Use your default terminal
+
+**🚨 If you haven't completed these setup steps, STOP and do them first!**
+
+---
+
+## 🎯 For Students: START HERE
 
 **👉 See [start_here.md](start_here.md) for the complete beginner's guide**
 
@@ -289,6 +311,20 @@ This workflow teaches you:
 
 ---
 
-**Last Updated**: November 19, 2025
-**Status**: Ready for Deployment
+## 🌐 Documentation Website
+
+A comprehensive documentation website is planned for future release, which will include:
+- Interactive setup guides
+- Step-by-step tutorials with screenshots
+- Detailed module documentation
+- Video walkthroughs
+- FAQ and troubleshooting guides
+
+For now, this README and the in-repo documentation provide everything you need to complete the analysis.
+
+---
+
+**Last Updated**: November 20, 2025
+**Status**: Ready for Public Release
 **Container**: `cosmelab/dna-barcoding-analysis:latest` (multi-architecture: amd64 + arm64)
+**GitHub Classroom**: Compatible - use as template repository

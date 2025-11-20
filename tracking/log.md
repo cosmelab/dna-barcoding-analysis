@@ -492,3 +492,41 @@ next:
   - Repository ready for students
   - All workflows tested and functional
   - Documentation complete
+
+## 2025-11-20 – claude-sonnet – public-release-preparation
+actions:
+  - updated tracking/decisions.yaml with 4 new decisions (D015-D018):
+    - D015: Interactive prompts with timeout in scripts
+    - D016: GitHub Classroom workflow and auto-grading approach
+    - D017: Repository polish for public release (professional tone, moderate emojis)
+    - D018: Documentation website creation (similar to entm201l-fall2025)
+  - updated tracking/state.yaml:
+    - current_phase: ready_for_deployment → public_release_preparation
+    - current_task: ready_for_students → polish_for_public_release
+    - added completed tracking system update to completed_today
+    - updated next_up with 6 tasks for public release
+  - documented all user requests in tracking system before continuing work
+results:
+  - **tracking system updated with all plans:**
+    - interactive prompt decision: "Press ENTER to open report" with auto-continue timeout
+    - GitHub Classroom workflow: verify completion via Actions, check result files exist
+    - public release requirements: review tone, moderate emojis, comprehensive polish
+    - website plan: create site similar to entm201l-fall2025 with Dracula theme
+  - **user requirements captured:**
+    - user emphasized: "update the track system before you forget what I told you"
+    - repository will be made public (GitHub Classroom template)
+    - auto-grading should verify workflow completion, not scientific correctness
+    - website needed for better student navigation than GitHub markdown
+  - **current status documented:**
+    - core workflow tested and functional (5 steps working)
+    - repository structure clean and linear (01→05 numbering)
+    - all modules documented (including consensus README.md)
+    - ready for polish and public deployment
+next:
+  - add interactive prompts with timeout to tutorial.sh and run-analysis.sh
+  - update README.md with prerequisites and platform-specific setup instructions
+  - review all documentation for professional tone and moderate emoji usage
+  - create GitHub Actions workflow for auto-grading (check results/ files)
+  - setup GitHub Classroom assignment from template repository
+  - create documentation website (Dracula theme, professional design)
+  - test complete workflow on Windows (optional, low priority)
