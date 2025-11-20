@@ -1,0 +1,158 @@
+name: Auto-Grading
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'results/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'results/**'
+  workflow_dispatch:
+
+jobs:
+  check-completion:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        lfs: true
+
+    - name: Check Tutorial Completion
+      id: tutorial
+      run: |
+        echo "Checking tutorial completion..."
+        TUTORIAL_DIR="results/tutorial"
+
+        # Check if tutorial directory exists
+        if [ ! -d "$TUTORIAL_DIR" ]; then
+          echo "❌ Tutorial not completed: results/tutorial/ directory not found"
+          echo "tutorial_completed=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Check for required output files from tutorial
+        REQUIRED_FILES=(
+          "$TUTORIAL_DIR/01_qc/qc_report.html"
+          "$TUTORIAL_DIR/02_consensus/consensus_report.html"
+          "$TUTORIAL_DIR/03_alignment/aligned_sequences.fasta"
+          "$TUTORIAL_DIR/04_phylogeny/tree.treefile"
+          "$TUTORIAL_DIR/05_blast/identification_report.html"
+        )
+
+        MISSING_FILES=()
+        for file in "${REQUIRED_FILES[@]}"; do
+          if [ ! -f "$file" ]; then
+            MISSING_FILES+=("$file")
+          fi
+        done
+
+        if [ ${#MISSING_FILES[@]} -eq 0 ]; then
+          echo "✅ Tutorial completed successfully!"
+          echo "   All required output files found in results/tutorial/"
+          echo "tutorial_completed=true" >> $GITHUB_OUTPUT
+        else
+          echo "⚠️  Tutorial incomplete - missing files:"
+          for file in "${MISSING_FILES[@]}"; do
+            echo "   - $file"
+          done
+          echo "tutorial_completed=partial" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Check Student Analysis Completion
+      id: analysis
+      run: |
+        echo "Checking student analysis completion..."
+        ANALYSIS_DIR="results/my_analysis"
+
+        # Check if analysis directory exists
+        if [ ! -d "$ANALYSIS_DIR" ]; then
+          echo "❌ Analysis not completed: results/my_analysis/ directory not found"
+          echo "analysis_completed=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Check for required output files from student analysis
+        REQUIRED_FILES=(
+          "$ANALYSIS_DIR/01_qc/qc_report.html"
+          "$ANALYSIS_DIR/02_consensus/consensus_sequences.fasta"
+          "$ANALYSIS_DIR/04_phylogeny/tree.png"
+          "$ANALYSIS_DIR/05_blast/identification_report.html"
+        )
+
+        MISSING_FILES=()
+        for file in "${REQUIRED_FILES[@]}"; do
+          if [ ! -f "$file" ]; then
+            MISSING_FILES+=("$file")
+          fi
+        done
+
+        if [ ${#MISSING_FILES[@]} -eq 0 ]; then
+          echo "✅ Student analysis completed successfully!"
+          echo "   All required output files found in results/my_analysis/"
+          echo "analysis_completed=true" >> $GITHUB_OUTPUT
+        else
+          echo "⚠️  Student analysis incomplete - missing files:"
+          for file in "${MISSING_FILES[@]}"; do
+            echo "   - $file"
+          done
+          echo "analysis_completed=partial" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Generate Summary Report
+      run: |
+        echo "## 📊 Assignment Completion Report" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Tutorial status
+        TUTORIAL_STATUS="${{ steps.tutorial.outputs.tutorial_completed }}"
+        if [ "$TUTORIAL_STATUS" = "true" ]; then
+          echo "### ✅ Tutorial: Complete" >> $GITHUB_STEP_SUMMARY
+          echo "Student successfully completed the tutorial using test data." >> $GITHUB_STEP_SUMMARY
+        elif [ "$TUTORIAL_STATUS" = "partial" ]; then
+          echo "### ⚠️ Tutorial: Incomplete" >> $GITHUB_STEP_SUMMARY
+          echo "Tutorial started but some output files are missing. Please complete all 5 steps." >> $GITHUB_STEP_SUMMARY
+        else
+          echo "### ❌ Tutorial: Not Started" >> $GITHUB_STEP_SUMMARY
+          echo "Please run \`./tutorial.sh\` first to learn the workflow." >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Analysis status
+        ANALYSIS_STATUS="${{ steps.analysis.outputs.analysis_completed }}"
+        if [ "$ANALYSIS_STATUS" = "true" ]; then
+          echo "### ✅ Student Analysis: Complete" >> $GITHUB_STEP_SUMMARY
+          echo "Student successfully analyzed their mosquito sequences." >> $GITHUB_STEP_SUMMARY
+        elif [ "$ANALYSIS_STATUS" = "partial" ]; then
+          echo "### ⚠️ Student Analysis: Incomplete" >> $GITHUB_STEP_SUMMARY
+          echo "Analysis started but some output files are missing. Please complete all 5 steps." >> $GITHUB_STEP_SUMMARY
+        else
+          echo "### ❌ Student Analysis: Not Started" >> $GITHUB_STEP_SUMMARY
+          echo "Please run \`./run-analysis.sh\` to analyze your mosquito sequences." >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Note:** This auto-grading checks workflow completion, not scientific correctness." >> $GITHUB_STEP_SUMMARY
+        echo "Your instructor will review your results and species identifications." >> $GITHUB_STEP_SUMMARY
+
+    - name: Set Completion Status
+      run: |
+        TUTORIAL_STATUS="${{ steps.tutorial.outputs.tutorial_completed }}"
+        ANALYSIS_STATUS="${{ steps.analysis.outputs.analysis_completed }}"
+
+        if [ "$TUTORIAL_STATUS" = "true" ] && [ "$ANALYSIS_STATUS" = "true" ]; then
+          echo "✅ ASSIGNMENT COMPLETE - All workflows finished!"
+          exit 0
+        elif [ "$TUTORIAL_STATUS" = "false" ] && [ "$ANALYSIS_STATUS" = "false" ]; then
+          echo "❌ ASSIGNMENT NOT STARTED - Please run tutorial.sh and run-analysis.sh"
+          exit 1
+        else
+          echo "⚠️ ASSIGNMENT PARTIAL - Continue working to complete both workflows"
+          exit 1
+        fi
