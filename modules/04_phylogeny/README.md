@@ -23,7 +23,7 @@ In the tree, the **closer two species are together (shorter branches between the
 To build a phylogenetic tree from aligned DNA sequences:
 
 ```bash
-python modules/03_phylogeny/build_tree.py <aligned_sequences> [output_directory]
+python modules/04_phylogeny/build_tree.py <aligned_sequences> [output_directory]
 ```
 
 ### Example
@@ -31,13 +31,13 @@ python modules/03_phylogeny/build_tree.py <aligned_sequences> [output_directory]
 If you completed Module 02 (Sequence Alignment), you'll have an aligned FASTA file. Here's how to build the tree:
 
 ```bash
-python modules/03_phylogeny/build_tree.py results/aligned_sequences.fasta results/
+python modules/04_phylogeny/build_tree.py results/aligned_sequences.fasta results/
 ```
 
 Or with a custom output directory:
 
 ```bash
-python modules/03_phylogeny/build_tree.py data/my_alignment.fasta phylogeny_output/
+python modules/04_phylogeny/build_tree.py data/my_alignment.fasta phylogeny_output/
 ```
 
 ---

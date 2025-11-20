@@ -138,7 +138,7 @@ echo ""
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
-  python3 modules/01b_consensus/create_consensus.py \
+  python3 modules/02_consensus/create_consensus.py \
   results/tutorial/qc/passed_sequences.fasta \
   results/tutorial/consensus/ \
   --pairs-only \
@@ -240,7 +240,7 @@ echo ""
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
-  python3 modules/02_alignment/align_sequences.py \
+  python3 modules/03_alignment/align_sequences.py \
   results/tutorial/consensus/combined_with_references.fasta \
   results/tutorial/alignment/
 
@@ -252,7 +252,7 @@ echo ""
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
-  python3 modules/03_phylogeny/build_tree.py \
+  python3 modules/04_phylogeny/build_tree.py \
   results/tutorial/alignment/aligned_sequences.fasta \
   results/tutorial/phylogeny/
 
@@ -307,7 +307,7 @@ echo ""
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
-  python3 modules/04_identification/identify_species.py \
+  python3 modules/05_identification/identify_species.py \
   results/tutorial/consensus/consensus_sequences.fasta \
   results/tutorial/blast/
 

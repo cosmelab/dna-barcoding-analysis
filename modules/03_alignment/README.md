@@ -45,7 +45,7 @@ python align_sequences.py <input_fasta> [output_directory]
 Assuming you have filtered sequences from Module 01:
 
 ```bash
-python modules/02_alignment/align_sequences.py results/passed_sequences.fasta results/
+python modules/03_alignment/align_sequences.py results/passed_sequences.fasta results/
 ```
 
 This will:

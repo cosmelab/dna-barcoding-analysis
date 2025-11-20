@@ -85,12 +85,12 @@ results:
   - Container build triggered on GitHub Actions (building now)
   - 6 major tasks completed in single session
   - Reference data prepared (52 Southern California mosquito COI sequences)
-  - Modular structure created (modules/01_quality_control, modules/04_identification)
+  - Modular structure created (modules/01_quality_control, modules/05_identification)
   - Docker container will be available at ghcr.io/cosmelab/dna-barcoding-analysis:latest
 next:
   - wait for container build to complete (check GitHub Actions)
-  - optional: create alignment visualization script (modules/02_alignment)
-  - optional: create phylogeny script with Bio.Phylo (modules/03_phylogeny)
+  - optional: create alignment visualization script (modules/03_alignment)
+  - optional: create phylogeny script with Bio.Phylo (modules/04_phylogeny)
   - create module README files for students
   - create GitHub Classroom template repository structure
   - test end-to-end with real chromatograms when user provides samples
@@ -331,7 +331,7 @@ next_steps:
 
 ## 2025-11-19 – claude-sonnet – consensus-workflow-implementation
 actions:
-  - created consensus sequence module (modules/01b_consensus/)
+  - created consensus sequence module (modules/02_consensus/)
   - added --pairs-only flag to require complete F+R pairs
   - updated workflow from 4 steps to 5 steps (QC → Consensus → Combine+Refs → Align+Tree → BLAST)
   - tested complete pipeline on 30 student .ab1 files
@@ -360,3 +360,53 @@ next:
   - create simple linear getting started guide (git clone → docker → tutorial → analysis)
   - document docker workflow clearly (Docker Desktop, docker login, pull container)
   - create copy/paste instructions for students
+
+## 2025-11-19 – claude-sonnet – comprehensive-repository-review
+actions:
+  - performed complete repository review at user request
+  - checked all analysis modules (01-04 + 01b)
+  - verified tutorial scripts and documentation
+  - identified organizational issues and redundancies
+  - updated README.md with current 5-step workflow and getting started guide
+  - removed outdated content (docker-compose, analyze-sequences one-command)
+results:
+  - **modules verified working:**
+    - ✓ 01_quality_control/qc_chromatograms.py + README.md
+    - ✓ 01b_consensus/create_consensus.py (MISSING README.md)
+    - ✓ 02_alignment/align_sequences.py + README.md
+    - ✓ 03_phylogeny/build_tree.py + README.md
+    - ✓ 04_identification/identify_species.py + README.md
+  - **unused/legacy code identified:**
+    - modules/00_assembly/ (not in current workflow)
+    - modules/master_pipeline.py (old one-command workflow)
+  - **duplicate/confusing files found:**
+    - tutorial.sh (382 lines, executable) ← KEEP (current)
+    - learn-the-pipeline.sh (415 lines, not executable) ← REMOVE (redundant)
+    - tutorials/ directory (contains unrelated 00-03 coding tutorials - causes confusion with tutorial.sh)
+    - results/WORKFLOW_SUMMARY.md (violates no-new-files rule, should be in tracking/)
+  - **results/ directory issues:**
+    - no linear numbering (should be 01_qc, 02_consensus, 03_alignment, 04_phylogeny, 05_blast)
+    - testing artifacts present (qc_test, qc_native_test, qc_report.html directory)
+    - inconsistent naming (student_qc vs qc vs qc_test)
+  - **README.md updated:**
+    - removed docker-compose references
+    - removed analyze-sequences one-command workflow
+    - added current 5-step manual workflow
+    - added Podman option for Linux users
+    - emphasized tutorial.sh as STEP 0 (REQUIRED)
+    - commit c764c88: "Update README.md with current 5-step workflow and getting started guide"
+issues_found:
+  1. Missing: modules/02_consensus/README.md
+  2. Duplicate: learn-the-pipeline.sh (remove)
+  3. Confusion: tutorial.sh script vs tutorials/ directory
+  4. Violation: results/WORKFLOW_SUMMARY.md (new file created)
+  5. Disorganized: results/ directory needs linear numbering and cleanup
+  6. Unused: modules/00_assembly/, modules/master_pipeline.py
+next:
+  - create modules/02_consensus/README.md
+  - remove learn-the-pipeline.sh
+  - move results/WORKFLOW_SUMMARY.md → tracking/student_data_results.md
+  - clean up results/ directory (remove testing artifacts)
+  - decide on tutorials/ directory (keep for separate coding tutorials? rename? document clearly?)
+  - optionally: rename results subdirs with linear numbering (or document that tutorial/ and my_analysis/ are student workspaces)
+  - optionally: archive/remove modules/00_assembly/ and master_pipeline.py (or document as legacy)

@@ -268,7 +268,7 @@ Once you have your high-quality sequences in `passed_sequences.fasta`, you're re
 3. Find the optimal reading frame
 4. Prepare data for identification
 
-Go to `modules/02_alignment/` to get started.
+Go to `modules/03_alignment/` to get started.
 
 **Remember**: Good QC now saves time and prevents errors later. Never skip this step!
 

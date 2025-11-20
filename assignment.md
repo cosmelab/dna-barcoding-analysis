@@ -70,7 +70,7 @@ Combine forward and reverse reads:
 ```bash
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
-  python3 modules/01b_consensus/create_consensus.py \
+  python3 modules/02_consensus/create_consensus.py \
   results/my_analysis/qc/passed_sequences.fasta \
   results/my_analysis/consensus/ \
   --pairs-only \
@@ -98,7 +98,7 @@ Line up all sequences so we can compare them:
 ```bash
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
-  python3 modules/02_alignment/align_sequences.py \
+  python3 modules/03_alignment/align_sequences.py \
   results/my_analysis/consensus/combined_with_references.fasta \
   results/my_analysis/alignment/
 ```
@@ -110,7 +110,7 @@ Build an evolutionary tree showing relationships:
 ```bash
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
-  python3 modules/03_phylogeny/build_tree.py \
+  python3 modules/04_phylogeny/build_tree.py \
   results/my_analysis/alignment/aligned_sequences.fasta \
   results/my_analysis/phylogeny/
 ```
@@ -124,7 +124,7 @@ Compare your sequences to GenBank database:
 ```bash
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
-  python3 modules/04_identification/identify_species.py \
+  python3 modules/05_identification/identify_species.py \
   results/my_analysis/consensus/consensus_sequences.fasta \
   results/my_analysis/blast/
 ```
