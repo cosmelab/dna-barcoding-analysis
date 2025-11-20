@@ -171,3 +171,14 @@ decisions:
   - build
   - multi-arch
   - arm64
+- id: D014
+  date: '2025-11-19'
+  question: Should we create consensus sequences from F+R pairs and only use samples with complete pairs?
+  decision: 'YES - Implement 5-step workflow: (1) QC on all .ab1 files, (2) Create consensus from F+R pairs with --pairs-only flag, (3) Combine consensus with 52 reference sequences, (4) Align and build tree with all 56 sequences, (5) BLAST only the consensus sequences for species ID.'
+  rationale: 'Consensus sequences from forward and reverse reads are more accurate than single reads. Combining with reference sequences in the tree allows students to see where their samples cluster with known SoCal mosquito species. Only using complete F+R pairs ensures high quality data for species identification. This matches best practices in DNA barcoding (Hoque et al 2022).'
+  status: active
+  tags:
+  - workflow
+  - consensus
+  - quality
+  - pedagogy
