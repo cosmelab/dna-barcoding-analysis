@@ -1,0 +1,486 @@
+/**
+ * Chromatogram CSS - DNA Barcoding Analysis Reports
+ *
+ * Defines: Chromatogram visualization, sliding window, quality heatmap
+ * Used by: QC Report (01_quality_control)
+ * Requires: base.css, components.css
+ */
+
+/* ============================================
+   CHROMATOGRAM CONTAINER
+   ============================================ */
+
+.chromatogram-wrapper {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.chromatogram-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.chromatogram-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--purple);
+    margin: 0;
+}
+
+.chromatogram-meta {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   QUALITY OVERVIEW HEATMAP
+   ============================================ */
+
+.quality-overview {
+    margin-bottom: var(--space-lg);
+}
+
+.quality-overview-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    color: var(--text-secondary);
+}
+
+.quality-heatmap {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+}
+
+.quality-segment {
+    flex: 1;
+    transition: opacity var(--transition-fast);
+}
+
+.quality-segment:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+/* Quality color coding */
+.q-high {
+    background-color: var(--status-pass);
+}
+
+.q-medium {
+    background-color: var(--status-warn);
+}
+
+.q-low {
+    background-color: var(--status-fail);
+}
+
+.q-none {
+    background-color: var(--bg-tertiary);
+}
+
+/* Current window indicator on heatmap */
+.window-indicator {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border: 2px solid var(--purple);
+    border-radius: var(--radius-sm);
+    background: rgba(189, 147, 249, 0.2);
+    pointer-events: none;
+    transition: left var(--transition-base), width var(--transition-base);
+}
+
+/* Legend */
+.quality-legend {
+    display: flex;
+    gap: var(--space-lg);
+    justify-content: center;
+    margin-top: var(--space-sm);
+    font-size: var(--text-xs);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-sm);
+}
+
+/* ============================================
+   CHROMATOGRAM VIEWER
+   ============================================ */
+
+.chromatogram-viewer {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: white;
+}
+
+.chromatogram-canvas-container {
+    width: 100%;
+    overflow: hidden;
+    background: white;
+    position: relative;
+}
+
+.chromatogram-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* For future canvas implementation */
+.chromatogram-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ============================================
+   CHROMATOGRAM CONTROLS
+   ============================================ */
+
+.chromatogram-controls {
+    padding: var(--space-md);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* Slider controls */
+.slider-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.slider-controls .btn-nav {
+    flex-shrink: 0;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+}
+
+/* Range slider */
+.position-slider {
+    flex: 1;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    outline: none;
+    cursor: pointer;
+}
+
+/* Chrome/Safari slider thumb */
+.position-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--purple);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition-fast);
+}
+
+.position-slider::-webkit-slider-thumb:hover {
+    background: var(--pink);
+    box-shadow: var(--shadow-md);
+}
+
+/* Firefox slider thumb */
+.position-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--purple);
+    cursor: pointer;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition-fast);
+}
+
+.position-slider::-moz-range-thumb:hover {
+    background: var(--pink);
+    box-shadow: var(--shadow-md);
+}
+
+/* Info display */
+.chromatogram-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+.position-info {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.window-size-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* ============================================
+   ZOOM CONTROLS (Future feature)
+   ============================================ */
+
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+}
+
+.zoom-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.zoom-btn:hover {
+    background: var(--purple);
+    color: white;
+    border-color: var(--purple);
+}
+
+.zoom-level {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    min-width: 50px;
+    text-align: center;
+}
+
+/* ============================================
+   BASE CALL ANNOTATIONS
+   ============================================ */
+
+.base-calls-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.base-call {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.base-call.high-quality {
+    color: var(--status-pass);
+}
+
+.base-call.medium-quality {
+    color: var(--status-warn);
+}
+
+.base-call.low-quality {
+    color: var(--status-fail);
+}
+
+/* ============================================
+   TRACE COLORS (Reference)
+   ============================================ */
+
+.trace-legend {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-sm);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-family: var(--font-mono);
+}
+
+.trace-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.trace-color {
+    width: 20px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.trace-a { background-color: #00ff00; } /* Green */
+.trace-t { background-color: #ff0000; } /* Red */
+.trace-c { background-color: #0000ff; } /* Blue */
+.trace-g { background-color: #000000; } /* Black */
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet: 768-1199px */
+@media (max-width: 1199px) and (min-width: 768px) {
+    .chromatogram-viewer {
+        --window-size: 100; /* 100bp window */
+    }
+
+    .slider-controls {
+        flex-wrap: wrap;
+    }
+}
+
+/* Mobile: <768px */
+@media (max-width: 768px) {
+    .chromatogram-wrapper {
+        padding: var(--space-md);
+    }
+
+    .chromatogram-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+
+    .chromatogram-viewer {
+        --window-size: 50; /* 50bp window */
+    }
+
+    .slider-controls {
+        flex-direction: column;
+    }
+
+    .position-slider {
+        width: 100%;
+    }
+
+    .slider-controls .btn-nav {
+        width: 100%;
+    }
+
+    .chromatogram-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+
+    .quality-legend {
+        flex-wrap: wrap;
+        font-size: 0.65rem;
+    }
+
+    .trace-legend {
+        flex-wrap: wrap;
+    }
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+
+.chromatogram-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: var(--text-secondary);
+}
+
+.chromatogram-loading .spinner {
+    margin-bottom: var(--space-lg);
+}
+
+/* ============================================
+   ERROR STATE
+   ============================================ */
+
+.chromatogram-error {
+    padding: var(--space-xl);
+    text-align: center;
+    background: rgba(255, 85, 85, 0.1);
+    border: 2px dashed var(--status-fail);
+    border-radius: var(--radius-md);
+    color: var(--status-fail);
+}
+
+.chromatogram-error-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+}
+
+/* ============================================
+   ANIMATION HELPERS
+   ============================================ */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chromatogram-viewer.animate-in {
+    animation: slideIn var(--transition-base);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .chromatogram-controls,
+    .quality-overview,
+    .zoom-controls {
+        display: none;
+    }
+
+    .chromatogram-viewer {
+        border: 1px solid #000;
+    }
+
+    .chromatogram-image {
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+}
