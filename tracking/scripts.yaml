@@ -1,0 +1,376 @@
+# Scripts & Modules Registry
+# Comprehensive documentation of all executable scripts and Python modules
+
+metadata:
+  project: dna-barcoding-analysis
+  last_updated: "2025-11-21T03:00:00"
+  purpose: "Track all scripts, modules, and their functionality"
+
+# ==============================================
+# BASH SCRIPTS (User-facing)
+# ==============================================
+
+bash_scripts:
+  - script_id: "tutorial_sh"
+    name: "tutorial.sh"
+    path: "./tutorial.sh"
+    purpose: "Interactive tutorial using test data"
+    description: "Runs complete 5-step workflow on test_data to teach students the pipeline"
+    author: "claude-sonnet"
+    created: "2025-11-17"
+    last_modified: "2025-11-20"
+    usage: "./tutorial.sh"
+    runtime: "~5 minutes"
+    requirements:
+      - "Docker Desktop running"
+      - "cosmelab/dna-barcoding-analysis:latest container"
+    outputs:
+      - "results/tutorial/01_qc/"
+      - "results/tutorial/02_consensus/"
+      - "results/tutorial/03_alignment/"
+      - "results/tutorial/04_phylogeny/"
+      - "results/tutorial/05_blast/"
+    features:
+      - "Interactive prompts with 5-second timeout"
+      - "Auto-opens HTML reports"
+      - "Color-coded progress indicators"
+    notes: "Students run this FIRST before analyzing class data"
+
+  - script_id: "run_analysis_sh"
+    name: "run-analysis.sh"
+    path: "./run-analysis.sh"
+    purpose: "Analyze class dataset (30 mosquito samples)"
+    description: "Runs complete 5-step workflow on data/student_sequences/"
+    author: "claude-sonnet"
+    created: "2025-11-18"
+    last_modified: "2025-11-20"
+    usage: "./run-analysis.sh"
+    runtime: "~10 minutes"
+    requirements:
+      - "Docker Desktop running"
+      - "Tutorial completed (./tutorial.sh)"
+      - "30 .ab1 files in data/student_sequences/"
+    outputs:
+      - "results/my_analysis/01_qc/"
+      - "results/my_analysis/02_consensus/"
+      - "results/my_analysis/03_alignment/"
+      - "results/my_analysis/04_phylogeny/"
+      - "results/my_analysis/05_blast/"
+    features:
+      - "Interactive prompts with timeout"
+      - "Processes all 30 class samples"
+      - "Creates consensus from F+R pairs"
+    notes: "Students run this AFTER tutorial for actual assignment"
+
+# ==============================================
+# PYTHON MODULES (Pipeline Steps)
+# ==============================================
+
+python_modules:
+  - module_id: "qc_chromatograms"
+    name: "qc_chromatograms.py"
+    path: "modules/01_quality_control/qc_chromatograms.py"
+    step: "Step 1 of 5"
+    purpose: "Quality control of Sanger sequencing chromatograms"
+    description: "Analyzes .ab1 files, generates QC report with chromatogram visualizations"
+    author: "claude-sonnet"
+    created: "2025-11-17"
+    last_modified: "2025-11-21"
+    usage: "python3 qc_chromatograms.py <input_dir> <output_dir> [--open]"
+    runtime: "~30 seconds for 30 files"
+    inputs:
+      - format: ".ab1 files (Sanger chromatograms)"
+        location: "data/student_sequences/ or data/test_data/"
+    outputs:
+      - "qc_report.html - Interactive report with chromatograms"
+      - "qc_results.json - Machine-readable results"
+      - "passed_sequences.fasta - Sequences that passed QC"
+    features:
+      - "Quality score analysis (Phred scores)"
+      - "Sequence length validation"
+      - "Chromatogram visualization (bases 50-200)"
+      - "Pass/fail criteria"
+    thresholds:
+      min_length: 500
+      min_quality: 20
+      min_quality_bases: 400
+    html_report:
+      uses_css: ["base.css", "components.css", "reports.css", "chromatogram.css"]
+      has_emoji: true
+      interactive: true
+      collapsible: true
+    known_issues:
+      - issue: "X-axis shows trace positions (0-1750) not base positions (50-200)"
+        status: "pending_fix"
+        priority: "high"
+      - issue: "No sliding window to view full sequence"
+        status: "pending_implementation"
+        priority: "high"
+    notes: "Most complex module - handles chromatogram plotting and quality assessment"
+
+  - module_id: "create_consensus"
+    name: "create_consensus.py"
+    path: "modules/02_consensus/create_consensus.py"
+    step: "Step 2 of 5"
+    purpose: "Create consensus sequences from F+R read pairs"
+    description: "Combines forward and reverse reads using pairwise alignment"
+    author: "claude-sonnet"
+    created: "2025-11-18"
+    last_modified: "2025-11-21"
+    usage: "python3 create_consensus.py <input_fasta> <output_dir> [--pairs-only]"
+    runtime: "~20 seconds for 12 sequences"
+    inputs:
+      - format: "FASTA (from QC step)"
+        location: "results/*/01_qc/passed_sequences.fasta"
+    outputs:
+      - "consensus_report.html - Pairing results"
+      - "consensus_sequences.fasta - Consensus sequences"
+      - "combined_with_references.fasta - (created by bash script in step 3)"
+    features:
+      - "Pairs F and R reads by sample name"
+      - "--pairs-only flag: Skip samples with only F or only R"
+      - "Selects best read (typically R has better quality)"
+      - "Reports pairing statistics"
+    html_report:
+      uses_css: ["base.css", "components.css", "reports.css"]
+      has_emoji: true
+      interactive: false
+    notes: "Uses Bio.pairwise2 (deprecated but functional)"
+
+  - module_id: "align_sequences"
+    name: "align_sequences.py"
+    path: "modules/03_alignment/align_sequences.py"
+    step: "Step 3 of 5"
+    purpose: "Multiple sequence alignment with MAFFT"
+    description: "Aligns student samples + reference sequences"
+    author: "claude-sonnet"
+    created: "2025-11-18"
+    last_modified: "2025-11-21"
+    usage: "python3 align_sequences.py <input_fasta> <output_dir>"
+    runtime: "~45 seconds for 56 sequences"
+    inputs:
+      - format: "FASTA (consensus + references)"
+        location: "results/*/02_consensus/combined_with_references.fasta"
+    outputs:
+      - "aligned_sequences.fasta - Aligned sequences"
+      - "alignment_report.html - Alignment visualization"
+      - "alignment_stats.json - Statistics"
+    features:
+      - "Uses MAFFT --auto for alignment"
+      - "Generates alignment statistics"
+      - "Visual alignment viewer in HTML"
+    dependencies:
+      - "mafft (in container)"
+    html_report:
+      uses_css: ["base.css", "components.css", "reports.css"]
+      has_emoji: false
+      interactive: false
+    notes: "MAFFT is gold standard for sequence alignment"
+
+  - module_id: "build_tree"
+    name: "build_tree.py"
+    path: "modules/04_phylogeny/build_tree.py"
+    step: "Step 4 of 5"
+    purpose: "Phylogenetic tree construction with IQ-TREE"
+    description: "Builds maximum likelihood tree, generates visualization"
+    author: "claude-sonnet"
+    created: "2025-11-18"
+    last_modified: "2025-11-21"
+    usage: "python3 build_tree.py <alignment_fasta> <output_dir>"
+    runtime: "~2 minutes for 56 sequences"
+    inputs:
+      - format: "Aligned FASTA"
+        location: "results/*/03_alignment/aligned_sequences.fasta"
+    outputs:
+      - "tree.treefile - Newick format tree"
+      - "tree.png - Visualization"
+      - "tree.iqtree - Detailed analysis log"
+      - "phylogeny_report.html - HTML report"
+    features:
+      - "Model selection (MFP - Model Finder Plus)"
+      - "1000 ultrafast bootstrap replicates"
+      - "Automatic tree visualization"
+      - "Student samples highlighted"
+    dependencies:
+      - "iqtree (in container)"
+      - "Bio.Phylo for visualization"
+    html_report:
+      uses_css: ["base.css", "components.css", "reports.css"]
+      has_emoji: false
+      interactive: false
+    notes: "IQ-TREE is state-of-the-art for phylogenetic inference"
+
+  - module_id: "identify_species"
+    name: "identify_species.py"
+    path: "modules/05_identification/identify_species.py"
+    step: "Step 5 of 5"
+    purpose: "Species identification via NCBI BLAST"
+    description: "BLASTs consensus sequences against GenBank, identifies species"
+    author: "claude-sonnet"
+    created: "2025-11-18"
+    last_modified: "2025-11-21"
+    usage: "python3 identify_species.py <consensus_fasta> <output_dir>"
+    runtime: "~30 seconds (3s delay between queries)"
+    inputs:
+      - format: "Consensus FASTA"
+        location: "results/*/02_consensus/consensus_sequences.fasta"
+    outputs:
+      - "identification_report.html - Top matches for each sample"
+      - "identification_results.json - Detailed BLAST results"
+    features:
+      - "Queries NCBI GenBank (nt database)"
+      - "Returns top 5 hits per sequence"
+      - "Calculates percent identity"
+      - "3-second delay between queries (NCBI rate limit)"
+    dependencies:
+      - "Bio.Blast (BioPython)"
+      - "Internet connection"
+      - "NCBI API access"
+    html_report:
+      uses_css: ["base.css", "components.css", "reports.css"]
+      has_emoji: false
+      interactive: false
+    notes: "BLAST results show % identity NOT similarity within each sample's hits"
+
+  - module_id: "merge_forward_reverse"
+    name: "merge_forward_reverse.py"
+    path: "modules/00_assembly/merge_forward_reverse.py"
+    step: "Legacy/Optional"
+    purpose: "Merge F+R reads using alignment (deprecated)"
+    description: "Old approach - now superseded by create_consensus.py"
+    status: "deprecated"
+    notes: "Kept for reference, not used in current workflow"
+
+# ==============================================
+# CONTAINER SCRIPTS
+# ==============================================
+
+container_scripts:
+  - script_id: "build_container"
+    name: "build-container.sh"
+    path: "scripts/build-container.sh"
+    purpose: "Build Docker container locally"
+    description: "Builds multi-architecture container (amd64 + arm64)"
+    usage: "./scripts/build-container.sh"
+    outputs:
+      - "cosmelab/dna-barcoding-analysis:latest"
+    notes: "Use this for local development, push to Docker Hub when ready"
+
+  - script_id: "push_container"
+    name: "push-container.sh"
+    path: "scripts/push-container.sh"
+    purpose: "Push container to Docker Hub"
+    description: "Pushes multi-architecture container to public registry"
+    usage: "./scripts/push-container.sh"
+    notes: "Requires Docker Hub authentication"
+
+# ==============================================
+# DOCUMENTATION FILES
+# ==============================================
+
+documentation:
+  - doc_id: "readme"
+    name: "README.md"
+    path: "README.md"
+    purpose: "Main project documentation"
+    audience: "Students, instructors"
+
+  - doc_id: "github_classroom"
+    name: "github_classroom.md"
+    path: "github_classroom.md"
+    purpose: "GitHub Classroom setup guide"
+    audience: "Instructors"
+
+  - doc_id: "pipeline_workflow"
+    name: "pipeline_workflow.md"
+    path: "docs/pipeline_workflow.md"
+    purpose: "Detailed workflow documentation"
+    audience: "Students, instructors"
+
+  - doc_id: "html_design_spec"
+    name: "html_design_spec.md"
+    path: "tracking/html_design_spec.md"
+    purpose: "HTML report design system specification"
+    audience: "Developers"
+    created: "2025-11-21"
+
+# ==============================================
+# CSS/STYLING FILES
+# ==============================================
+
+css_files:
+  - css_id: "base_css"
+    name: "base.css"
+    path: "tracking/styles/base.css"
+    purpose: "Core styles - colors, typography, CSS reset"
+    size_lines: 150
+    created: "2025-11-21"
+
+  - css_id: "components_css"
+    name: "components.css"
+    path: "tracking/styles/components.css"
+    purpose: "Reusable UI components"
+    size_lines: 300
+    created: "2025-11-21"
+
+  - css_id: "reports_css"
+    name: "reports.css"
+    path: "tracking/styles/reports.css"
+    purpose: "Report-specific layouts"
+    size_lines: 250
+    created: "2025-11-21"
+
+  - css_id: "chromatogram_css"
+    name: "chromatogram.css"
+    path: "tracking/styles/chromatogram.css"
+    purpose: "Chromatogram visualization styles"
+    size_lines: 200
+    created: "2025-11-21"
+
+# ==============================================
+# WORKFLOW DEPENDENCIES
+# ==============================================
+
+workflow:
+  description: "5-step DNA barcoding pipeline"
+  steps:
+    - step: 1
+      module: "qc_chromatograms.py"
+      input: ".ab1 files"
+      output: "passed_sequences.fasta"
+
+    - step: 2
+      module: "create_consensus.py"
+      input: "passed_sequences.fasta"
+      output: "consensus_sequences.fasta"
+
+    - step: 3
+      module: "bash: cat consensus + references"
+      input: "consensus_sequences.fasta + socal_mosquitoes.fasta"
+      output: "combined_with_references.fasta"
+
+    - step: 4a
+      module: "align_sequences.py"
+      input: "combined_with_references.fasta"
+      output: "aligned_sequences.fasta"
+
+    - step: 4b
+      module: "build_tree.py"
+      input: "aligned_sequences.fasta"
+      output: "tree.treefile, tree.png"
+
+    - step: 5
+      module: "identify_species.py"
+      input: "consensus_sequences.fasta"
+      output: "identification_report.html"
+
+# ==============================================
+# NOTES
+# ==============================================
+
+notes:
+  - "All Python modules are designed to run inside Docker container"
+  - "HTML reports use modular CSS from tracking/styles/"
+  - "Container includes: Python, BioPython, MAFFT, IQ-TREE, matplotlib"
+  - "Multi-architecture support: amd64 (Intel/AMD) + arm64 (Apple Silicon)"
+  - "Auto-grading checks for presence of output files, not correctness"

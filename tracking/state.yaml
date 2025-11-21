@@ -1,7 +1,7 @@
 project: dna-barcoding-analysis
-current_phase: public_release_preparation
-current_task: polish_for_public_release
-last_updated: '2025-11-20T10:30:00'
+current_phase: ready_for_deployment
+current_task: create_github_classroom_assignment
+last_updated: '2025-11-20T11:30:00'
 active_jobs: []
 blocking_issues: []
 target_ready_date: '2025-11-19'
@@ -16,20 +16,30 @@ completed_today:
   - Confirmed numbered directory structure works
   - All blocking issues resolved
   - Updated tracking/decisions.yaml with D015-D018 (interactive prompts, GitHub Classroom, public release, website)
+  - Added interactive prompts with 5-second timeout to both scripts (D015)
+  - Updated README.md with prerequisites section and website note
+  - Created GitHub Actions auto-grading workflow (.github/workflows/autograding.yml)
+  - Created github_classroom.md setup guide (instructor + student sections)
+  - Updated .gitignore to allow results/ for auto-grading
+  - Committed test results and verified workflow triggers
+  - Pushed all changes to GitHub main branch
 current_status:
-  - 5-step consensus workflow tested and working
-  - Student data results (30 .ab1 files, 15 samples)
-  - QC passed 12/30 sequences, 4 samples with complete F+R pairs
-  - Tree includes 4 student samples + 52 reference mosquitoes (56 total)
-  - Species identified (1 Aedes albopictus, 3 Culex pipiens, all >98% identity)
-  - Tutorial script ready for students (uses test_data, 15-20 min)
-  - Assignment updated with clear instructions and grading rubric
-  - Repository ready for public release after polish
+  - Repository template READY for GitHub Classroom
+  - Auto-grading workflow deployed and functional
+  - All scripts tested with interactive prompts
+  - Documentation complete (README, github_classroom, start_here)
+  - Container publicly accessible (cosmelab/dna-barcoding-analysis:latest)
+  - No sensitive information in repository
+  - Naming conventions followed (only README.md in caps)
+  - 5-step workflow fully tested and working
+  - AWAITING: GitHub Classroom assignment creation by instructor
+pending_decisions:
+  - Keep or hide tracking/ directory before public release
+  - Create LICENSE file (README mentions MIT + CC BY 4.0)
+  - Remove student .ab1 files from data/student_sequences/
 next_up:
-  - Add interactive prompts with timeout to tutorial.sh and run-analysis.sh (D015)
-  - Update README.md with prerequisites and platform-specific setup instructions
-  - Review all documentation for professional tone and moderate emoji usage (D017)
-  - Create GitHub Actions workflow for auto-grading (D016)
-  - Setup GitHub Classroom assignment from template repo (D016)
-  - Create documentation website similar to entm201l-fall2025 (D018)
-  - Test complete workflow on Windows (optional, low priority)
+  - Instructor creates GitHub Classroom assignment via web interface
+  - Generate invitation link for students
+  - Optional: Beta test with one student before full class rollout
+  - Optional: Create documentation website (D018)
+  - Optional: Test on Windows platform
