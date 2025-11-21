@@ -141,6 +141,7 @@ def generate_html_report(output_dir, pairs, unpaired, consensus_seqs, stats):
     html = f"""<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Consensus Sequence Report</title>
     <style>
         body {{

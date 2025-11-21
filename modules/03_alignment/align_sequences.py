@@ -135,6 +135,7 @@ def generate_html_report(stats, alignment_file, output_file):
     html = f"""<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Sequence Alignment Report</title>
     <style>
         body {{ font-family: Arial, sans-serif; margin: 20px; max-width: 1400px; }}

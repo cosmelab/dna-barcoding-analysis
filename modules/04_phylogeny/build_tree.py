@@ -84,6 +84,7 @@ def generate_html_report(tree_file, image_file, log_file, output_file):
     html = f"""<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Phylogenetic Tree Report</title>
     <style>
         body {{ font-family: Arial, sans-serif; margin: 20px; }}

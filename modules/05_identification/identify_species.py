@@ -64,6 +64,7 @@ def generate_html_report(results, output_file):
     html = """<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Species Identification Report</title>
     <style>
         body {{ font-family: Arial, sans-serif; margin: 20px; }}
