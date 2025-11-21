@@ -157,4 +157,4 @@ For technical issues with GitHub Classroom:
 For questions about the analysis workflow:
 - See README.md in the repository
 - Check docs/pipeline_workflow.md for detailed workflow
-- Ask your TA or instructor
+- Ask during lab or office hours
