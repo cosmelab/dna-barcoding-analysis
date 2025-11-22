@@ -68,6 +68,7 @@ def visualize_tree(tree_file, output_image):
 def generate_html_report(tree_file, image_file, log_file, output_file):
     """Generate HTML report for phylogenetic tree using new design system"""
     from datetime import datetime
+    from pathlib import Path
 
     # Try to extract model info from log
     model_info = "See .iqtree file for details"
@@ -82,6 +83,12 @@ def generate_html_report(tree_file, image_file, log_file, output_file):
         except:
             pass
 
+    # Read CSS files and embed them
+    project_root = Path(__file__).parent.parent.parent
+    base_css = (project_root / "tracking/styles/base.css").read_text()
+    components_css = (project_root / "tracking/styles/components.css").read_text()
+    reports_css = (project_root / "tracking/styles/reports.css").read_text()
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,10 +96,14 @@ def generate_html_report(tree_file, image_file, log_file, output_file):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phylogenetic Tree Report - DNA Barcoding</title>
 
-    <!-- Modular CSS -->
-    <link rel="stylesheet" href="../../../tracking/styles/base.css">
-    <link rel="stylesheet" href="../../../tracking/styles/components.css">
-    <link rel="stylesheet" href="../../../tracking/styles/reports.css">
+    <!-- Embedded CSS for reliable loading -->
+    <style>
+{base_css}
+
+{components_css}
+
+{reports_css}
+    </style>
 </head>
 <body>
     <!-- Report Header -->

@@ -131,11 +131,18 @@ def generate_visual_alignment(alignment_file, max_seqs=20, chunk_size=100):
 def generate_html_report(stats, alignment_file, output_file):
     """Generate comprehensive HTML report with visual alignment using new design system"""
     from datetime import datetime
+    from pathlib import Path
 
     visual_alignment = generate_visual_alignment(alignment_file)
 
     # Calculate metrics
     avg_gaps = sum(s['percent_gaps'] for s in stats['sequences']) / len(stats['sequences']) if stats['sequences'] else 0
+
+    # Read CSS files and embed them
+    project_root = Path(__file__).parent.parent.parent
+    base_css = (project_root / "tracking/styles/base.css").read_text()
+    components_css = (project_root / "tracking/styles/components.css").read_text()
+    reports_css = (project_root / "tracking/styles/reports.css").read_text()
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -144,12 +151,14 @@ def generate_html_report(stats, alignment_file, output_file):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sequence Alignment Report - DNA Barcoding</title>
 
-    <!-- Modular CSS -->
-    <link rel="stylesheet" href="../../../tracking/styles/base.css">
-    <link rel="stylesheet" href="../../../tracking/styles/components.css">
-    <link rel="stylesheet" href="../../../tracking/styles/reports.css">
-
+    <!-- Embedded CSS for reliable loading -->
     <style>
+{base_css}
+
+{components_css}
+
+{reports_css}
+
         /* Alignment-specific styles - Heatmap visualization */
         .alignment-chunk {{
             margin: 20px 0;

@@ -92,6 +92,7 @@ def get_common_name(species):
 def generate_html_report(results, output_file):
     """Generate HTML report with BLAST results using new design system"""
     from datetime import datetime
+    from pathlib import Path
 
     # Calculate summary statistics
     total = len(results)
@@ -110,6 +111,12 @@ def generate_html_report(results, output_file):
                   if r['status'] == "SUCCESS" and r['top_hit']]
     avg_identity = sum(identities) / len(identities) if identities else 0
 
+    # Read CSS files and embed them
+    project_root = Path(__file__).parent.parent.parent
+    base_css = (project_root / "tracking/styles/base.css").read_text()
+    components_css = (project_root / "tracking/styles/components.css").read_text()
+    reports_css = (project_root / "tracking/styles/reports.css").read_text()
+
     # Build HTML
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -118,10 +125,14 @@ def generate_html_report(results, output_file):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Species Identification Report - DNA Barcoding</title>
 
-    <!-- Modular CSS -->
-    <link rel="stylesheet" href="../../../tracking/styles/base.css">
-    <link rel="stylesheet" href="../../../tracking/styles/components.css">
-    <link rel="stylesheet" href="../../../tracking/styles/reports.css">
+    <!-- Embedded CSS for reliable loading -->
+    <style>
+{base_css}
+
+{components_css}
+
+{reports_css}
+    </style>
 </head>
 <body>
     <!-- Report Header -->
