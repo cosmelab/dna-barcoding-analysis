@@ -1,45 +1,41 @@
 {
   "name": "DNA Barcoding Analysis",
-  "build": {
-    "dockerfile": "../container/Dockerfile",
-    "context": ".."
-  },
+  "image": "cosmelab/dna-barcoding-analysis:latest",
+
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+
   "customizations": {
     "vscode": {
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "python.defaultInterpreterPath": "/opt/conda/bin/python",
-        "python.linting.enabled": true,
-        "python.linting.pylintEnabled": true,
-        "python.formatting.provider": "black",
-        "r.rterm.linux": "/opt/conda/bin/R",
-        "files.watcherExclude": {
-          "**/.git/objects/**": true,
-          "**/.git/subtree-cache/**": true,
-          "**/node_modules/*/**": true,
-          "**/.tracking/checkpoints/**": true
-        }
-      },
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "ms-toolsai.jupyter",
-        "REditorSupport.r",
-        "REditorSupport.r-lsp",
+        "ms-azuretools.vscode-docker",
         "yzhang.markdown-all-in-one",
-        "davidanson.vscode-markdownlint",
-        "streetsidesoftware.code-spell-checker",
-        "eamodio.gitlens",
-        "mhutchie.git-graph"
-      ]
+        "DavidAnson.vscode-markdownlint"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/conda/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": false,
+        "python.formatting.provider": "black",
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "files.watcherExclude": {
+          "**/results/**": true
+        }
+      }
     }
   },
-  "forwardPorts": [8888, 4000],
-  "postCreateCommand": "echo '\\n=================================\\nDNA Barcoding Analysis Container\\n=================================\\n\\nWelcome! You are now in a fully configured bioinformatics environment.\\n\\nAvailable tools:\\n- MAFFT, MUSCLE, IQ-TREE, BLAST\\n- Python 3.10 + BioPython\\n- R 4.3 + ape, ggtree\\n- Jupyter Lab\\n\\nGet started:\\n  cd 01_linux_basics     # Start learning\\n  jupyter lab            # Launch Jupyter\\n  python --version       # Check Python\\n  R --version            # Check R\\n\\nHappy Barcoding!\\n'",
-  "remoteUser": "root",
+
+  "postCreateCommand": "echo '🧬 DNA Barcoding container ready! Run ./tutorial.sh to get started.'",
+
+  "remoteUser": "mambauser",
+
   "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder}/results,target=/workspace/results,type=bind"
   ],
-  "workspaceFolder": "/workspace",
-  "features": {}
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  }
 }

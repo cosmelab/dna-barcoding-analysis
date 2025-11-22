@@ -51,6 +51,45 @@ def open_in_browser(file_path):
         print(f"Could not auto-open browser: {e}")
         return False
 
+def extract_trace_data(ab1_file):
+    """Extract complete trace data for interactive viewer"""
+    try:
+        with open(ab1_file, 'rb') as f:
+            record = AbiIO.AbiIterator(f).__next__()
+
+        # Get base calls and quality
+        seq_record = SeqIO.read(ab1_file, 'abi')
+        sequence = str(seq_record.seq)
+        quality = seq_record.letter_annotations.get('phred_quality', [])
+
+        # Get peak positions
+        peak_positions = record.annotations['abif_raw'].get('PLOC1', [])
+
+        # Get trace data for all channels
+        channels_data = {}
+        channels = {'DATA9': 'G', 'DATA10': 'A', 'DATA11': 'T', 'DATA12': 'C'}
+
+        for channel, base in channels.items():
+            if channel in record.annotations['abif_raw']:
+                # Downsample trace data for performance (every 2nd point)
+                trace = record.annotations['abif_raw'][channel][::2]
+                # Convert to list (handles both numpy arrays and tuples)
+                channels_data[base] = list(trace)
+
+        # Downsample peak positions too (divide by 2 since we downsampled traces)
+        peak_positions_downsampled = [int(p/2) for p in peak_positions] if peak_positions else []
+
+        return {
+            'sequence': sequence,
+            'quality': quality,
+            'peak_positions': peak_positions_downsampled[:len(sequence)],  # Match sequence length
+            'traces': channels_data,
+            'trace_length': len(channels_data.get('A', []))
+        }
+    except Exception as e:
+        print(f"  Warning: Could not extract trace data: {e}")
+        return None
+
 def plot_chromatogram(ab1_file, start_base=50, num_bases=150):
     """Generate chromatogram plot with sequence overlay
 
@@ -115,9 +154,9 @@ def plot_chromatogram(ab1_file, start_base=50, num_bases=150):
                            ha='center', va='top', fontsize=8,
                            color=qual_color, fontweight='bold')
 
-        ax.set_xlabel('Trace Position', fontsize=10)
-        ax.set_ylabel('Signal Intensity', fontsize=10)
-        ax.set_title(f'{ab1_file.name} - Bases {start_base}-{end_base} (green=Q≥30, orange=Q≥20, red=Q<20)',
+        ax.set_xlabel('Trace Data Position (arbitrary units)', fontsize=10)
+        ax.set_ylabel('Fluorescence Signal Intensity', fontsize=10)
+        ax.set_title(f'{ab1_file.name} - Region showing bases {start_base}-{end_base}\n(Base call colors: green=Q≥30, orange=Q≥20, red=Q<20)',
                     fontsize=11, fontweight='bold')
         ax.legend(loc='upper right')
         ax.grid(True, alpha=0.2)
@@ -159,12 +198,15 @@ def analyze_chromatogram(ab1_file, output_dir=None):
             "low_quality_bases": low_quality_bases,
             "percent_high_quality": round(100 * high_quality_bases / seq_length, 2),
             "qc_status": "PASS" if qc_pass else "FAIL",
-            "sequence": str(record.seq)
+            "sequence": str(record.seq),
+            "quality_scores": quality_scores
         }
 
         # Generate chromatogram plot if output_dir provided
         if output_dir:
             result["chromatogram_img"] = plot_chromatogram(ab1_file)
+            # Also extract full trace data for interactive viewer
+            result["trace_data"] = extract_trace_data(ab1_file)
 
         return result
     except Exception as e:
@@ -174,122 +216,667 @@ def analyze_chromatogram(ab1_file, output_dir=None):
             "qc_status": "ERROR"
         }
 
-def generate_html_report(results, output_file):
-    """Generate improved HTML report with collapsible chromatograms"""
-    from datetime import datetime
+def generate_quality_heatmap(quality_scores):
+    """Generate HTML for quality heatmap visualization"""
+    if not quality_scores:
+        return ""
 
-    html = """<!DOCTYPE html>
-<html>
+    # Divide sequence into segments for heatmap
+    segment_size = max(1, len(quality_scores) // 50)  # Show ~50 segments
+    segments = []
+
+    for i in range(0, len(quality_scores), segment_size):
+        segment_quals = quality_scores[i:i+segment_size]
+        avg_qual = sum(segment_quals) / len(segment_quals) if segment_quals else 0
+
+        if avg_qual >= 30:
+            qual_class = "q-high"
+        elif avg_qual >= 20:
+            qual_class = "q-medium"
+        elif avg_qual > 0:
+            qual_class = "q-low"
+        else:
+            qual_class = "q-none"
+
+        segments.append(qual_class)
+
+    heatmap_html = '<div class="quality-heatmap">'
+    for qual_class in segments:
+        heatmap_html += f'<div class="quality-segment {qual_class}"></div>'
+    heatmap_html += '</div>'
+
+    return heatmap_html
+
+def generate_html_report(results, output_file):
+    """Generate HTML report with chromatogram visualizations using new design system"""
+    from datetime import datetime
+    from pathlib import Path
+
+    # Calculate summary statistics
+    total = len(results)
+    passed = sum(1 for r in results if r['qc_status'] == "PASS")
+    failed = sum(1 for r in results if r['qc_status'] == "FAIL")
+    errors = sum(1 for r in results if r['qc_status'] == "ERROR")
+
+    # Average quality of passed sequences
+    passed_results = [r for r in results if r['qc_status'] == "PASS" and 'avg_quality' in r]
+    avg_quality = sum(r['avg_quality'] for r in passed_results) / len(passed_results) if passed_results else 0
+
+    # Read CSS files and embed them
+    project_root = Path(__file__).parent.parent.parent
+    base_css = (project_root / "tracking/styles/base.css").read_text()
+    components_css = (project_root / "tracking/styles/components.css").read_text()
+    reports_css = (project_root / "tracking/styles/reports.css").read_text()
+    chromatogram_css = (project_root / "tracking/styles/chromatogram.css").read_text()
+
+    # Build HTML
+    html = f"""<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DNA Barcoding QC Report</title>
+    <title>Quality Control Report - DNA Barcoding</title>
+
+    <!-- Embedded CSS for reliable loading -->
     <style>
-        body {{ font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }}
-        h1 {{ color: #333; }}
-        .summary {{ background-color: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
-        table {{ border-collapse: collapse; width: 100%; background-color: white; }}
-        th, td {{ border: 1px solid #ddd; padding: 12px; text-align: left; }}
-        th {{ background-color: #4CAF50; color: white; position: sticky; top: 0; }}
-        .pass {{ background-color: #d4edda; }}
-        .fail {{ background-color: #f8d7da; }}
-        .error {{ background-color: #fff3cd; }}
-        .chromatogram-row {{ background-color: #fafafa; }}
-        .chromatogram-container {{
-            padding: 20px;
-            overflow-x: auto;
-            max-width: 100%;
-        }}
-        .chromatogram-container img {{
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: white;
-        }}
-        details {{ margin: 10px 0; }}
-        summary {{
-            cursor: pointer;
-            padding: 10px;
-            background-color: #e8f5e9;
-            border-radius: 4px;
-            font-weight: bold;
-        }}
-        summary:hover {{ background-color: #c8e6c9; }}
-        .sequence-display {{
-            font-family: 'Courier New', monospace;
-            background-color: #f0f0f0;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            overflow-x: auto;
-            white-space: pre;
-            font-size: 11px;
-        }}
+{base_css}
+
+{components_css}
+
+{reports_css}
+
+{chromatogram_css}
     </style>
+
+    <!-- Interactive Chromatogram Viewer JavaScript -->
+    <script>
+        // Render chromatogram on canvas
+        function renderChromatogram(sampleId, startBase) {{
+            const traceData = window['traceData_' + sampleId];
+            if (!traceData) return;
+
+            const canvas = document.getElementById('chromato-canvas-' + sampleId);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+
+            // Configuration - Reduced window for better peak visibility
+            const basesToShow = 60;  // Changed from 150 to 60 for clearer peaks
+            const endBase = Math.min(startBase + basesToShow, traceData.sequence.length);
+            const actualStart = Math.max(0, startBase);
+
+            // Get trace window
+            const peakPos = traceData.peak_positions;
+            if (!peakPos || peakPos.length === 0) return;
+
+            const traceStart = peakPos[actualStart] || 0;
+            const traceEnd = peakPos[Math.min(endBase - 1, peakPos.length - 1)] || traceData.trace_length;
+
+            // Draw traces
+            const traces = {{
+                'G': {{ color: 'rgba(0, 0, 0, 0.7)', data: traceData.traces.G }},
+                'A': {{ color: 'rgba(0, 200, 0, 0.7)', data: traceData.traces.A }},
+                'T': {{ color: 'rgba(255, 0, 0, 0.7)', data: traceData.traces.T }},
+                'C': {{ color: 'rgba(0, 0, 255, 0.7)', data: traceData.traces.C }}
+            }};
+
+            // Find max intensity in window for scaling
+            let maxIntensity = 0;
+            for (const base in traces) {{
+                const slice = traces[base].data.slice(traceStart, traceEnd);
+                maxIntensity = Math.max(maxIntensity, ...slice);
+            }}
+
+            // Scale factor
+            const yScale = (height * 0.75) / maxIntensity;
+            const xScale = width / (traceEnd - traceStart);
+
+            // Draw each trace with SMOOTH curves
+            for (const base in traces) {{
+                const trace = traces[base];
+                ctx.strokeStyle = trace.color;
+                ctx.lineWidth = 1.5;
+                ctx.lineJoin = 'round';  // Smooth corners
+                ctx.lineCap = 'round';   // Smooth line ends
+                ctx.beginPath();
+
+                // Convert trace data to points
+                const points = [];
+                for (let i = traceStart; i < traceEnd; i++) {{
+                    const x = (i - traceStart) * xScale;
+                    const y = height - (trace.data[i] * yScale);
+                    points.push({{ x, y }});
+                }}
+
+                if (points.length > 0) {{
+                    ctx.moveTo(points[0].x, points[0].y);
+
+                    // Draw smooth curves using quadratic interpolation
+                    for (let i = 1; i < points.length - 1; i++) {{
+                        const xc = (points[i].x + points[i + 1].x) / 2;
+                        const yc = (points[i].y + points[i + 1].y) / 2;
+                        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+                    }}
+
+                    // Draw last segment
+                    if (points.length > 1) {{
+                        const last = points[points.length - 1];
+                        const prev = points[points.length - 2];
+                        ctx.quadraticCurveTo(prev.x, prev.y, last.x, last.y);
+                    }}
+                }}
+
+                ctx.stroke();
+            }}
+
+            // Draw base calls
+            ctx.font = 'bold 14px monospace';
+            ctx.textAlign = 'center';
+
+            for (let i = actualStart; i < endBase; i++) {{
+                if (i >= traceData.sequence.length) break;
+
+                const base = traceData.sequence[i];
+                const qual = traceData.quality[i] || 0;
+
+                // Position on canvas
+                const peakIdx = peakPos[i];
+                if (peakIdx === undefined || peakIdx < traceStart || peakIdx >= traceEnd) continue;
+
+                const x = (peakIdx - traceStart) * xScale;
+                const y = 20;
+
+                // Color by quality
+                if (qual >= 30) {{
+                    ctx.fillStyle = '#006400';  // Dark green
+                }} else if (qual >= 20) {{
+                    ctx.fillStyle = '#ff8c00';  // Orange
+                }} else {{
+                    ctx.fillStyle = '#dc3545';  // Red
+                }}
+
+                ctx.fillText(base, x, y);
+            }}
+
+            // Update position display (minimal format)
+            const posDisplay = document.getElementById('chromato-position-' + sampleId);
+            if (posDisplay) {{
+                const totalBases = traceData.sequence.length;
+                posDisplay.innerHTML = `
+                    <span style="color: var(--purple);">📍 Base:</span>
+                    <span style="color: var(--text-primary); font-weight: 700;">${{actualStart}}-${{endBase}}</span>
+                    <span style="color: var(--text-secondary);"> (of ${{totalBases}})</span>
+                    <span style="margin: 0 0.5rem; color: var(--text-secondary);">•</span>
+                    <span style="color: var(--cyan); font-weight: 600;">Trace:</span>
+                    <span style="color: var(--text-primary); font-weight: 700;">${{traceStart}}-${{traceEnd}}</span>
+                `;
+            }}
+        }}
+
+        // Update chromatogram from slider
+        function updateChromatogram(sampleId, value) {{
+            const startBase = parseInt(value);
+            renderChromatogram(sampleId, startBase);
+        }}
+
+        // Move chromatogram by offset
+        function moveChromatogram(sampleId, offset) {{
+            const slider = document.getElementById('chromato-slider-' + sampleId);
+            const newValue = parseInt(slider.value) + offset;
+            const maxValue = parseInt(slider.max);
+
+            slider.value = Math.max(0, Math.min(newValue, maxValue));
+            updateChromatogram(sampleId, slider.value);
+        }}
+
+        // Reset to default view
+        function resetChromatogram(sampleId) {{
+            const slider = document.getElementById('chromato-slider-' + sampleId);
+            slider.value = 50;
+            updateChromatogram(sampleId, 50);
+        }}
+
+        // Add CSS for controls
+        const style = document.createElement('style');
+        style.textContent = `
+            .chromato-controls {{
+                margin-top: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+                background: var(--bg-secondary);
+                border-radius: var(--radius-md);
+            }}
+
+            .control-group {{
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }}
+
+            .slider-group {{
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }}
+
+            .chromato-slider {{
+                -webkit-appearance: none;
+                appearance: none;
+                height: 12px;
+                background: linear-gradient(90deg, var(--purple), var(--pink));
+                border-radius: 6px;
+                outline: none;
+                transition: opacity 0.2s;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }}
+
+            .chromato-slider:hover {{
+                opacity: 0.9;
+                box-shadow: 0 2px 8px rgba(189, 147, 249, 0.4);
+            }}
+
+            /* Chrome/Safari/Edge slider thumb - BIG and OBVIOUS! */
+            .chromato-slider::-webkit-slider-thumb {{
+                -webkit-appearance: none;
+                appearance: none;
+                width: 32px;
+                height: 32px;
+                background: linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%);
+                border: 4px solid white;
+                border-radius: 50%;
+                cursor: grab;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.3), 0 0 0 4px rgba(189, 147, 249, 0.2);
+                transition: all 0.2s ease;
+                animation: pulse 2s ease-in-out infinite;
+            }}
+
+            .chromato-slider::-webkit-slider-thumb:hover {{
+                transform: scale(1.15);
+                box-shadow: 0 4px 12px rgba(189, 147, 249, 0.6), 0 0 0 6px rgba(189, 147, 249, 0.3);
+            }}
+
+            .chromato-slider::-webkit-slider-thumb:active {{
+                cursor: grabbing;
+                background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+                transform: scale(1.05);
+                animation: none;
+            }}
+
+            /* Firefox slider thumb - BIG and OBVIOUS! */
+            .chromato-slider::-moz-range-thumb {{
+                width: 32px;
+                height: 32px;
+                background: linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%);
+                border: 4px solid white;
+                border-radius: 50%;
+                cursor: grab;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.3), 0 0 0 4px rgba(189, 147, 249, 0.2);
+                transition: all 0.2s ease;
+            }}
+
+            .chromato-slider::-moz-range-thumb:hover {{
+                transform: scale(1.15);
+                box-shadow: 0 4px 12px rgba(189, 147, 249, 0.6), 0 0 0 6px rgba(189, 147, 249, 0.3);
+            }}
+
+            .chromato-slider::-moz-range-thumb:active {{
+                cursor: grabbing;
+                background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+                transform: scale(1.05);
+            }}
+
+            /* Pulsing animation to draw attention */
+            @keyframes pulse {{
+                0%, 100% {{
+                    box-shadow: 0 3px 8px rgba(0,0,0,0.3), 0 0 0 4px rgba(189, 147, 249, 0.2);
+                }}
+                50% {{
+                    box-shadow: 0 3px 8px rgba(0,0,0,0.3), 0 0 0 8px rgba(189, 147, 249, 0.4);
+                }}
+            }}
+
+            @media (max-width: 768px) {{
+                .chromato-controls {{
+                    padding: 0.75rem;
+                }}
+
+                .control-group {{
+                    flex-direction: column;
+                }}
+
+                .slider-group {{
+                    flex-direction: column;
+                    align-items: flex-start;
+                }}
+
+                .chromato-slider {{
+                    width: 100% !important;
+                    max-width: none !important;
+                }}
+            }}
+        `;
+        document.head.appendChild(style);
+    </script>
 </head>
 <body>
-    <div class="summary">
-        <h1>DNA Barcoding Quality Control Report</h1>
-        <p><strong>Generated:</strong> {date}</p>
-        <p><strong>Note:</strong> Chromatograms show middle region (bases 50-200) where quality is typically highest.
-        Click "Show Chromatogram" to view sequence traces.</p>
-    </div>
-    <table>
-        <tr>
-            <th>File</th>
-            <th>Length (bp)</th>
-            <th>Avg Quality</th>
-            <th>High Quality %</th>
-            <th>Status</th>
-        </tr>
-""".format(date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    <!-- Report Header -->
+    <header class="report-header">
+        <h1>🔬 Quality Control Report</h1>
+        <div class="progress-badge">Step 1 of 5</div>
+        <div class="report-date">Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</div>
+    </header>
 
+    <!-- Summary Dashboard -->
+    <section class="summary-dashboard">
+        <div class="metric-card metric-success">
+            <div class="metric-value">{passed}</div>
+            <div class="metric-label">Passed QC</div>
+            <div class="metric-icon">✓</div>
+        </div>
+
+        <div class="metric-card metric-{"fail" if failed > 0 else "success"}">
+            <div class="metric-value">{failed}</div>
+            <div class="metric-label">Failed QC</div>
+            <div class="metric-icon">{"✗" if failed > 0 else "✓"}</div>
+        </div>
+
+        <div class="metric-card metric-primary">
+            <div class="metric-value">{avg_quality:.1f}</div>
+            <div class="metric-label">Avg. Quality (Q)</div>
+            <div class="metric-icon">📊</div>
+        </div>
+
+        <div class="metric-card metric-{"fail" if errors > 0 else "success"}">
+            <div class="metric-value">{errors}</div>
+            <div class="metric-label">Errors</div>
+            <div class="metric-icon">{"⚠" if errors > 0 else "✓"}</div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="report-content">
+        <div class="content-section">
+            <h2>Quality Control Results</h2>
+            <p>Sanger sequencing chromatogram analysis with Phred quality scores</p>
+
+            <div class="info-box info-tip">
+                <strong>💡 Quality Thresholds:</strong>
+                <ul>
+                    <li><strong>Q ≥ 30:</strong> High quality (99.9% base call accuracy)</li>
+                    <li><strong>Q ≥ 20:</strong> Acceptable quality (99% accuracy)</li>
+                    <li><strong>Q &lt; 20:</strong> Low quality (may need review)</li>
+                    <li><strong>Pass criteria:</strong> ≥80% bases with Q≥20, average Q≥20</li>
+                </ul>
+            </div>
+
+            <div class="info-box info-success" style="margin-top: 1rem; background: linear-gradient(135deg, rgba(189, 147, 249, 0.1), rgba(255, 121, 198, 0.1));">
+                <strong>🔬 Interactive Chromatogram Viewer Guide:</strong>
+                <ul style="margin: 0.5rem 0 0 1.5rem;">
+                    <li><strong>👆 Drag the BIG circular slider</strong> to scroll through the entire sequence</li>
+                    <li><strong>⏮️ ⏭️ Use arrow buttons</strong> to jump forward/backward by 20 bases</li>
+                    <li><strong>🎨 Trace colors:</strong> A=green, T=red, C=blue, G=black</li>
+                    <li><strong>📊 Base quality on peaks:</strong> Green text=high (Q≥30), Orange=medium (Q≥20), Red=low (Q&lt;20)</li>
+                </ul>
+                <div style="margin-top: 1rem; padding: 0.75rem; background: var(--bg-cyan-light); border-radius: var(--radius-md); border-left: 3px solid var(--cyan);">
+                    <strong>📍 Understanding Positions:</strong>
+                    <ul style="margin: 0.5rem 0 0 1.5rem;">
+                        <li><strong>Base Position:</strong> Which DNA bases (A, T, G, C) you're viewing (e.g., bases 50-110)</li>
+                        <li><strong>Trace Position:</strong> The raw fluorescence data points from the sequencer (each base has ~10-15 trace points)</li>
+                    </ul>
+                </div>
+            </div>
+"""
+
+    # Generate results for each sequence
     for result in results:
-        if "error" in result:
-            row_class = "error"
-            row = f"""        <tr class="{row_class}">
-            <td>{result['file']}</td>
-            <td colspan="3">ERROR: {result['error']}</td>
-            <td>{result['qc_status']}</td>
-        </tr>
-"""
-        else:
-            row_class = "pass" if result['qc_status'] == "PASS" else "fail"
-            row = f"""        <tr class="{row_class}">
-            <td>{result['file']}</td>
-            <td>{result['length']}</td>
-            <td>{result['avg_quality']}</td>
-            <td>{result['percent_high_quality']}%</td>
-            <td>{result['qc_status']}</td>
-        </tr>
-"""
-            html += row
+        filename = result['file']
+        status = result['qc_status']
 
-            # Add chromatogram visualization in collapsible section
-            if "chromatogram_img" in result and result["chromatogram_img"]:
-                # Show first 60 bases of sequence as preview
-                seq_preview = result.get('sequence', '')[:60] + '...' if len(result.get('sequence', '')) > 60 else result.get('sequence', '')
-
-                html += f"""        <tr class="chromatogram-row">
-            <td colspan="5">
-                <details>
-                    <summary>📊 Show Chromatogram & Sequence</summary>
-                    <div class="chromatogram-container">
-                        <h4>Chromatogram View (Bases 50-200)</h4>
-                        <p><em>Base colors indicate quality: Green (Q≥30), Orange (Q≥20), Red (Q&lt;20)</em></p>
-                        <img src="data:image/png;base64,{result['chromatogram_img']}" alt="Chromatogram">
-                        <h4>Full Sequence ({result['length']} bp)</h4>
-                        <div class="sequence-display">{result.get('sequence', 'N/A')}</div>
+        if status == "ERROR":
+            html += f"""
+            <div class="collapsible-section">
+                <button class="collapsible-toggle">
+                    <span class="toggle-icon">▶</span>
+                    <strong>{filename}</strong>
+                    <span class="badge badge-fail">ERROR</span>
+                </button>
+                <div class="collapsible-content">
+                    <div class="info-box info-error">
+                        <strong>⚠️ Processing Error:</strong> {result.get('error', 'Unknown error')}
                     </div>
-                </details>
-            </td>
-        </tr>
+                </div>
+            </div>
+"""
+            continue
+
+        # Get metrics
+        length = result.get('length', 0)
+        avg_qual = result.get('avg_quality', 0)
+        high_qual_pct = result.get('percent_high_quality', 0)
+
+        # Determine badge and styling
+        if status == "PASS":
+            badge_class = "badge-success"
+            badge_text = "PASS"
+            status_class = "pass"
+            status_upper = "PASS"
+        else:
+            badge_class = "badge-fail"
+            badge_text = "FAIL"
+            status_class = "fail"
+            status_upper = "FAIL"
+
+        html += f"""
+            <div class="collapsible-section">
+                <button class="collapsible-toggle">
+                    <span class="toggle-icon">▶</span>
+                    <strong>{filename}</strong>
+                    <span class="badge {badge_class}">{badge_text}</span>
+                    <em style="margin-left: auto; color: var(--text-secondary);">{length} bp | Q{avg_qual:.1f}</em>
+                </button>
+                <div class="collapsible-content">
+                    <!-- Quality Metrics Summary Table -->
+                    <div style="overflow-x: auto; margin-bottom: 1.5rem;">
+                        <table class="data-table" style="margin: 0;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, var(--bg-green-light), var(--bg-cyan-light));">
+                                    <th>📏 Length</th>
+                                    <th>⭐ Avg Quality</th>
+                                    <th>✓ High Quality %</th>
+                                    <th>📊 Q≥20 Bases</th>
+                                    <th>📉 Q<20 Bases</th>
+                                    <th>🎯 Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="row-{status_class}">
+                                    <td><strong>{length} bp</strong></td>
+                                    <td><span class="badge badge-{"success" if avg_qual >= 30 else "warning" if avg_qual >= 20 else "fail"}">Q {avg_qual:.1f}</span></td>
+                                    <td><strong>{high_qual_pct:.1f}%</strong></td>
+                                    <td>{result.get('high_quality_bases', 0)} / {length}</td>
+                                    <td>{result.get('low_quality_bases', 0)} / {length}</td>
+                                    <td><span class="badge badge-{status_class}">{status_upper}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Quality Overview Heatmap -->
+                    <div class="quality-overview">
+                        <div class="quality-overview-label">Quality Distribution Across Sequence</div>
+                        {generate_quality_heatmap(result.get('quality_scores', []))}
+                    </div>
 """
 
-    html += """    </table>
+        # Add interactive chromatogram if trace data available
+        if "trace_data" in result and result["trace_data"]:
+            trace_data = result["trace_data"]
+            trace_data_json = json.dumps(trace_data)
+
+            html += f"""
+                    <!-- Interactive Chromatogram Visualization -->
+                    <div class="chromatogram-wrapper">
+                        <div class="chromatogram-header">
+                            <h4 class="chromatogram-title">🔬 Interactive Chromatogram Viewer</h4>
+                            <div class="chromatogram-meta">
+                                <span class="badge badge-success">NEW!</span>
+                                <span style="margin-left: 1rem;">Drag slider to explore • Full sequence: {len(trace_data['sequence'])} bases</span>
+                            </div>
+                        </div>
+
+                        <div class="chromatogram-viewer">
+                            <!-- Canvas for rendering traces -->
+                            <canvas id="chromato-canvas-{filename.replace('.', '_')}"
+                                    width="1400"
+                                    height="350"
+                                    style="width: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; cursor: crosshair;">
+                            </canvas>
+
+                            <!-- Navigation Controls -->
+                            <div class="chromato-controls">
+                                <div class="control-group">
+                                    <button class="btn btn-nav" onclick="moveChromatogram('{filename.replace('.', '_')}', -20)">
+                                        ⏮️ Back 20
+                                    </button>
+                                    <button class="btn btn-nav" onclick="moveChromatogram('{filename.replace('.', '_')}', 20)">
+                                        Forward 20 ⏭️
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetChromatogram('{filename.replace('.', '_')}')">
+                                        🔄 Reset
+                                    </button>
+                                </div>
+
+                                <div class="slider-group">
+                                    <label for="chromato-slider-{filename.replace('.', '_')}" style="font-weight: 600; margin-right: 1rem; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                                        <span id="chromato-position-{filename.replace('.', '_')}" style="font-size: 0.95rem;">
+                                            <span style="color: var(--purple);">📍 Base:</span>
+                                            <span style="color: var(--text-primary); font-weight: 700;">50-110</span>
+                                            <span style="color: var(--text-secondary);"> (of {len(trace_data['sequence'])})</span>
+                                            <span style="margin: 0 0.5rem; color: var(--text-secondary);">•</span>
+                                            <span style="color: var(--cyan); font-weight: 600;">Trace:</span>
+                                            <span style="color: var(--text-primary); font-weight: 700;">Loading...</span>
+                                        </span>
+                                    </label>
+                                    <input type="range"
+                                           id="chromato-slider-{filename.replace('.', '_')}"
+                                           class="chromato-slider"
+                                           min="0"
+                                           max="{max(0, len(trace_data['sequence']) - 60)}"
+                                           value="50"
+                                           oninput="updateChromatogram('{filename.replace('.', '_')}', this.value)"
+                                           style="width: 100%; max-width: 600px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trace Legend - Inline -->
+                        <div style="margin-top: 1rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: var(--radius-md); text-align: center; font-size: 0.9rem;">
+                            <strong style="color: var(--text-secondary);">Traces:</strong>
+                            <span style="margin: 0 1rem; color: var(--green); font-weight: 600;">A</span>
+                            <span style="margin: 0 1rem; color: var(--red); font-weight: 600;">T</span>
+                            <span style="margin: 0 1rem; color: var(--cyan); font-weight: 600;">C</span>
+                            <span style="margin: 0 1rem; color: black; font-weight: 600;">G</span>
+                        </div>
+                    </div>
+
+                    <!-- JavaScript for this chromatogram -->
+                    <script>
+                        // Store trace data for this sample
+                        window.traceData_{filename.replace('.', '_')} = {trace_data_json};
+
+                        // Initialize the chromatogram viewer
+                        document.addEventListener('DOMContentLoaded', function() {{
+                            renderChromatogram('{filename.replace('.', '_')}', 50);
+                        }});
+                    </script>
+"""
+        # Fallback to static image if trace data not available
+        elif "chromatogram_img" in result and result["chromatogram_img"]:
+            html += f"""
+                    <!-- Static Chromatogram (trace data unavailable) -->
+                    <div class="chromatogram-wrapper">
+                        <div class="chromatogram-header">
+                            <h4 class="chromatogram-title">Chromatogram View</h4>
+                            <div class="chromatogram-meta">Showing bases 50-200 (middle region)</div>
+                        </div>
+                        <div class="chromatogram-viewer">
+                            <div class="chromatogram-canvas-container">
+                                <img src="data:image/png;base64,{result['chromatogram_img']}"
+                                     alt="Chromatogram for {filename}"
+                                     class="chromatogram-image">
+                            </div>
+                        </div>
+                    </div>
+"""
+
+        # Add full sequence
+        sequence = result.get('sequence', 'N/A')
+        if sequence and sequence != 'N/A':
+            html += f"""
+                    <!-- Full Sequence -->
+                    <h4 style="margin-top: 1.5rem;">Full Sequence ({len(sequence)} bp)</h4>
+                    <div class="sequence-display">{sequence}</div>
+"""
+
+        html += """
+                </div>
+            </div>
+"""
+
+    html += """
+        </div>
+    </main>
+
+    <!-- Footer with Help -->
+    <footer class="report-footer">
+        <div class="help-section">
+            <h3>Understanding Quality Control</h3>
+
+            <h4>What are Phred Quality Scores?</h4>
+            <p>Phred quality scores indicate the confidence in each base call. Q20 means 99% accuracy (1 in 100 chance of error), Q30 means 99.9% accuracy (1 in 1000 chance of error).</p>
+
+            <h4>Why do some sequences fail?</h4>
+            <ul>
+                <li><strong>Too short:</strong> Sequences under 500bp may not provide enough information for species identification</li>
+                <li><strong>Low quality:</strong> Poor chromatogram peaks can lead to incorrect base calls</li>
+                <li><strong>Contamination:</strong> Mixed signals from multiple DNA sources</li>
+                <li><strong>Degraded DNA:</strong> Old or improperly stored samples</li>
+            </ul>
+
+            <h4>How to improve sequence quality</h4>
+            <ol>
+                <li>Ensure DNA is fresh and properly stored (-20°C or -80°C)</li>
+                <li>Use high-quality primers designed for your target region</li>
+                <li>Optimize PCR conditions (annealing temperature, cycle number)</li>
+                <li>Clean PCR products before sequencing (remove primers and dNTPs)</li>
+                <li>Request re-sequencing for failed samples</li>
+            </ol>
+
+            <h4>What does the chromatogram show?</h4>
+            <p>The chromatogram displays raw fluorescence signals from the sequencer. Clean, sharp peaks with good separation indicate high-quality sequence data. Overlapping peaks or noisy baselines suggest quality issues.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for collapsible sections -->
+    <script>
+        document.querySelectorAll('.collapsible-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const section = button.parentElement;
+                section.classList.toggle('expanded');
+            });
+        });
+    </script>
 </body>
-</html>"""
+</html>
+"""
 
     with open(output_file, 'w') as f:
         f.write(html)

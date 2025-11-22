@@ -11,17 +11,30 @@
    ============================================ */
 
 .metric-card {
-    background: var(--bg-primary);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-purple-light) 100%);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     box-shadow: var(--shadow-md);
     text-align: center;
     transition: transform var(--transition-base), box-shadow var(--transition-base);
     border-left: 4px solid var(--purple);
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(189, 147, 249, 0.2) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .metric-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
 }
 
@@ -48,6 +61,11 @@
 /* Metric card variants */
 .metric-primary {
     border-left-color: var(--purple);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-purple-light) 100%);
+}
+
+.metric-primary::before {
+    background: radial-gradient(circle, rgba(189, 147, 249, 0.2) 0%, transparent 70%);
 }
 
 .metric-primary .metric-value {
@@ -56,6 +74,11 @@
 
 .metric-success {
     border-left-color: var(--status-pass);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-green-light) 100%);
+}
+
+.metric-success::before {
+    background: radial-gradient(circle, rgba(80, 250, 123, 0.2) 0%, transparent 70%);
 }
 
 .metric-success .metric-value {
@@ -64,6 +87,11 @@
 
 .metric-warning {
     border-left-color: var(--status-warn);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-orange-light) 100%);
+}
+
+.metric-warning::before {
+    background: radial-gradient(circle, rgba(255, 184, 108, 0.2) 0%, transparent 70%);
 }
 
 .metric-warning .metric-value {
@@ -72,6 +100,11 @@
 
 .metric-fail {
     border-left-color: var(--status-fail);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, #fff0f0 100%);
+}
+
+.metric-fail::before {
+    background: radial-gradient(circle, rgba(255, 85, 85, 0.2) 0%, transparent 70%);
 }
 
 .metric-fail .metric-value {
@@ -299,11 +332,14 @@
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    transition: background-color var(--transition-fast);
+    transition: all var(--transition-fast);
+    border-left: 4px solid transparent;
 }
 
 .collapsible-toggle:hover {
     background: var(--bg-hover);
+    border-left-color: var(--purple);
+    transform: translateX(2px);
 }
 
 .collapsible-toggle .toggle-icon {
@@ -493,6 +529,94 @@
 }
 
 /* ============================================
+   SEQUENCE DISPLAY BOXES
+   ============================================ */
+
+.sequence-box {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.sequence-box .sequence-header {
+    padding: var(--space-sm) var(--space-md);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.sequence-box .sequence-content {
+    padding: var(--space-md);
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    overflow-x: auto;
+    max-height: 250px;
+    overflow-y: auto;
+    white-space: pre;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Scrollbar styling for sequence boxes */
+.sequence-box .sequence-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.sequence-box .sequence-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.sequence-box .sequence-content::-webkit-scrollbar-thumb {
+    background: var(--purple);
+    border-radius: 4px;
+}
+
+.sequence-box .sequence-content::-webkit-scrollbar-thumb:hover {
+    background: var(--pink);
+}
+
+/* ============================================
+   SUMMARY TABLES (Compact horizontal layout)
+   ============================================ */
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-table thead {
+    background: var(--bg-secondary);
+}
+
+.summary-table thead th {
+    padding: var(--space-sm) var(--space-md);
+    text-align: left;
+    font-weight: 600;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+}
+
+.summary-table tbody td {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+}
+
+.summary-table tbody tr {
+    border-top: 1px solid var(--border-color);
+}
+
+/* ============================================
    RESPONSIVE UTILITIES
    ============================================ */
 
@@ -513,5 +637,10 @@
     .btn {
         padding: 0.4rem 1rem;
         font-size: var(--text-xs);
+    }
+
+    .sequence-box .sequence-content {
+        font-size: 11px;
+        padding: var(--space-sm);
     }
 }

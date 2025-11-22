@@ -54,8 +54,8 @@ def generate_alignment_stats(alignment_file):
 
     return stats
 
-def generate_visual_alignment(alignment_file, max_seqs=20, chunk_size=80):
-    """Generate visual alignment with conserved/variable positions"""
+def generate_visual_alignment(alignment_file, max_seqs=20, chunk_size=100):
+    """Generate heatmap-style visual alignment with grayscale conservation boxes"""
     alignment = AlignIO.read(alignment_file, "fasta")
 
     # Limit display to max_seqs sequences
@@ -75,7 +75,7 @@ def generate_visual_alignment(alignment_file, max_seqs=20, chunk_size=80):
         else:
             conservation.append(0)
 
-    # Generate HTML alignment view in chunks
+    # Generate HTML alignment view in chunks with heatmap boxes
     html_chunks = []
     for chunk_start in range(0, aln_length, chunk_size):
         chunk_end = min(chunk_start + chunk_size, aln_length)
@@ -85,40 +85,42 @@ def generate_visual_alignment(alignment_file, max_seqs=20, chunk_size=80):
         for record in display_seqs:
             seq_chunk = str(record.seq[chunk_start:chunk_end])
 
-            # Format sequence with conservation styling
-            formatted_seq = '<span class="sequence">'
+            # Format sequence with heatmap boxes
+            formatted_seq = '<div class="sequence">'
             for i, base in enumerate(seq_chunk):
                 pos = chunk_start + i
                 cons = conservation[pos]
 
-                # Conserved (>80%) = UPPERCASE, Variable (<80%) = lowercase
-                if cons >= 0.8:
-                    display_base = base.upper()
-                    css_class = 'conserved'
-                else:
-                    display_base = base.lower()
-                    css_class = 'variable'
-
-                # Color code bases
+                # Determine conservation class based on rate
                 if base == '-':
-                    color_class = 'gap'
-                elif base.upper() == 'A':
-                    color_class = 'base-a'
-                elif base.upper() == 'T':
-                    color_class = 'base-t'
-                elif base.upper() == 'G':
-                    color_class = 'base-g'
-                elif base.upper() == 'C':
-                    color_class = 'base-c'
+                    box_class = 'gap-box'
+                elif cons >= 0.95:
+                    box_class = 'cons-100'
+                elif cons >= 0.90:
+                    box_class = 'cons-90'
+                elif cons >= 0.80:
+                    box_class = 'cons-80'
+                elif cons >= 0.70:
+                    box_class = 'cons-70'
+                elif cons >= 0.60:
+                    box_class = 'cons-60'
+                elif cons >= 0.50:
+                    box_class = 'cons-50'
+                elif cons >= 0.40:
+                    box_class = 'cons-40'
+                elif cons >= 0.30:
+                    box_class = 'cons-30'
+                elif cons >= 0.20:
+                    box_class = 'cons-20'
                 else:
-                    color_class = 'base-n'
+                    box_class = 'cons-10'
 
-                formatted_seq += f'<span class="{css_class} {color_class}">{display_base}</span>'
+                formatted_seq += f'<span class="base-box {box_class}" title="{base.upper()} (conservation: {cons*100:.0f}%)">{base.upper()}</span>'
 
-            formatted_seq += '</span>'
+            formatted_seq += '</div>'
 
             # Truncate long IDs
-            seq_id = record.id[:30] + '...' if len(record.id) > 30 else record.id
+            seq_id = record.id[:28] + '...' if len(record.id) > 28 else record.id
             chunk_html += f'<div class="alignment-row"><span class="seq-id">{seq_id}</span>{formatted_seq}</div>'
 
         chunk_html += '</div>'
@@ -127,94 +129,290 @@ def generate_visual_alignment(alignment_file, max_seqs=20, chunk_size=80):
     return '\n'.join(html_chunks)
 
 def generate_html_report(stats, alignment_file, output_file):
-    """Generate comprehensive HTML report with visual alignment"""
+    """Generate comprehensive HTML report with visual alignment using new design system"""
     from datetime import datetime
 
     visual_alignment = generate_visual_alignment(alignment_file)
 
+    # Calculate metrics
+    avg_gaps = sum(s['percent_gaps'] for s in stats['sequences']) / len(stats['sequences']) if stats['sequences'] else 0
+
     html = f"""<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sequence Alignment Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence Alignment Report - DNA Barcoding</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="../../../tracking/styles/base.css">
+    <link rel="stylesheet" href="../../../tracking/styles/components.css">
+    <link rel="stylesheet" href="../../../tracking/styles/reports.css">
+
     <style>
-        body {{ font-family: Arial, sans-serif; margin: 20px; max-width: 1400px; }}
-        h1 {{ color: #333; }}
-        h2 {{ color: #555; margin-top: 30px; }}
-        table {{ border-collapse: collapse; width: 100%; margin-top: 20px; }}
-        th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
-        th {{ background-color: #4CAF50; color: white; }}
-        .summary {{ background-color: #f0f0f0; padding: 15px; margin: 20px 0; border-radius: 5px; }}
-        .legend {{ background-color: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 5px; border: 1px solid #ffc107; }}
-        .legend-item {{ display: inline-block; margin-right: 20px; }}
+        /* Alignment-specific styles - Heatmap visualization */
+        .alignment-chunk {{
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            box-shadow: var(--shadow-md);
+        }}
 
-        /* Alignment visualization */
-        .alignment-chunk {{ margin: 20px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; overflow-x: auto; }}
-        .position-header {{ font-weight: bold; color: #666; margin-bottom: 10px; }}
-        .alignment-row {{ font-family: 'Courier New', monospace; margin: 2px 0; white-space: nowrap; }}
-        .seq-id {{ display: inline-block; width: 200px; padding-right: 10px; font-weight: bold; color: #333; }}
-        .sequence {{ letter-spacing: 1px; }}
+        .position-header {{
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }}
 
-        /* Conservation styling */
-        .conserved {{ font-weight: bold; font-size: 1.1em; }}
-        .variable {{ font-size: 0.9em; opacity: 0.8; }}
+        .alignment-row {{
+            display: flex;
+            align-items: center;
+            margin: 1px 0;
+            white-space: nowrap;
+        }}
 
-        /* Base colors */
-        .base-a {{ color: #00C851; }}
-        .base-t {{ color: #ff4444; }}
-        .base-g {{ color: #ffbb33; }}
-        .base-c {{ color: #33b5e5; }}
-        .base-n {{ color: #999; }}
-        .gap {{ color: #ddd; }}
+        .seq-id {{
+            display: inline-block;
+            width: 200px;
+            padding-right: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }}
+
+        .sequence {{
+            display: flex;
+            gap: 1px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }}
+
+        /* Heatmap box styling - darker = more conserved */
+        .base-box {{
+            width: 14px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+            transition: transform 0.1s ease;
+        }}
+
+        .base-box:hover {{
+            transform: scale(1.5);
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }}
+
+        /* Conservation levels - grayscale heatmap */
+        /* Highly conserved (90-100%) - dark gray/black */
+        .cons-100 {{ background: #1a1a1a; }}
+        .cons-90 {{ background: #2d2d2d; }}
+
+        /* Moderately conserved (70-89%) - medium gray */
+        .cons-80 {{ background: #4a4a4a; }}
+        .cons-70 {{ background: #6b6b6b; }}
+
+        /* Low conservation (50-69%) - light gray */
+        .cons-60 {{ background: #8c8c8c; }}
+        .cons-50 {{ background: #adadad; }}
+
+        /* Variable (<50%) - very light gray */
+        .cons-40 {{ background: #c9c9c9; color: #555; text-shadow: none; }}
+        .cons-30 {{ background: #dedede; color: #555; text-shadow: none; }}
+        .cons-20 {{ background: #efefef; color: #555; text-shadow: none; }}
+        .cons-10 {{ background: #f5f5f5; color: #777; text-shadow: none; }}
+
+        /* Gaps */
+        .gap-box {{
+            background: #ffd4d4;
+            color: #999;
+            text-shadow: none;
+            border: 1px solid #ffb3b3;
+        }}
+
+        /* Legend */
+        .conservation-legend {{
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--bg-purple-light);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--purple);
+        }}
+
+        .legend-scale {{
+            display: flex;
+            gap: 2px;
+            margin: 10px 0;
+            align-items: center;
+        }}
+
+        .legend-box {{
+            width: 40px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }}
+
+        .legend-label {{
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0 10px;
+        }}
     </style>
 </head>
 <body>
-    <h1>Sequence Alignment Report</h1>
-    <p>Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
+    <!-- Report Header -->
+    <header class="report-header">
+        <h1>🧬 Sequence Alignment Report</h1>
+        <div class="progress-badge">Step 3 of 5</div>
+        <div class="report-date">Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</div>
+    </header>
 
-    <div class="summary">
-        <h2>Alignment Summary</h2>
-        <p><strong>Number of sequences:</strong> {stats['num_sequences']}</p>
-        <p><strong>Alignment length:</strong> {stats['alignment_length']} bp</p>
-        <p><strong>Alignment file:</strong> {Path(alignment_file).name}</p>
-    </div>
+    <!-- Summary Dashboard -->
+    <section class="summary-dashboard">
+        <div class="metric-card metric-primary">
+            <div class="metric-value">{stats['num_sequences']}</div>
+            <div class="metric-label">Sequences Aligned</div>
+            <div class="metric-icon">🧬</div>
+        </div>
 
-    <div class="legend">
-        <h3>Legend</h3>
-        <div class="legend-item"><strong>UPPERCASE</strong> = Conserved position (≥80% identity)</div>
-        <div class="legend-item"><strong>lowercase</strong> = Variable position (&lt;80% identity)</div>
-        <br>
-        <div class="legend-item"><span class="base-a">A</span> = Adenine</div>
-        <div class="legend-item"><span class="base-t">T</span> = Thymine</div>
-        <div class="legend-item"><span class="base-g">G</span> = Guanine</div>
-        <div class="legend-item"><span class="base-c">C</span> = Cytosine</div>
-        <div class="legend-item"><span class="gap">-</span> = Gap</div>
-    </div>
+        <div class="metric-card metric-success">
+            <div class="metric-value">{stats['alignment_length']}</div>
+            <div class="metric-label">Alignment Length (bp)</div>
+            <div class="metric-icon">📏</div>
+        </div>
 
-    <h2>Visual Alignment</h2>
-    <p><em>Scroll right to see full alignment. Conserved positions (UPPERCASE) vs variable positions (lowercase).</em></p>
-    {visual_alignment}
+        <div class="metric-card metric-primary">
+            <div class="metric-value">{avg_gaps:.1f}%</div>
+            <div class="metric-label">Avg. Gap %</div>
+            <div class="metric-icon">📊</div>
+        </div>
 
-    <h2>Sequence Statistics</h2>
-    <table>
-        <tr>
-            <th>Sequence ID</th>
-            <th>Original Length (bp)</th>
-            <th>Gaps</th>
-            <th>Gap %</th>
-        </tr>
+        <div class="metric-card metric-success">
+            <div class="metric-value">MAFFT</div>
+            <div class="metric-label">Alignment Tool</div>
+            <div class="metric-icon">⚙️</div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="report-content">
+        <div class="content-section">
+            <h2>Multiple Sequence Alignment</h2>
+            <p>Generated using MAFFT --auto algorithm</p>
+
+            <div class="info-box info-tip">
+                <strong>💡 Reading the Heatmap Alignment:</strong>
+                <ul>
+                    <li><strong>Dark boxes (black/dark gray):</strong> Highly conserved positions (90-100% identical across sequences)</li>
+                    <li><strong>Medium gray boxes:</strong> Moderately conserved (50-90% identical)</li>
+                    <li><strong>Light gray boxes:</strong> Variable positions (&lt;50% identical)</li>
+                    <li><strong>Pink boxes:</strong> Gaps (-) representing insertions/deletions</li>
+                    <li><strong>Hover over any box:</strong> See the base letter and conservation %</li>
+                </ul>
+            </div>
+
+            <div class="conservation-legend">
+                <h4 style="margin-top: 0;">Conservation Scale</h4>
+                <div class="legend-scale">
+                    <span class="legend-label">High</span>
+                    <span class="legend-box cons-100" style="color: white;">100%</span>
+                    <span class="legend-box cons-90" style="color: white;">90%</span>
+                    <span class="legend-box cons-80" style="color: white;">80%</span>
+                    <span class="legend-box cons-70" style="color: white;">70%</span>
+                    <span class="legend-box cons-60" style="color: white;">60%</span>
+                    <span class="legend-box cons-50" style="color: white;">50%</span>
+                    <span class="legend-box cons-40" style="color: #555;">40%</span>
+                    <span class="legend-box cons-30" style="color: #555;">30%</span>
+                    <span class="legend-box cons-20" style="color: #555;">20%</span>
+                    <span class="legend-box cons-10" style="color: #777;">10%</span>
+                    <span class="legend-label">Low</span>
+                    <span class="legend-box gap-box" style="color: #999; border: 1px solid #ffb3b3;">Gap</span>
+                </div>
+                <p style="font-size: 0.85rem; margin-top: 10px; margin-bottom: 0;">
+                    <strong>Interpretation:</strong> Darker colors indicate higher sequence similarity at that position.
+                    DNA barcoding regions (like COI) should show mostly dark boxes (high conservation within species)
+                    with some lighter boxes showing intraspecific variation.
+                </p>
+            </div>
+
+            <h3>Visual Alignment</h3>
+            <p><em>Scroll horizontally to view the full alignment. Hover over boxes to see base and conservation %. Alignment shown in 100bp chunks.</em></p>
+
+            {visual_alignment}
+
+            <h3 style="margin-top: 2rem;">Sequence Statistics</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Sequence ID</th>
+                        <th>Original Length (bp)</th>
+                        <th>Gaps Added</th>
+                        <th>Gap %</th>
+                    </tr>
+                </thead>
+                <tbody>
 """
 
     for seq in stats['sequences']:
-        html += f"""        <tr>
-            <td>{seq['id']}</td>
-            <td>{seq['length']}</td>
-            <td>{seq['gaps']}</td>
-            <td>{seq['percent_gaps']}%</td>
-        </tr>
+        row_class = "row-pass" if seq['percent_gaps'] < 5 else "row-warning" if seq['percent_gaps'] < 10 else "row-fail"
+        html += f"""                    <tr class="{row_class}">
+                        <td><code>{seq['id']}</code></td>
+                        <td>{seq['length']}</td>
+                        <td>{seq['gaps']}</td>
+                        <td><span class="badge badge-{"success" if seq['percent_gaps'] < 5 else "warning" if seq['percent_gaps'] < 10 else "fail"}">{seq['percent_gaps']}%</span></td>
+                    </tr>
 """
 
-    html += """    </table>
+    html += """                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer with Help -->
+    <footer class="report-footer">
+        <div class="help-section">
+            <h3>Understanding Sequence Alignment</h3>
+
+            <h4>What is multiple sequence alignment?</h4>
+            <p>Multiple sequence alignment (MSA) arranges DNA sequences to identify regions of similarity. These similarities may indicate functional, structural, or evolutionary relationships between sequences.</p>
+
+            <h4>Why align sequences?</h4>
+            <ul>
+                <li><strong>Phylogenetic analysis:</strong> Alignments are required for building evolutionary trees</li>
+                <li><strong>Identify conserved regions:</strong> Find functionally important DNA regions shared across species</li>
+                <li><strong>Compare sequences:</strong> See how your samples relate to reference sequences</li>
+            </ul>
+
+            <h4>What is MAFFT?</h4>
+            <p>MAFFT is a state-of-the-art multiple sequence alignment program. The --auto option automatically selects the most appropriate algorithm based on dataset size and similarity.</p>
+
+            <h4>What do gaps mean?</h4>
+            <p>Gaps (-) represent insertions or deletions (indels) that occurred during evolution. MAFFT inserts gaps to maximize alignment quality. High gap percentages (&gt;10%) may indicate:</p>
+            <ul>
+                <li>Sequence quality issues</li>
+                <li>Distant evolutionary relationships</li>
+                <li>Sequencing errors or contamination</li>
+            </ul>
+
+            <h4>Conserved vs Variable Positions</h4>
+            <p>Conserved positions (UPPERCASE) show ≥80% identity across all sequences, indicating functionally important or slowly-evolving regions. Variable positions (lowercase) may represent neutral mutations or rapidly-evolving regions.</p>
+        </div>
+    </footer>
 </body>
 </html>"""
 

@@ -99,14 +99,26 @@ python_modules:
       has_emoji: true
       interactive: true
       collapsible: true
+      redesigned: "2025-11-21"
+      features_added:
+        - "Metric cards dashboard (passed, failed, avg quality, errors)"
+        - "Quality heatmap showing distribution across sequence"
+        - "Collapsible sections for each sample"
+        - "Stats panel with key metrics"
+        - "Trace legend for nucleotide colors"
+        - "Comprehensive help section"
+        - "JavaScript interactivity for collapsible sections"
     known_issues:
       - issue: "X-axis shows trace positions (0-1750) not base positions (50-200)"
-        status: "pending_fix"
+        status: "fixed"
         priority: "high"
+        fix_date: "2025-11-21"
+        solution: "Updated labels to 'Trace Data Position (arbitrary units)' for clarity"
       - issue: "No sliding window to view full sequence"
         status: "pending_implementation"
-        priority: "high"
-    notes: "Most complex module - handles chromatogram plotting and quality assessment"
+        priority: "medium"
+        note: "Complex feature - requires JavaScript canvas or multiple views. Consider for future enhancement."
+    notes: "Most complex module - handles chromatogram plotting and quality assessment. Redesigned 2025-11-21 with modular CSS system and quality heatmap."
 
   - module_id: "create_consensus"
     name: "create_consensus.py"
@@ -135,7 +147,13 @@ python_modules:
       uses_css: ["base.css", "components.css", "reports.css"]
       has_emoji: true
       interactive: false
-    notes: "Uses Bio.pairwise2 (deprecated but functional)"
+      redesigned: "2025-11-21"
+      features_added:
+        - "Metric cards dashboard (consensus created, total samples, single reads, unpaired)"
+        - "Data tables with color-coded rows"
+        - "Info boxes for warnings and tips"
+        - "Comprehensive help section explaining consensus generation"
+    notes: "Uses Bio.pairwise2 (deprecated but functional). Redesigned 2025-11-21 with modular CSS system."
 
   - module_id: "align_sequences"
     name: "align_sequences.py"
@@ -163,9 +181,16 @@ python_modules:
       - "mafft (in container)"
     html_report:
       uses_css: ["base.css", "components.css", "reports.css"]
-      has_emoji: false
+      has_emoji: true
       interactive: false
-    notes: "MAFFT is gold standard for sequence alignment"
+      redesigned: "2025-11-21"
+      features_added:
+        - "Metric cards dashboard (sequences aligned, alignment length, avg gap %, tool used)"
+        - "Visual alignment with conservation highlighting (UPPERCASE=conserved, lowercase=variable)"
+        - "Color-coded bases (A, T, G, C) and gaps"
+        - "Sequence statistics table with gap percentage badges"
+        - "Comprehensive help section explaining MSA and MAFFT"
+    notes: "MAFFT is gold standard for sequence alignment. Redesigned 2025-11-21 with modular CSS system, preserving visual alignment viewer."
 
   - module_id: "build_tree"
     name: "build_tree.py"
@@ -196,9 +221,17 @@ python_modules:
       - "Bio.Phylo for visualization"
     html_report:
       uses_css: ["base.css", "components.css", "reports.css"]
-      has_emoji: false
+      has_emoji: true
       interactive: false
-    notes: "IQ-TREE is state-of-the-art for phylogenetic inference"
+      redesigned: "2025-11-21"
+      features_added:
+        - "Metric cards dashboard (IQ-TREE, ML, 1000 bootstraps, MFP)"
+        - "Figure with caption showing tree visualization"
+        - "Analysis details table with parameters and descriptions"
+        - "Output files documentation"
+        - "FigTree usage instructions for advanced viewing"
+        - "Comprehensive help section explaining phylogenetics, bootstrap, ML, IQ-TREE"
+    notes: "IQ-TREE is state-of-the-art for phylogenetic inference. Redesigned 2025-11-21 with modular CSS system."
 
   - module_id: "identify_species"
     name: "identify_species.py"
@@ -228,9 +261,17 @@ python_modules:
       - "NCBI API access"
     html_report:
       uses_css: ["base.css", "components.css", "reports.css"]
-      has_emoji: false
-      interactive: false
-    notes: "BLAST results show % identity NOT similarity within each sample's hits"
+      has_emoji: true
+      interactive: true
+      redesigned: "2025-11-21"
+      features_added:
+        - "Metric cards dashboard (success count, unique species, avg identity)"
+        - "Collapsible sections for each sequence"
+        - "Color-coded identity badges (≥97% green, 90-97% orange, <90% red)"
+        - "Common names for known mosquito species"
+        - "Comprehensive help section"
+        - "JavaScript interactivity for collapsible sections"
+    notes: "BLAST results show % identity NOT similarity within each sample's hits. Redesigned 2025-11-21 with modular CSS system."
 
   - module_id: "merge_forward_reverse"
     name: "merge_forward_reverse.py"

@@ -18,6 +18,8 @@
     box-shadow: var(--shadow-lg);
     position: relative;
     overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .report-header::before {
@@ -68,12 +70,20 @@
    ============================================ */
 
 .summary-dashboard {
-    max-width: 1400px;
+    max-width: 1800px;
     margin: 0 auto var(--space-2xl);
     padding: 0 var(--space-xl);
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--space-lg);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+    .summary-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
@@ -88,7 +98,7 @@
    ============================================ */
 
 .report-content {
-    max-width: 1400px;
+    max-width: 1800px;
     margin: 0 auto var(--space-2xl);
     padding: 0 var(--space-xl);
 }
@@ -99,6 +109,7 @@
     padding: var(--space-xl);
     margin-bottom: var(--space-xl);
     box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--purple);
 }
 
 .content-section h2 {
@@ -112,6 +123,52 @@
     color: var(--text-primary);
     margin-top: var(--space-lg);
     margin-bottom: var(--space-md);
+}
+
+/* Colored section variants */
+.section-qc {
+    background: var(--bg-green-light);
+    border-left-color: var(--green);
+}
+
+.section-qc h2 {
+    color: var(--green);
+    border-bottom-color: var(--green);
+}
+
+.section-consensus {
+    background: var(--bg-cyan-light);
+    border-left-color: var(--cyan);
+}
+
+.section-consensus h2 {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+}
+
+.section-alignment {
+    background: var(--bg-purple-light);
+    border-left-color: var(--purple);
+}
+
+.section-phylogeny {
+    background: var(--bg-pink-light);
+    border-left-color: var(--pink);
+}
+
+.section-phylogeny h2 {
+    color: var(--pink);
+    border-bottom-color: var(--pink);
+}
+
+.section-blast {
+    background: var(--bg-orange-light);
+    border-left-color: var(--orange);
+}
+
+.section-blast h2 {
+    color: var(--orange);
+    border-bottom-color: var(--orange);
 }
 
 @media (max-width: 768px) {
@@ -177,7 +234,7 @@
    ============================================ */
 
 .report-footer {
-    max-width: 1400px;
+    max-width: 1800px;
     margin: var(--space-2xl) auto 0;
     padding: var(--space-xl);
     background: var(--bg-tertiary);

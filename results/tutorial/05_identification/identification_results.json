@@ -1,0 +1,122 @@
+[
+  {
+    "sequence_id": "AT99",
+    "status": "SUCCESS",
+    "top_hit": {
+      "accession": "PV094723",
+      "definition": "gi|2923984190|gb|PV094723.1| Culex pipiens voucher RMNH.INS.1271356 mitochondrion, complete genome",
+      "length": 15587,
+      "e_value": 0.0,
+      "identity": 654,
+      "alignment_length": 659,
+      "percent_identity": 99.24
+    },
+    "all_hits": [
+      {
+        "accession": "PV094723",
+        "definition": "gi|2923984190|gb|PV094723.1| Culex pipiens voucher RMNH.INS.1271356 mitochondrion, complete genome",
+        "length": 15587,
+        "e_value": 0.0,
+        "identity": 654,
+        "alignment_length": 659,
+        "percent_identity": 99.24
+      },
+      {
+        "accession": "PQ588186",
+        "definition": "gi|2851468440|gb|PQ588186.1| Culex pipiens voucher Cx_pip_2 mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 654,
+        "alignment_length": 659,
+        "percent_identity": 99.24
+      },
+      {
+        "accession": "PV094722",
+        "definition": "gi|2923984176|gb|PV094722.1| Culex pipiens voucher RMNH.INS.1271355 mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 654,
+        "alignment_length": 659,
+        "percent_identity": 99.24
+      },
+      {
+        "accession": "NC_085461",
+        "definition": "gi|2666689003|ref|NC_085461.1| Culex hutchinsoni mitochondrion, complete genome >gi|2634332717|gb|OR127147.1| Culex hutchinsoni mitochondrion, complete genome",
+        "length": 15586,
+        "e_value": 0.0,
+        "identity": 654,
+        "alignment_length": 659,
+        "percent_identity": 99.24
+      },
+      {
+        "accession": "ON351297",
+        "definition": "gi|2230751102|gb|ON351297.1| Culex quinquefasciatus isolate h-COILep cytochrome c oxidase subunit I (COX1) gene, partial cds; mitochondrial",
+        "length": 680,
+        "e_value": 0.0,
+        "identity": 654,
+        "alignment_length": 659,
+        "percent_identity": 99.24
+      }
+    ]
+  },
+  {
+    "sequence_id": "AT_ROCK_",
+    "status": "SUCCESS",
+    "top_hit": {
+      "accession": "KC970270",
+      "definition": "gi|525316862|gb|KC970270.1| Aedes aegypti voucher BK6 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial",
+      "length": 658,
+      "e_value": 0.0,
+      "identity": 637,
+      "alignment_length": 667,
+      "percent_identity": 95.5
+    },
+    "all_hits": [
+      {
+        "accession": "KC970270",
+        "definition": "gi|525316862|gb|KC970270.1| Aedes aegypti voucher BK6 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial",
+        "length": 658,
+        "e_value": 0.0,
+        "identity": 637,
+        "alignment_length": 667,
+        "percent_identity": 95.5
+      },
+      {
+        "accession": "LC832164",
+        "definition": "gi|2784637816|dbj|LC832164.1| Aedes aegypti Jeddah-5 mitochondrial COX1 gene, cytochrome c oxidase subunit 1, partial sequence",
+        "length": 687,
+        "e_value": 0.0,
+        "identity": 634,
+        "alignment_length": 663,
+        "percent_identity": 95.63
+      },
+      {
+        "accession": "KT339654",
+        "definition": "gi|943463762|gb|KT339654.1| Aedes aegypti voucher BU-Zoo-Ae.a-02 cytochrome c oxidase subunit I (COI) gene, partial cds; mitochondrial",
+        "length": 652,
+        "e_value": 0.0,
+        "identity": 634,
+        "alignment_length": 663,
+        "percent_identity": 95.63
+      },
+      {
+        "accession": "OR413792",
+        "definition": "gi|2576393826|gb|OR413792.1| Aedes aegypti isolate D119 mitochondrion, complete genome",
+        "length": 15406,
+        "e_value": 0.0,
+        "identity": 634,
+        "alignment_length": 664,
+        "percent_identity": 95.48
+      },
+      {
+        "accession": "MW339668",
+        "definition": "gi|2165128410|gb|MW339668.1| Aedes aegypti voucher CUL_0018 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial",
+        "length": 658,
+        "e_value": 0.0,
+        "identity": 636,
+        "alignment_length": 667,
+        "percent_identity": 95.35
+      }
+    ]
+  }
+]

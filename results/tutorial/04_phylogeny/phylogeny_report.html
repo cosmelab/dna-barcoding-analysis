@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phylogenetic Tree Report - DNA Barcoding</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="../../../tracking/styles/base.css">
+    <link rel="stylesheet" href="../../../tracking/styles/components.css">
+    <link rel="stylesheet" href="../../../tracking/styles/reports.css">
+</head>
+<body>
+    <!-- Report Header -->
+    <header class="report-header">
+        <h1>🌳 Phylogenetic Tree Report</h1>
+        <div class="progress-badge">Step 4 of 5</div>
+        <div class="report-date">Generated: 2025-11-21 23:00:01</div>
+    </header>
+
+    <!-- Summary Dashboard -->
+    <section class="summary-dashboard">
+        <div class="metric-card metric-success">
+            <div class="metric-value">IQ-TREE</div>
+            <div class="metric-label">Analysis Method</div>
+            <div class="metric-icon">⚙️</div>
+        </div>
+
+        <div class="metric-card metric-primary">
+            <div class="metric-value">ML</div>
+            <div class="metric-label">Maximum Likelihood</div>
+            <div class="metric-icon">🧬</div>
+        </div>
+
+        <div class="metric-card metric-primary">
+            <div class="metric-value">1000</div>
+            <div class="metric-label">Bootstrap Replicates</div>
+            <div class="metric-icon">🔁</div>
+        </div>
+
+        <div class="metric-card metric-success">
+            <div class="metric-value">MFP</div>
+            <div class="metric-label">Model Selection</div>
+            <div class="metric-icon">📊</div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="report-content">
+        <div class="content-section">
+            <h2>Phylogenetic Tree</h2>
+            <p>Maximum likelihood tree showing evolutionary relationships</p>
+
+            <div class="info-box info-tip">
+                <strong>💡 Reading the Tree:</strong>
+                <ul>
+                    <li><strong>Branch lengths:</strong> Evolutionary distance (substitutions per site)</li>
+                    <li><strong>Bootstrap values:</strong> Statistical support (≥70% considered reliable)</li>
+                    <li><strong>Topology:</strong> Shows relationships, not time</li>
+                    <li><strong>Your samples:</strong> Compare with reference species to identify unknown specimens</li>
+                </ul>
+            </div>
+
+            <!-- Tree Visualization -->
+            <div class="figure-container">
+                <img src="tree.png" alt="Phylogenetic Tree" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
+                <div class="figure-caption">
+                    <strong>Figure 1:</strong> Maximum likelihood phylogenetic tree constructed using IQ-TREE with 1000 ultrafast bootstrap replicates.
+                    Best-fit model: GTR+F+I+G4 chosen according to BIC
+                </div>
+            </div>
+
+            <!-- Analysis Details -->
+            <h3 style="margin-top: 2rem;">Analysis Details</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-pass">
+                        <td><strong>Method</strong></td>
+                        <td><span class="badge badge-primary">Maximum Likelihood</span></td>
+                        <td>Statistical method for inferring phylogeny</td>
+                    </tr>
+                    <tr class="row-pass">
+                        <td><strong>Software</strong></td>
+                        <td><span class="badge badge-primary">IQ-TREE</span></td>
+                        <td>State-of-the-art phylogenetic inference program</td>
+                    </tr>
+                    <tr class="row-pass">
+                        <td><strong>Bootstrap</strong></td>
+                        <td><span class="badge badge-success">1000 ultrafast replicates</span></td>
+                        <td>Measures confidence in tree topology</td>
+                    </tr>
+                    <tr class="row-pass">
+                        <td><strong>Model Selection</strong></td>
+                        <td><span class="badge badge-primary">ModelFinder Plus (MFP)</span></td>
+                        <td>Automatic selection of best-fit substitution model</td>
+                    </tr>
+                    <tr class="row-pass">
+                        <td><strong>Best-fit Model</strong></td>
+                        <td><code>GTR+F+I+G4 chosen according to BIC</code></td>
+                        <td>DNA substitution model used for tree inference</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Output Files -->
+            <h3 style="margin-top: 2rem;">Output Files</h3>
+            <div class="info-box info-secondary">
+                <strong>📁 Generated Files:</strong>
+                <ul>
+                    <li><code>tree.treefile</code> - Newick tree format (text file, open in FigTree)</li>
+                    <li><code>tree.png</code> - Tree visualization (this image)</li>
+                    <li><code>tree.iqtree</code> - Detailed analysis report with statistics</li>
+                    <li><code>tree.log</code> - IQ-TREE execution log</li>
+                </ul>
+            </div>
+
+            <!-- Advanced Viewing -->
+            <div class="info-box info-tip" style="margin-top: 1rem;">
+                <strong>🔬 Advanced Viewing with FigTree:</strong>
+                <p>For interactive tree exploration with bootstrap values and branch lengths:</p>
+                <ol>
+                    <li>Download <a href="http://tree.bio.ed.ac.uk/software/figtree/" target="_blank">FigTree</a> (free phylogenetic tree viewer)</li>
+                    <li>Open <code>tree.treefile</code> in FigTree</li>
+                    <li>Enable "Node Labels" to display bootstrap support values</li>
+                    <li>Adjust "Branch Labels" to show evolutionary distances</li>
+                    <li>Export high-resolution images for publications</li>
+                </ol>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer with Help -->
+    <footer class="report-footer">
+        <div class="help-section">
+            <h3>Understanding Phylogenetic Trees</h3>
+
+            <h4>What is a phylogenetic tree?</h4>
+            <p>A phylogenetic tree is a diagram showing the evolutionary relationships between organisms based on DNA sequence similarity. Closely related species appear near each other on the tree.</p>
+
+            <h4>How to interpret the tree</h4>
+            <ul>
+                <li><strong>Tips (leaves):</strong> Current species or samples being analyzed</li>
+                <li><strong>Branches:</strong> Evolutionary lineages; longer branches = more changes</li>
+                <li><strong>Nodes:</strong> Common ancestors where lineages split</li>
+                <li><strong>Root:</strong> Most recent common ancestor of all sequences</li>
+            </ul>
+
+            <h4>What are bootstrap values?</h4>
+            <p>Bootstrap values (0-100%) measure confidence in tree branching patterns:</p>
+            <ul>
+                <li><strong>≥95%:</strong> Very strong support</li>
+                <li><strong>70-95%:</strong> Good support</li>
+                <li><strong>&lt;70%:</strong> Weak support (uncertain relationship)</li>
+            </ul>
+
+            <h4>What is Maximum Likelihood?</h4>
+            <p>Maximum Likelihood (ML) is a statistical method that finds the tree topology and branch lengths most likely to have produced the observed sequences, given a model of DNA evolution.</p>
+
+            <h4>Why use IQ-TREE?</h4>
+            <p>IQ-TREE is the fastest and most accurate ML phylogenetic software available. Key features:</p>
+            <ul>
+                <li>Automatic model selection (ModelFinder)</li>
+                <li>Ultrafast bootstrap (1000 replicates in seconds)</li>
+                <li>Handles large datasets efficiently</li>
+                <li>Widely used in published research</li>
+            </ul>
+
+            <h4>How to use this tree</h4>
+            <ol>
+                <li>Find your samples on the tree (student sequences)</li>
+                <li>Look at which reference species cluster with your samples</li>
+                <li>Check bootstrap values for branch reliability</li>
+                <li>Compare results with BLAST identification (next step)</li>
+            </ol>
+        </div>
+    </footer>
+</body>
+</html>

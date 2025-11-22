@@ -337,3 +337,76 @@ tasks:
   depends_on:
   - create-getting-started-guide
   notes: 'Podman is Linux-only alternative to Docker Desktop. Add to getting started guide as option for Linux users: sudo apt-get install podman, then podman pull ghcr.io/cosmelab/dna-barcoding-analysis:latest (works since container on both GHCR and Docker Hub). Benefits: free, rootless, no Docker Desktop. Reference entm201l setup/github-setup.html.'
+- id: improve-consensus-report-visualization
+  phase: html_improvements
+  status: done
+  summary: Consensus report shows only text - add actual sequence display or better tables
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-22T00:00:00'
+  notes: 'Implemented collapsible sequence comparison cards showing Forward, Reverse (original), Reverse Complement, and Consensus sequences side-by-side with colored backgrounds (cyan, pink, purple, green). Each card includes length statistics and explains which read was selected for consensus.'
+- id: improve-alignment-visualization
+  phase: html_improvements
+  status: done
+  summary: Replace current alignment view with box plot style (dark/gray for similarity)
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-22T00:00:00'
+  notes: 'Implemented heatmap-style visualization with grayscale boxes where darker = more conserved (100% = black, 90% = dark gray, down to 10% = light gray). Each base is shown as a box with hover tooltip showing base letter and conservation %. Added conservation scale legend. Pink boxes show gaps. Much more intuitive than previous colored text.'
+- id: add-color-visual-interest-to-reports
+  phase: html_improvements
+  status: done
+  summary: Reports are "very boring all white" - add more color, visual interest, intuitive design
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-22T00:00:00'
+  notes: 'Major CSS redesign: (1) Body background changed to colorful gradient (purple→cyan→pink), (2) Added colored tinted backgrounds (--bg-purple-light, --bg-cyan-light, etc), (3) Created section variants (.section-qc, .section-consensus, etc) with different colored backgrounds, (4) Metric cards now have gradient backgrounds with radial accent overlays, (5) Each report type has its own color theme (QC=green, consensus=cyan, alignment=purple, phylogeny=pink, BLAST=orange). Much more visually engaging!'
+- id: explain-blast-identical-hits
+  phase: html_improvements
+  status: done
+  summary: Add explanation for why BLAST hits have identical identity percentages
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-22T00:00:00'
+  notes: 'Added comprehensive explanation in BLAST report help section as green success info-box. Explains: (1) Same species have multiple database entries, (2) COI is conserved within species, (3) Different voucher specimens from different studies, (4) Multiple accessions for same organism. Includes actionable advice: "Look at species names - if same across top hits, confident identification!" Makes it clear this is NORMAL and actually increases confidence.'
+- id: implement-chromatogram-sliding-window
+  phase: html_improvements
+  status: done
+  summary: Implement interactive sliding window to view full chromatogram
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-22T01:00:00'
+  notes: 'Implemented HTML5 Canvas-based interactive chromatogram viewer! Features: (1) Full trace data extraction with downsampling for performance, (2) Canvas rendering with dynamic window (150 bases at a time), (3) Smooth slider control (purple→pink gradient) to scroll through entire sequence, (4) Previous/Next buttons for 50-base jumps, (5) Reset button, (6) Base calls overlaid on traces with quality-based coloring (green=Q≥30, orange=Q≥20, red=Q<20), (7) Position indicator showing current range, (8) Responsive CSS with mobile support. User can now explore the ENTIRE chromatogram interactively instead of fixed bases 50-200!'
+- id: fix-biopython-pairwise2-deprecation
+  phase: code_maintenance
+  status: done
+  summary: Replace deprecated Bio.pairwise2 with Bio.Align.PairwiseAligner
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-22T00:00:00'
+  notes: 'Fixed by removing unused import. Bio.pairwise2 was imported but never actually used in the code - the consensus generation just selects the longer sequence. Removed the import line entirely, eliminating the deprecation warning. No functionality change since it was never being used.'
+- id: add-vscode-support-to-readme
+  phase: documentation
+  status: done
+  summary: Add comprehensive VS Code section to README with workflow guide
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-21T21:00:00'
+  notes: 'Added VS Code as prerequisite #2, created "Recommended Workflow: Use VS Code" section with quick start guide, integrated terminal instructions, and explanation of Dev Containers. Links to ENTM201L setup guides. Addresses user feedback that students already have VS Code set up for the course.'
+- id: create-devcontainer-configuration
+  phase: development_tools
+  status: done
+  summary: Create .devcontainer configuration for one-click VS Code development
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-21T21:00:00'
+  notes: 'Created .devcontainer/devcontainer.json with container image, Python extensions, settings, and post-create command. Created .devcontainer/README.md explaining what Dev Containers are, who should use them, and how to use them. Optional advanced feature for students who want to work inside the container.'
+- id: professional-readme-review
+  phase: documentation
+  status: done
+  summary: Final professional review of README for public release
+  agent_allowed: true
+  depends_on:
+  - add-vscode-support-to-readme
+  completed: '2025-11-21T21:00:00'
+  notes: 'Updated footer with "Public Release - Student Ready" status, added Development section for instructors/developers, updated Last Updated date to Nov 21, added checkmarks to status indicators. Repository now looks professional and complete for public use.'

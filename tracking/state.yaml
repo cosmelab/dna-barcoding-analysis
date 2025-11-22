@@ -1,28 +1,24 @@
 project: dna-barcoding-analysis
-current_phase: ready_for_deployment
-current_task: create_github_classroom_assignment
-last_updated: '2025-11-20T11:30:00'
+current_phase: enhancing_reports
+current_task: improving_html_reports_ux
+last_updated: '2025-11-22T11:00:00'
 active_jobs: []
 blocking_issues: []
 target_ready_date: '2025-11-19'
 lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products from UC genomics)
 strategy: '5-step consensus workflow, interactive tutorial required, reference sequences for tree context, zero-coding-experience friendly'
 completed_today:
-  - Created modules/02_consensus/README.md (comprehensive docs)
-  - Fixed CRLF line endings in scripts (/bin/bash^M error)
-  - Tested run-analysis.sh end-to-end (all 5 steps, 30 .ab1 files)
-  - Tested tutorial.sh (test data, numbered dirs working)
-  - Verified tree visualization (all 4 samples present)
-  - Confirmed numbered directory structure works
-  - All blocking issues resolved
-  - Updated tracking/decisions.yaml with D015-D018 (interactive prompts, GitHub Classroom, public release, website)
-  - Added interactive prompts with 5-second timeout to both scripts (D015)
-  - Updated README.md with prerequisites section and website note
-  - Created GitHub Actions auto-grading workflow (.github/workflows/autograding.yml)
-  - Created github_classroom.md setup guide (instructor + student sections)
-  - Updated .gitignore to allow results/ for auto-grading
-  - Committed test results and verified workflow triggers
-  - Pushed all changes to GitHub main branch
+  - Enhanced HTML reports with beautiful colorful design
+  - Embedded CSS in all HTML reports for reliable loading
+  - Improved consensus creation using BioPython pairwise alignment
+  - Fixed low identity issue (27% -> 94.8% with proper alignment)
+  - Added sequence alignment visualization with match/mismatch indicators
+  - Implemented collapsible sections for detailed sequence views
+  - Added 80bp block formatting for sequences
+  - Created comprehensive instructions in consensus report
+  - Updated QC report to embed CSS like consensus
+  - Verified Hoque et al 2022 COI amplicon size (~712bp)
+  - Improved consensus merging strategy for overlapping reads
 current_status:
   - Repository template READY for GitHub Classroom
   - Auto-grading workflow deployed and functional

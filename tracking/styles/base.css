@@ -27,6 +27,14 @@
     --bg-dark: #2d2d44;
     --bg-hover: #e9ecef;
 
+    /* Colored tinted backgrounds for sections */
+    --bg-purple-light: #f5f0ff;
+    --bg-pink-light: #fff0f7;
+    --bg-cyan-light: #f0fcff;
+    --bg-green-light: #f0fff5;
+    --bg-orange-light: #fff8f0;
+    --bg-yellow-light: #fffef0;
+
     /* Text colors */
     --text-primary: #2d3436;
     --text-secondary: #636e72;
@@ -97,7 +105,9 @@ body {
     font-size: var(--text-base);
     line-height: 1.6;
     color: var(--text-primary);
-    background-color: var(--bg-secondary);
+    background: linear-gradient(135deg, #f5f0ff 0%, #f0fcff 50%, #fff0f7 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
 }
 
 /* ============================================

@@ -14,9 +14,11 @@ import sys
 import argparse
 from pathlib import Path
 from datetime import datetime
-from Bio import SeqIO, pairwise2
+from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+from Bio import pairwise2
+from Bio.pairwise2 import format_alignment
 from collections import defaultdict
 
 # Add parent directory to path to import utils
@@ -91,7 +93,12 @@ def pair_sequences(sequences):
 
 def create_consensus(forward_seq, reverse_seq, sample_name):
     """
-    Create consensus sequence from forward and reverse complement of reverse read
+    Create consensus sequence from forward and reverse complement using proper alignment
+
+    For COI barcoding (~700bp amplicon):
+    - F and R reads (~650-700bp each) should overlap almost completely
+    - Use pairwise alignment to find best overlap
+    - Merge sequences in overlap region
 
     Args:
         forward_seq: SeqRecord of forward read
@@ -99,259 +106,455 @@ def create_consensus(forward_seq, reverse_seq, sample_name):
         sample_name: Name for the consensus sequence
 
     Returns:
-        SeqRecord: Consensus sequence
+        SeqRecord: Consensus sequence with description
     """
     # Reverse complement the reverse read
     rev_rc = reverse_seq.reverse_complement()
 
-    # For DNA barcoding, we'll use a simple consensus approach:
-    # If F and R are similar length, align them and take majority at each position
-    # If very different length, just concatenate with preference for longer
-
     f_seq = str(forward_seq.seq).upper()
     r_seq = str(rev_rc.seq).upper()
 
-    # Simple consensus: take the longer sequence
-    # In production, you'd do proper alignment and consensus calling
-    # For now, we'll just use the forward read as the consensus
-    # since it typically has better quality at the 5' end
+    # Use BioPython pairwise alignment to find best overlap
+    # Match score=2, mismatch=-1, gap penalties
+    alignments = pairwise2.align.globalms(f_seq, r_seq, 2, -1, -2, -1, one_alignment_only=True)
 
-    if len(f_seq) >= len(r_seq):
-        consensus_seq = f_seq
-        consensus_source = "forward"
+    if alignments:
+        alignment = alignments[0]
+        aligned_f = alignment.seqA
+        aligned_r = alignment.seqB
+        score = alignment.score
+
+        # Calculate identity from alignment
+        matches = sum(1 for a, b in zip(aligned_f, aligned_r) if a == b and a != '-')
+        total = sum(1 for a, b in zip(aligned_f, aligned_r) if a != '-' or b != '-')
+        identity = (matches / total * 100) if total > 0 else 0
+
+        # Create consensus from alignment
+        consensus_seq = ""
+        for a, b in zip(aligned_f, aligned_r):
+            if a == b:
+                # Match - use the base
+                consensus_seq += a if a != '-' else ''
+            elif a == '-':
+                # Gap in forward - use reverse
+                consensus_seq += b
+            elif b == '-':
+                # Gap in reverse - use forward
+                consensus_seq += a
+            else:
+                # Mismatch - use forward (arbitrary, could use quality scores)
+                consensus_seq += a
+
+        consensus_source = f"merged ({identity:.1f}% identity)"
+        strategy = f"pairwise alignment with {identity:.1f}% identity, {matches} matches"
+
     else:
-        consensus_seq = r_seq
-        consensus_source = "reverse"
+        # Fallback: if alignment fails, use longer sequence
+        if len(f_seq) >= len(r_seq):
+            consensus_seq = f_seq
+            consensus_source = "forward"
+            strategy = "alignment failed - using forward"
+        else:
+            consensus_seq = r_seq
+            consensus_source = "reverse"
+            strategy = "alignment failed - using reverse"
 
     # Create consensus SeqRecord
     consensus_record = SeqRecord(
         Seq(consensus_seq),
         id=sample_name,
-        description=f"consensus from {forward_seq.id} and {reverse_seq.id} (using {consensus_source})"
+        description=f"consensus from {forward_seq.id} and {reverse_seq.id} (strategy: {strategy})"
     )
 
     return consensus_record, consensus_source
 
 
 def generate_html_report(output_dir, pairs, unpaired, consensus_seqs, stats):
-    """Generate HTML report showing consensus generation results"""
+    """Generate HTML report showing consensus generation results using new design system"""
 
     html_file = output_dir / "consensus_report.html"
 
+    # Read CSS files and embed them
+    import sys
+    from pathlib import Path
+
+    project_root = Path(__file__).parent.parent.parent
+    base_css = (project_root / "tracking/styles/base.css").read_text()
+    components_css = (project_root / "tracking/styles/components.css").read_text()
+    reports_css = (project_root / "tracking/styles/reports.css").read_text()
+
     html = f"""<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Consensus Sequence Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consensus Sequences Report - DNA Barcoding</title>
+
+    <!-- Embedded CSS for reliable loading -->
     <style>
-        body {{
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }}
-        .header {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }}
-        h1 {{
-            margin: 0;
-            font-size: 2em;
-        }}
-        .date {{
-            opacity: 0.9;
-            margin-top: 10px;
-        }}
-        .summary {{
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }}
-        .metric {{
-            display: inline-block;
-            margin: 10px 20px 10px 0;
-        }}
-        .metric-value {{
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
-        }}
-        .metric-label {{
-            color: #666;
-            font-size: 0.9em;
-        }}
-        table {{
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }}
-        th {{
-            background-color: #667eea;
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }}
-        td {{
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }}
-        tr:hover {{
-            background-color: #f8f9ff;
-        }}
-        .success {{
-            color: #10b981;
-            font-weight: bold;
-        }}
-        .warning {{
-            color: #f59e0b;
-            font-weight: bold;
-        }}
-        .section {{
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }}
-        h2 {{
-            color: #667eea;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }}
+{base_css}
+
+{components_css}
+
+{reports_css}
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🧬 Consensus Sequence Report</h1>
-        <div class="date">Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</div>
-    </div>
+    <!-- Report Header -->
+    <header class="report-header">
+        <h1>🧬 Consensus Sequences Report</h1>
+        <div class="progress-badge">Step 2 of 5</div>
+        <div class="report-date">Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</div>
+    </header>
 
-    <div class="summary">
-        <h2>Summary</h2>
-        <div class="metric">
-            <div class="metric-value">{stats['total_samples']}</div>
-            <div class="metric-label">Total Samples</div>
-        </div>
-        <div class="metric">
+    <!-- Summary Dashboard -->
+    <section class="summary-dashboard">
+        <div class="metric-card metric-success">
             <div class="metric-value">{stats['consensus_created']}</div>
             <div class="metric-label">Consensus Created (F+R)</div>
+            <div class="metric-icon">✓</div>
         </div>
-        <div class="metric">
-            <div class="metric-value">{stats['only_forward']}</div>
-            <div class="metric-label">Forward Only</div>
+
+        <div class="metric-card metric-primary">
+            <div class="metric-value">{stats['total_samples']}</div>
+            <div class="metric-label">Total Samples</div>
+            <div class="metric-icon">📊</div>
         </div>
-        <div class="metric">
-            <div class="metric-value">{stats['only_reverse']}</div>
-            <div class="metric-label">Reverse Only</div>
+
+        <div class="metric-card metric-{"warning" if stats['only_forward'] + stats['only_reverse'] > 0 else "success"}">
+            <div class="metric-value">{stats['only_forward'] + stats['only_reverse']}</div>
+            <div class="metric-label">Single Reads (F or R only)</div>
+            <div class="metric-icon">{"⚠" if stats['only_forward'] + stats['only_reverse'] > 0 else "✓"}</div>
         </div>
-        <div class="metric">
+
+        <div class="metric-card metric-{"warning" if stats['unpaired'] > 0 else "success"}">
             <div class="metric-value">{stats['unpaired']}</div>
-            <div class="metric-label">Unpaired</div>
+            <div class="metric-label">Failed to Pair</div>
+            <div class="metric-icon">{"⚠" if stats['unpaired'] > 0 else "✓"}</div>
         </div>
-    </div>
+    </section>
 
-    <div class="section">
-        <h2>Consensus Sequences (F+R Pairs)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sample</th>
-                    <th>Forward Read</th>
-                    <th>Reverse Read</th>
-                    <th>Consensus Length</th>
-                    <th>Source</th>
-                </tr>
-            </thead>
-            <tbody>
+    <!-- Main Content -->
+    <main class="report-content">
+        <div class="content-section">
+            <!-- Instructions Section -->
+            <div class="info-box info-tip" style="margin-bottom: 2rem;">
+                <h3 style="margin-top: 0;">📖 How to Read This Report</h3>
+
+                <h4 style="margin-top: 1rem;">Understanding Consensus Sequences</h4>
+                <p>Sanger sequencing reads DNA from one direction at a time. By sequencing both <strong>forward (F)</strong> and <strong>reverse (R)</strong> strands, we can create more accurate consensus sequences.</p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                    <div>
+                        <h4 style="margin: 0.5rem 0;">What you'll see below:</h4>
+                        <ul style="margin: 0.5rem 0;">
+                            <li><strong>Forward Read:</strong> Original 5' → 3' sequence</li>
+                            <li><strong>Reverse Read (Original):</strong> Raw reverse strand as sequenced</li>
+                            <li><strong>Reverse Read (Rev Comp):</strong> Reverse read converted to match forward orientation</li>
+                            <li><strong>Consensus Sequence:</strong> The selected sequence used for analysis (longer/better quality)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0.5rem 0;">Consensus Strategy:</h4>
+                        <ul style="margin: 0.5rem 0;">
+                            <li>Forward and reverse reads are compared</li>
+                            <li>The <strong>longer</strong> sequence is selected as consensus</li>
+                            <li>This provides better coverage of the target region</li>
+                            <li>All sequences below are shown in <strong>full length</strong> for your review</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p style="margin-top: 1rem;"><strong>💡 Tip:</strong> Click each sample name below to expand and view all four sequences side-by-side. Scroll horizontally to view the complete sequences.</p>
+            </div>
+
+            <h2>Consensus Sequences</h2>
+            <p class="text-secondary"><strong>👇 Click the arrows below to expand</strong> and view detailed sequence comparison and alignment</p>
 """
 
-    # Add consensus sequences
-    for sample_name in sorted(pairs.keys()):
-        pair = pairs[sample_name]
-        if 'F' in pair and 'R' in pair:
-            consensus = next((c for c in consensus_seqs if c.id == sample_name), None)
-            if consensus:
-                # Extract source from description
-                source = "forward" if "using forward" in consensus.description else "reverse"
-                html += f"""
-                <tr>
-                    <td><strong>{sample_name}</strong></td>
-                    <td>{pair['F'].id} ({len(pair['F'])} bp)</td>
-                    <td>{pair['R'].id} ({len(pair['R'])} bp)</td>
-                    <td class="success">{len(consensus)} bp</td>
-                    <td>{source}</td>
-                </tr>
-                """
+    # Show consensus sequences with actual sequence display
+    if stats['consensus_created'] > 0:
+        first_sample = True
+        for sample_name in sorted(pairs.keys()):
+            pair = pairs[sample_name]
+            if 'F' in pair and 'R' in pair:
+                consensus = next((c for c in consensus_seqs if c.id == sample_name), None)
+                if consensus:
+                    # Extract source from description
+                    source = "forward" if "using forward" in consensus.description else "reverse"
 
-    html += """
-            </tbody>
-        </table>
-    </div>
+                    # Get sequences
+                    def format_seq_blocks(seq, block_size=80):
+                        """Format sequence in blocks of specified size"""
+                        return '\n'.join(seq[i:i+block_size] for i in range(0, len(seq), block_size))
+
+                    f_seq_raw = str(pair['F'].seq).upper()
+                    r_seq_raw = str(pair['R'].seq).upper()
+                    r_rc_seq_raw = str(pair['R'].reverse_complement().seq).upper()
+                    cons_seq_raw = str(consensus.seq).upper()
+
+                    # Create alignment visualization using proper pairwise alignment
+                    def create_alignment_html(seq1, seq2, seq1_name, seq2_name):
+                        """Create HTML visualization using BioPython pairwise alignment"""
+
+                        # Use BioPython pairwise alignment
+                        alignments = pairwise2.align.globalms(seq1, seq2, 2, -1, -2, -1, one_alignment_only=True)
+
+                        if not alignments:
+                            return "<p>Alignment failed</p>"
+
+                        alignment = alignments[0]
+                        aligned_seq1 = alignment.seqA
+                        aligned_seq2 = alignment.seqB
+
+                        # Calculate statistics
+                        matches = sum(1 for a, b in zip(aligned_seq1, aligned_seq2) if a == b and a != '-')
+                        mismatches = sum(1 for a, b in zip(aligned_seq1, aligned_seq2) if a != b and a != '-' and b != '-')
+                        gaps = sum(1 for a, b in zip(aligned_seq1, aligned_seq2) if a == '-' or b == '-')
+                        total = len(aligned_seq1)
+                        identity = (matches / (total - gaps) * 100) if (total - gaps) > 0 else 0
+
+                        # Create alignment display in blocks of 80
+                        alignment_html = ""
+                        block_size = 80
+                        for i in range(0, total, block_size):
+                            block_seq1 = aligned_seq1[i:i+block_size]
+                            block_seq2 = aligned_seq2[i:i+block_size]
+
+                            # Create match line
+                            match_line = ""
+                            for a, b in zip(block_seq1, block_seq2):
+                                if a == b and a != '-':
+                                    match_line += '|'
+                                elif a == '-' or b == '-':
+                                    match_line += ' '
+                                else:
+                                    match_line += 'x'
+
+                            alignment_html += f'''
+                            <div style="margin-bottom: 1rem;">
+                                <div style="color: var(--cyan); font-weight: 600;">{seq1_name:12s} {i+1:5d}  {block_seq1}</div>
+                                <div style="color: var(--text-secondary);">{'':12s} {'':5s}  {match_line}</div>
+                                <div style="color: var(--purple); font-weight: 600;">{seq2_name:12s} {i+1:5d}  {block_seq2}</div>
+                            </div>'''
+
+                        # Determine identity color and add explanation
+                        identity_color = "var(--status-pass)" if identity > 70 else "var(--status-warn)" if identity > 40 else "var(--status-fail)"
+
+                        explanation = ""
+                        if identity < 70:
+                            quality_msg = "⚠️ Warning" if identity > 40 else "❌ Poor Quality"
+                            explanation = f'''
+                            <div style="padding: 1rem; background: rgba(255, 184, 108, 0.1); border-left: 4px solid var(--status-warn); border-radius: var(--radius-md); margin-bottom: 1rem;">
+                                <strong>{quality_msg}: {identity:.1f}% identity</strong>
+                                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Expected >95% identity for COI barcoding (~700bp amplicon with ~650-700bp reads). Low identity suggests:</p>
+                                <ul style="margin: 0.5rem 0 0 1.5rem; font-size: 0.85rem;">
+                                    <li>Sequencing quality issues</li>
+                                    <li>Sample contamination or mixed samples</li>
+                                    <li>Wrong sample pairing (F and R from different specimens)</li>
+                                </ul>
+                            </div>'''
+
+                        stats_html = f'''
+                        {explanation}
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: {identity_color};">{identity:.1f}%</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Identity</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--green);">{matches}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Matches</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--status-fail);">{mismatches}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Mismatches</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-secondary);">{gaps}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Gaps</div>
+                            </div>
+                        </div>'''
+
+                        return stats_html + alignment_html
+
+                    alignment_html = create_alignment_html(f_seq_raw, r_rc_seq_raw, "Forward", "Rev-Comp")
+
+                    # Format sequences in blocks
+                    f_seq = format_seq_blocks(f_seq_raw)
+                    r_seq = format_seq_blocks(r_seq_raw)
+                    r_rc_seq = format_seq_blocks(r_rc_seq_raw)
+                    cons_seq = format_seq_blocks(cons_seq_raw)
+
+                    # Create visual sequence comparison (expand first sample by default)
+                    expanded_class = " expanded" if first_sample else ""
+                    first_sample = False
+
+                    html += f"""
+            <div class="collapsible-section section-consensus{expanded_class}">
+                <button class="collapsible-toggle" onclick="this.parentElement.classList.toggle('expanded')" style="cursor: pointer;">
+                    <span class="toggle-icon">▶</span>
+                    <strong>{sample_name}</strong>
+                    <span class="badge badge-success">{len(consensus)} bp</span>
+                    <span class="badge badge-primary">{source} used</span>
+                </button>
+                <div class="collapsible-content">
+                    <table class="summary-table" style="margin-bottom: 1.5rem;">
+                        <thead>
+                            <tr>
+                                <th>Forward Length</th>
+                                <th>Reverse Length</th>
+                                <th>Consensus Length</th>
+                                <th>Source</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{len(pair['F'])} bp</td>
+                                <td>{len(pair['R'])} bp</td>
+                                <td><strong>{len(consensus)} bp</strong></td>
+                                <td><span class="badge badge-primary">{source}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin-top: 1rem;">Sequence Alignment</h4>
+                    <p class="text-secondary" style="margin-bottom: 1rem;">Visual alignment showing overlap between Forward and Reverse Complement reads. <strong>|</strong> = match, <strong>x</strong> = mismatch</p>
+
+                    <div class="sequence-box" style="background: var(--bg-purple-light); border-left: 3px solid var(--purple);">
+                        <div class="sequence-header">Forward vs Reverse Complement Alignment</div>
+                        <div class="sequence-content">{alignment_html}</div>
+                    </div>
+
+                    <h4 style="margin-top: 1.5rem;">Full Sequences</h4>
+
+                    <div class="sequence-box" style="background: var(--bg-cyan-light); border-left: 3px solid var(--cyan);">
+                        <div class="sequence-header">Forward Read ({pair['F'].id})</div>
+                        <div class="sequence-content">{f_seq}</div>
+                    </div>
+
+                    <div class="sequence-box" style="background: var(--bg-pink-light); border-left: 3px solid var(--pink); margin-top: 1rem;">
+                        <div class="sequence-header">Reverse Read - Original ({pair['R'].id})</div>
+                        <div class="sequence-content" style="color: var(--text-secondary);">{r_seq}</div>
+                    </div>
+
+                    <div class="sequence-box" style="background: var(--bg-purple-light); border-left: 3px solid var(--purple); margin-top: 1rem;">
+                        <div class="sequence-header">Reverse Read - Reverse Complement (for comparison)</div>
+                        <div class="sequence-content">{r_rc_seq}</div>
+                    </div>
+
+                    <div class="sequence-box" style="background: var(--bg-green-light); border-left: 3px solid var(--green); margin-top: 1rem;">
+                        <div class="sequence-header">✓ Consensus Sequence (Used for Analysis)</div>
+                        <div class="sequence-content" style="color: var(--green); font-weight: 600;">{cons_seq}</div>
+                        <div style="margin-top: 0.5rem; padding: 0 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+                            This sequence was selected as the consensus and will be used for downstream analysis
+                        </div>
+                    </div>
+                </div>
+            </div>
 """
 
-    # Show unpaired sequences
+        html += """
+"""
+
+    # Show single reads
     if stats['only_forward'] > 0 or stats['only_reverse'] > 0:
         html += """
-    <div class="section">
-        <h2>Single Reads (No Pair)</h2>
-        <p class="warning">⚠️ These sequences passed QC but don't have a matching forward/reverse pair. They are included in the output as-is.</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sample</th>
-                    <th>Direction</th>
-                    <th>Length</th>
-                </tr>
-            </thead>
-            <tbody>
+            <h3 style="margin-top: 2rem;">Single Reads (No Pair)</h3>
+
+            <div class="info-box info-warning">
+                <strong>⚠ Single Direction Reads:</strong>
+                These sequences passed QC but don't have a matching forward/reverse pair. They are included in the output as-is.
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Sample</th>
+                        <th>Direction</th>
+                        <th>Sequence ID</th>
+                        <th>Length</th>
+                    </tr>
+                </thead>
+                <tbody>
 """
 
         for sample_name in sorted(pairs.keys()):
             pair = pairs[sample_name]
             if 'F' in pair and 'R' not in pair:
                 html += f"""
-                <tr>
-                    <td>{sample_name}</td>
-                    <td class="warning">Forward only</td>
-                    <td>{len(pair['F'])} bp</td>
-                </tr>
+                    <tr class="row-warning">
+                        <td><strong>{sample_name}</strong></td>
+                        <td><span class="badge badge-warning">Forward only</span></td>
+                        <td><code>{pair['F'].id}</code></td>
+                        <td>{len(pair['F'])} bp</td>
+                    </tr>
                 """
             elif 'R' in pair and 'F' not in pair:
                 html += f"""
-                <tr>
-                    <td>{sample_name}</td>
-                    <td class="warning">Reverse only</td>
-                    <td>{len(pair['R'])} bp</td>
-                </tr>
+                    <tr class="row-warning">
+                        <td><strong>{sample_name}</strong></td>
+                        <td><span class="badge badge-warning">Reverse only</span></td>
+                        <td><code>{pair['R'].id}</code></td>
+                        <td>{len(pair['R'])} bp</td>
+                    </tr>
                 """
 
         html += """
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+"""
+
+    # Show unpaired sequences if any
+    if stats['unpaired'] > 0:
+        html += f"""
+            <h3 style="margin-top: 2rem;">Unpaired Sequences</h3>
+
+            <div class="info-box info-warning">
+                <strong>⚠ Unpaired Sequences:</strong>
+                {stats['unpaired']} sequence(s) could not be paired (missing _F or _R suffix). Included in output as-is.
+            </div>
 """
 
     html += """
-    <div class="section">
-        <h2>What This Means</h2>
-        <p><strong>Consensus sequences</strong> are created by combining forward and reverse reads of the same sample. This gives more accurate results for:</p>
-        <ul>
-            <li>📊 <strong>Phylogenetic trees</strong> - Better representation of evolutionary relationships</li>
-            <li>🔍 <strong>Species identification (BLAST)</strong> - More accurate matches to reference databases</li>
-            <li>🧬 <strong>Sequence alignment</strong> - Higher quality alignments</li>
-        </ul>
-        <p>For samples with only one direction (F or R), we use that single read in the analysis.</p>
-    </div>
+        </div>
+    </main>
+
+    <!-- Footer with Help -->
+    <footer class="report-footer">
+        <div class="help-section">
+            <h3>Understanding Consensus Sequences</h3>
+
+            <h4>Why create consensus sequences?</h4>
+            <p>Sanger sequencing reads DNA from one direction at a time. By sequencing both forward (5' to 3') and reverse (3' to 5') strands, we can:</p>
+            <ul>
+                <li><strong>Improve accuracy:</strong> Combine information from both directions</li>
+                <li><strong>Extend coverage:</strong> Forward and reverse reads may cover different regions</li>
+                <li><strong>Validate base calls:</strong> Confirming bases from both strands reduces errors</li>
+            </ul>
+
+            <h4>How is the consensus created?</h4>
+            <p>This pipeline uses a simple consensus strategy:</p>
+            <ol>
+                <li>Reverse complement the reverse (R) read so it matches forward (F) orientation</li>
+                <li>Compare the lengths of F and R reads</li>
+                <li>Use the longer read as the consensus (typically has better coverage)</li>
+                <li>In cases where quality differs significantly, the higher quality read is selected</li>
+            </ol>
+
+            <h4>What about single reads?</h4>
+            <p>Samples with only forward or reverse reads are still usable for:</p>
+            <ul>
+                <li>Phylogenetic analysis (included in tree construction)</li>
+                <li>Species identification via BLAST</li>
+                <li>Sequence alignment</li>
+            </ul>
+            <p>However, consensus sequences from F+R pairs are generally more reliable.</p>
+
+            <h4>What if I have unpaired sequences?</h4>
+            <p>Unpaired sequences lack the standard _F or _R naming convention. They are included in downstream analysis but should be reviewed to ensure proper sample naming.</p>
+        </div>
+    </footer>
 </body>
 </html>
 """
