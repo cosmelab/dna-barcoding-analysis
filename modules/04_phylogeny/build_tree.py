@@ -43,20 +43,67 @@ def run_iqtree(alignment_file, output_prefix):
         return False
 
 def visualize_tree(tree_file, output_image):
-    """Generate tree visualization with Bio.Phylo"""
+    """Generate tree visualization with Bio.Phylo with color-coded samples"""
     try:
         tree = Phylo.read(tree_file, "newick")
 
-        # Create figure
-        fig, ax = plt.subplots(1, 1, figsize=(12, 8))
+        # Identify which sequences are student samples vs references
+        # Student samples typically start with: AT-, AT99, AT_ROCK, etc.
+        # Reference sequences have underscores and genus names
+        def is_student_sample(name):
+            """Check if this is a student/tutorial sample"""
+            if not name:
+                return False
+            name_upper = name.upper()
+            # Student samples start with AT- or AT99, AT_ROCK patterns
+            if name_upper.startswith('AT-') or name_upper.startswith('AT_') or name_upper.startswith('AT99'):
+                return True
+            return False
 
-        # Draw tree
-        Phylo.draw(tree, axes=ax, do_show=False)
-        ax.set_title("Phylogenetic Tree (Maximum Likelihood)", fontsize=14, fontweight='bold')
+        # Color map for terminal nodes (leaves)
+        def get_color_for_label(label):
+            """Return color based on whether it's a sample or reference"""
+            if is_student_sample(str(label)):
+                return '#FF6B6B'  # Red/coral for student samples
+            else:
+                return '#4ECDC4'  # Teal for reference sequences
+
+        # Create figure with more space
+        fig, ax = plt.subplots(1, 1, figsize=(14, 10))
+
+        # Draw tree first
+        Phylo.draw(tree, axes=ax, do_show=False,
+                   label_func=lambda x: x.name if x.name else '')
+
+        # Now customize all text labels after drawing
+        for text in ax.texts:
+            label = text.get_text()
+            if is_student_sample(label):
+                # Student samples: Bold red labels, larger font
+                text.set_fontweight('bold')
+                text.set_fontsize(10)
+                text.set_color('#FF6B6B')
+            else:
+                # Reference sequences: Normal teal labels, smaller font
+                text.set_fontsize(8)
+                text.set_color('#4ECDC4')
+
+        # Add title
+        ax.set_title("Phylogenetic Tree (Maximum Likelihood)\n" +
+                     "Red = Your Samples  •  Teal = Reference Sequences",
+                     fontsize=14, fontweight='bold', pad=20)
+
+        # Add legend
+        from matplotlib.patches import Patch
+        legend_elements = [
+            Patch(facecolor='#FF6B6B', label='Your Samples (Student/Tutorial)'),
+            Patch(facecolor='#4ECDC4', label='Reference Sequences (Known Species)')
+        ]
+        ax.legend(handles=legend_elements, loc='upper left', fontsize=10, framealpha=0.9)
 
         # Save figure
         plt.tight_layout()
-        plt.savefig(output_image, dpi=300, bbox_inches='tight')
+        plt.savefig(output_image, dpi=300, bbox_inches='tight', facecolor='white')
         plt.close()
 
         print(f"✓ Tree visualization saved: {output_image}")

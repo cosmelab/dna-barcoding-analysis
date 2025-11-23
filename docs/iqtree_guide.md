@@ -27,6 +27,73 @@ IQ-TREE is the **gold standard** for phylogenetic analysis in 2025 because:
 
 **We chose IQ-TREE** because it gives the best balance of speed, accuracy, and ease of use for students.
 
+## What is Maximum Likelihood (ML)?
+
+**Maximum Likelihood** is a statistical method for building phylogenetic trees. It answers the question:
+
+> "Given my DNA sequences, which tree arrangement is most likely to have produced these sequences through evolution?"
+
+### Simple Explanation
+
+Imagine you have DNA from 4 mosquito species. There are many ways to arrange them into a tree:
+
+```
+Tree 1:          Tree 2:          Tree 3:
+  ┌─A              ┌─A              ┌─B
+──┤               ──┤               ──┤
+  │  ┌─B            │  ┌─C            │  ┌─A
+  └──┤              └──┤              └──┤
+     │  ┌─C            │  ┌─B            │  ┌─C
+     └──┤              └──┤              └──┤
+        └─D              └─D              └─D
+```
+
+**Maximum Likelihood asks:** "Which tree is most likely to be correct, given:
+- The DNA differences we see
+- A model of how DNA evolves (mutations, deletions, insertions)
+- The laws of probability"
+
+For each tree, ML calculates a **likelihood score** - how probable that tree is given your data. The tree with the highest score "wins."
+
+### Why Maximum Likelihood Instead of Other Methods?
+
+| Method | How It Works | Pros | Cons | When to Use |
+|--------|--------------|------|------|-------------|
+| **Maximum Likelihood (ML)** | Finds tree with highest probability given data | Most accurate; uses statistical model; handles complex evolution | Slower than simpler methods | Best for research & publication |
+| **Neighbor-Joining (NJ)** | Joins closest sequences first | Very fast; simple | Less accurate; no statistical model | Quick previews, large datasets |
+| **Maximum Parsimony (MP)** | Finds tree with fewest mutations | Fast; intuitive | Assumes all changes equally likely (wrong!) | Historical; rarely used now |
+| **Bayesian (MrBayes)** | Samples many trees using probability | Most rigorous statistically | VERY slow (hours to days) | Research with critical questions |
+
+**For DNA barcoding, Maximum Likelihood is the gold standard** because:
+1. ✅ Accurate enough for species identification
+2. ✅ Fast enough for student projects (1-5 minutes)
+3. ✅ Uses a realistic model of DNA evolution
+4. ✅ Provides statistical support (bootstrap values)
+5. ✅ Widely accepted in scientific literature
+
+### Why Not Bayesian?
+
+Bayesian methods (like MrBayes) are theoretically superior BUT:
+- **Time:** Takes hours to days for 50 sequences
+- **Complexity:** Students must understand priors, MCMC, convergence
+- **Overkill:** For species ID, ML is plenty accurate
+
+**Our choice:** ML gives 95% of the accuracy in 1% of the time.
+
+### In Practice
+
+When IQ-TREE runs, you'll see:
+```
+Choosing best model... GTR+F+I+G4
+Computing ML tree... done
+Running 1000 bootstrap replicates... done
+```
+
+This means:
+1. **Best model chosen:** GTR+F+I+G4 (complex model of DNA evolution)
+2. **ML tree computed:** Found the most likely tree arrangement
+3. **Bootstrap:** Tested how confident we are in each branch
+
 ## How IQ-TREE Works in Our Pipeline
 
 ### Input

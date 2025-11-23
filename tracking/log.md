@@ -13,6 +13,35 @@ next:
 
 ---
 
+## 2025-11-22 – claude-sonnet-4.5 – reference-trimming-and-methodology
+actions:
+  - discovered reference sequences had varying lengths (639-2306bp) causing 2334bp alignments with ~1000 gaps
+  - created scripts/trim_references_to_barcode.py using AUCOS primers from Hoque et al 2022
+  - trimmed 26/52 references from 1500-2300bp down to ~712bp barcode region
+  - created docs/reference_trimming.md explaining why trimming needed
+  - created docs/alignment_methodology.md comparing our approach to Hoque et al 2022
+  - documented reproducibility advantages (open source, containerized, automated)
+  - explained BLAST threshold (97% BOLD standard vs Hoque's 98%)
+  - regenerated all tutorial and student analyses with trimmed references
+  - added color-coding to phylogenetic trees (red=student samples, teal=references)
+  - updated README.md with reference trimming explanation
+results:
+  - tutorial alignment: 2334bp → 784bp (67% reduction)
+  - student alignment: ~2500bp → 908bp (64% reduction)
+  - minimal gaps (~50-100 instead of ~1000)
+  - cleaner phylogenetic trees
+  - fully documented methodology vs Hoque et al 2022
+  - validated scoring matrices (2/-1/-2/-1) as standard for DNA
+  - confirmed MAFFT --auto and IQ-TREE are industry standards
+  - trees now color-coded for easy identification of samples
+next:
+  - add explanation of Maximum Likelihood trees to iqtree_guide.md
+  - update workflow documentation to explain why ML is used
+  - final review of all 5 HTML reports
+  - verify tree coloring works correctly in both tutorial and student trees
+
+---
+
 ## 2025-11-17 – migration – system
 actions:
   - created new hybrid YAML tracking system for dna-barcoding-analysis repo
