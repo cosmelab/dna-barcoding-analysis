@@ -1,7 +1,7 @@
 project: dna-barcoding-analysis
-current_phase: enhancing_reports
-current_task: improving_html_reports_ux
-last_updated: '2025-11-22T11:00:00'
+current_phase: reference_optimization
+current_task: trimming_references_to_barcode_region
+last_updated: '2025-11-22T14:30:00'
 active_jobs: []
 blocking_issues: []
 target_ready_date: '2025-11-19'
@@ -19,6 +19,14 @@ completed_today:
   - Updated QC report to embed CSS like consensus
   - Verified Hoque et al 2022 COI amplicon size (~712bp)
   - Improved consensus merging strategy for overlapping reads
+  - MAJOR FIX - Trimmed reference sequences to barcode region
+  - Created trim_references_to_barcode.py script
+  - Reduced alignment length from 2334bp to 784bp (67% reduction!)
+  - Fixed excessive gaps issue (~1000 gaps -> minimal gaps)
+  - Documented trimming process in docs/reference_trimming.md
+  - Updated README with reference trimming explanation
+  - Regenerated all tutorial and student analyses with trimmed refs
+  - Student alignment improved from ~2500bp to 908bp
 current_status:
   - Repository template READY for GitHub Classroom
   - Auto-grading workflow deployed and functional
