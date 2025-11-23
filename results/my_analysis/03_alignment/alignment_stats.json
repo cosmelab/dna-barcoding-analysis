@@ -1,318 +1,330 @@
 {
-  "num_sequences": 52,
-  "alignment_length": 784,
+  "num_sequences": 54,
+  "alignment_length": 908,
   "sequences": [
     {
-      "id": "AT99",
-      "length": 689,
-      "gaps": 95,
-      "percent_gaps": 12.12
+      "id": "AT-HV1",
+      "length": 754,
+      "gaps": 154,
+      "percent_gaps": 16.96
     },
     {
-      "id": "AT_ROCK_",
-      "length": 704,
-      "gaps": 80,
-      "percent_gaps": 10.2
+      "id": "AT-HV3",
+      "length": 742,
+      "gaps": 166,
+      "percent_gaps": 18.28
+    },
+    {
+      "id": "AT-JM2",
+      "length": 876,
+      "gaps": 32,
+      "percent_gaps": 3.52
+    },
+    {
+      "id": "AT-WL2",
+      "length": 829,
+      "gaps": 79,
+      "percent_gaps": 8.7
     },
     {
       "id": "Aedes_aegypti_MN299002.1",
       "length": 686,
-      "gaps": 98,
-      "percent_gaps": 12.5
+      "gaps": 222,
+      "percent_gaps": 24.45
     },
     {
       "id": "Aedes_aegypti_MK300221.1",
       "length": 709,
-      "gaps": 75,
-      "percent_gaps": 9.57
+      "gaps": 199,
+      "percent_gaps": 21.92
     },
     {
       "id": "Aedes_aegypti_MN298992.1",
       "length": 695,
-      "gaps": 89,
-      "percent_gaps": 11.35
+      "gaps": 213,
+      "percent_gaps": 23.46
     },
     {
       "id": "Aedes_aegypti_MN298993.1",
       "length": 693,
-      "gaps": 91,
-      "percent_gaps": 11.61
+      "gaps": 215,
+      "percent_gaps": 23.68
     },
     {
       "id": "Aedes_aegypti_MK300224.1",
       "length": 709,
-      "gaps": 75,
-      "percent_gaps": 9.57
+      "gaps": 199,
+      "percent_gaps": 21.92
     },
     {
       "id": "Aedes_albopictus_KF211505",
       "length": 709,
-      "gaps": 75,
-      "percent_gaps": 9.57
+      "gaps": 199,
+      "percent_gaps": 21.92
     },
     {
       "id": "Aedes_albopictus_MN513368",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Aedes_taeniorhynchus_MN626442.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_pipiens_KP293422.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_pipiens_MK714012.1",
       "length": 699,
-      "gaps": 85,
-      "percent_gaps": 10.84
+      "gaps": 209,
+      "percent_gaps": 23.02
     },
     {
       "id": "Culex_pipiens_KP293425.1",
       "length": 750,
-      "gaps": 34,
-      "percent_gaps": 4.34
+      "gaps": 158,
+      "percent_gaps": 17.4
     },
     {
       "id": "Culex_pipiens_MK714001.1",
       "length": 700,
-      "gaps": 84,
-      "percent_gaps": 10.71
+      "gaps": 208,
+      "percent_gaps": 22.91
     },
     {
       "id": "Culex_quinquefasciatus_MW509603",
       "length": 694,
-      "gaps": 90,
-      "percent_gaps": 11.48
+      "gaps": 214,
+      "percent_gaps": 23.57
     },
     {
       "id": "Culex_quinquefasciatus_MH463059.1",
       "length": 709,
-      "gaps": 75,
-      "percent_gaps": 9.57
+      "gaps": 199,
+      "percent_gaps": 21.92
     },
     {
       "id": "Culex_quinquefasciatus_MN389462.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_quinquefasciatus_MN005046.1",
       "length": 679,
-      "gaps": 105,
-      "percent_gaps": 13.39
+      "gaps": 229,
+      "percent_gaps": 25.22
     },
     {
       "id": "Culex_tarsalis_NC_036006.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_tarsalis_AF425847",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_erraticus_MH129001",
       "length": 673,
-      "gaps": 111,
-      "percent_gaps": 14.16
+      "gaps": 235,
+      "percent_gaps": 25.88
     },
     {
       "id": "Culex_erraticus_MH128999.1",
       "length": 673,
-      "gaps": 111,
-      "percent_gaps": 14.16
+      "gaps": 235,
+      "percent_gaps": 25.88
     },
     {
       "id": "Culex_erraticus_MN389459",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Anopheles_quadrimaculatus_L04272",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Anopheles_quadrimaculatus_L04272.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Anopheles_punctipennis_KR666470.1",
       "length": 658,
-      "gaps": 126,
-      "percent_gaps": 16.07
+      "gaps": 250,
+      "percent_gaps": 27.53
     },
     {
       "id": "Aedes_busckii_MN626443.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Aedes_japonicus_KF211494.1",
       "length": 709,
-      "gaps": 75,
-      "percent_gaps": 9.57
+      "gaps": 199,
+      "percent_gaps": 21.92
     },
     {
       "id": "Aedes_tortilis_JX259682.1",
       "length": 658,
-      "gaps": 126,
-      "percent_gaps": 16.07
+      "gaps": 250,
+      "percent_gaps": 27.53
     },
     {
       "id": "Aedes_vexans_MH032639",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Aedes_vexans_KP954638.1",
       "length": 684,
-      "gaps": 100,
-      "percent_gaps": 12.76
+      "gaps": 224,
+      "percent_gaps": 24.67
     },
     {
       "id": "Aedes_triseriatus_MG242523.1",
       "length": 676,
-      "gaps": 108,
-      "percent_gaps": 13.78
+      "gaps": 232,
+      "percent_gaps": 25.55
     },
     {
       "id": "Anopheles_crucians_MT040812.1",
       "length": 675,
-      "gaps": 109,
-      "percent_gaps": 13.9
+      "gaps": 233,
+      "percent_gaps": 25.66
     },
     {
       "id": "Anopheles_albimanus_KC354824",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Anopheles_funestus_MT917175",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Anopheles_gambiae_MG753769",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Anopheles_pseudopunctipennis_KC354820",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Anopheles_stephensi_KT899888",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_nigripalpus_NC_037823.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_usquatissimus_NC_036007.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_coronator_NC_036006.1",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_sitiens_NC_054318",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Culex_tritaeniorhynchus_KT852976",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Deinocerites_magnus_MH376751.1",
       "length": 709,
-      "gaps": 75,
-      "percent_gaps": 9.57
+      "gaps": 199,
+      "percent_gaps": 21.92
     },
     {
       "id": "Psorophora_howardii_MG242538.1",
       "length": 657,
-      "gaps": 127,
-      "percent_gaps": 16.2
+      "gaps": 251,
+      "percent_gaps": 27.64
     },
     {
       "id": "Psorophora_ferox_MK575485",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Psorophora_pygmaea_JX260116.1",
       "length": 658,
-      "gaps": 126,
-      "percent_gaps": 16.07
+      "gaps": 250,
+      "percent_gaps": 27.53
     },
     {
       "id": "Psorophora_cingulata_KM592989.1",
       "length": 698,
-      "gaps": 86,
-      "percent_gaps": 10.97
+      "gaps": 210,
+      "percent_gaps": 23.13
     },
     {
       "id": "Psorophora_confinis_KY859921.1",
       "length": 658,
-      "gaps": 126,
-      "percent_gaps": 16.07
+      "gaps": 250,
+      "percent_gaps": 27.53
     },
     {
       "id": "Culiseta_annulata_MN626442",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Mansonia_annulata_HQ341635",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     },
     {
       "id": "Ochlerotatus_taeniorhynchus_MN626442",
       "length": 712,
-      "gaps": 72,
-      "percent_gaps": 9.18
+      "gaps": 196,
+      "percent_gaps": 21.59
     }
   ]
 }

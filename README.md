@@ -280,9 +280,13 @@ dna-barcoding-analysis/
 │   ├── 04_phylogeny/
 │   └── 05_identification/
 │
+├── scripts/                     # Utility scripts
+│   └── trim_references_to_barcode.py  # Trim GenBank references to ~700bp
+│
 ├── docs/                        # Reference documentation
 │   ├── pipeline_workflow.md
-│   └── iqtree_guide.md
+│   ├── iqtree_guide.md
+│   └── reference_trimming.md    # Why we trim references to barcode region
 │
 └── intro_to_cli/                # Optional CLI tutorials (separate course)
 ```
@@ -301,10 +305,13 @@ dna-barcoding-analysis/
 
 ## 📚 Reference Dataset
 
-85 mosquito COI sequences from **Hoque et al. 2022**:
+50 mosquito COI sequences trimmed to the **barcode region** (~700bp):
 - 19 species from 6 genera
 - Genera: *Aedes*, *Anopheles*, *Culex*, *Deinocerites*, *Psorophora*, *Uranotaenia*
 - All sequences validated and published
+- **Trimmed from GenBank to match the 712bp AUCOS amplicon** (see `docs/reference_trimming.md`)
+
+**Why trimmed?** GenBank contains COI sequences of varying lengths (640bp - 2,300bp). Using sequences of different lengths creates poor alignments with excessive gaps (~1,000 gaps!). We trimmed all references to the ~700bp barcode region that matches your student sequences.
 
 **Citation**: Hoque MM, Valentine MJ, Kelly PJ, et al. Modification of the Folmer primers for the cytochrome c oxidase gene facilitates identification of mosquitoes. *Parasites Vectors*. 2022;15:437. doi:[10.1186/s13071-022-05494-2](https://doi.org/10.1186/s13071-022-05494-2)
 
@@ -341,8 +348,9 @@ dna-barcoding-analysis/
 1. **Re-run the tutorial**: `./tutorial.sh`
 2. **Read the visual workflow**: `docs/pipeline_workflow.md`
 3. **Understand IQ-TREE**: `docs/iqtree_guide.md`
-4. **Check assignment**: `assignment.md`
-5. **Ask your TA or instructor**
+4. **Reference sequence trimming**: `docs/reference_trimming.md`
+5. **Check assignment**: `assignment.md`
+6. **Ask your TA or instructor**
 
 ---
 

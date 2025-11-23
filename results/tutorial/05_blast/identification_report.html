@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phylogenetic Tree Report - DNA Barcoding</title>
+    <title>Species Identification Report - DNA Barcoding</title>
 
     <!-- Embedded CSS for reliable loading -->
     <style>
@@ -1418,173 +1418,271 @@ button:focus-visible,
 <body>
     <!-- Report Header -->
     <header class="report-header">
-        <h1>🌳 Phylogenetic Tree Report</h1>
-        <div class="progress-badge">Step 4 of 5</div>
-        <div class="report-date">Generated: 2025-11-23 00:26:13</div>
+        <h1>🔬 Species Identification Report</h1>
+        <div class="progress-badge">Step 5 of 5</div>
+        <div class="report-date">Generated: 2025-11-22 22:53:30</div>
     </header>
 
     <!-- Summary Dashboard -->
     <section class="summary-dashboard">
         <div class="metric-card metric-success">
-            <div class="metric-value">IQ-TREE</div>
-            <div class="metric-label">Analysis Method</div>
-            <div class="metric-icon">⚙️</div>
+            <div class="metric-value">2</div>
+            <div class="metric-label">Successfully Identified</div>
+            <div class="metric-icon">✓</div>
         </div>
 
         <div class="metric-card metric-primary">
-            <div class="metric-value">ML</div>
-            <div class="metric-label">Maximum Likelihood</div>
-            <div class="metric-icon">🧬</div>
+            <div class="metric-value">2</div>
+            <div class="metric-label">Unique Species</div>
+            <div class="metric-icon">🦟</div>
         </div>
 
         <div class="metric-card metric-primary">
-            <div class="metric-value">1000</div>
-            <div class="metric-label">Bootstrap Replicates</div>
-            <div class="metric-icon">🔁</div>
+            <div class="metric-value">96.8%</div>
+            <div class="metric-label">Avg. Identity</div>
+            <div class="metric-icon">🎯</div>
         </div>
 
         <div class="metric-card metric-success">
-            <div class="metric-value">MFP</div>
-            <div class="metric-label">Model Selection</div>
-            <div class="metric-icon">📊</div>
+            <div class="metric-value">0</div>
+            <div class="metric-label">Errors</div>
+            <div class="metric-icon">✓</div>
         </div>
     </section>
 
     <!-- Main Content -->
     <main class="report-content">
         <div class="content-section">
-            <h2>Phylogenetic Tree</h2>
-            <p>Maximum likelihood tree showing evolutionary relationships</p>
+            <h2>Identification Results</h2>
+            <p>BLAST search against NCBI GenBank nucleotide database (nt)</p>
 
             <div class="info-box info-tip">
-                <strong>💡 Reading the Tree:</strong>
+                <strong>💡 How to interpret results:</strong>
                 <ul>
-                    <li><strong>Branch lengths:</strong> Evolutionary distance (substitutions per site)</li>
-                    <li><strong>Bootstrap values:</strong> Statistical support (≥70% considered reliable)</li>
-                    <li><strong>Topology:</strong> Shows relationships, not time</li>
-                    <li><strong>Your samples:</strong> Compare with reference species to identify unknown specimens</li>
+                    <li><strong>≥97% identity:</strong> Same species (high confidence)</li>
+                    <li><strong>90-97% identity:</strong> Related species (moderate confidence)</li>
+                    <li><strong>&lt;90% identity:</strong> Distant match (low confidence)</li>
                 </ul>
             </div>
 
-            <!-- Tree Visualization -->
-            <div class="figure-container">
-                <img src="tree.png" alt="Phylogenetic Tree" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
-                <div class="figure-caption">
-                    <strong>Figure 1:</strong> Maximum likelihood phylogenetic tree constructed using IQ-TREE with 1000 ultrafast bootstrap replicates.
-                    Best-fit model: GTR+F+I+G4 chosen according to BIC
+            <div class="collapsible-section expanded">
+                <button class="collapsible-toggle">
+                    <span class="toggle-icon">▶</span>
+                    <strong>AT99</strong>
+                    <span class="badge badge-success">98.94% match</span>
+                    <em style="margin-left: auto; color: var(--text-secondary);">Culex pipiens</em>
+                </button>
+                <div class="collapsible-content">
+                    <!-- Top Match Summary -->
+                    <div class="info-box info-success">
+                        <strong>🎯 Top Match:</strong>
+                        <div style="margin-top: 0.5rem;">
+                            <div style="font-size: 1.1rem; font-weight: 600; font-style: italic;">
+                                Culex pipiens
+                            </div>
+                            <div style="color: var(--text-secondary); margin-top: 0.25rem;">Northern house mosquito</div>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="badge badge-success">98.94% identity</span>
+                                <span class="badge badge-secondary">E-value: 0.00e+00</span>
+                                <span class="badge badge-secondary">Accession: PV094723</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- All BLAST Hits Table -->
+                    <h4 style="margin-top: 1.5rem;">All BLAST Hits (Top 5)</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Species</th>
+                                <th>Accession</th>
+                                <th>Identity %</th>
+                                <th>E-value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr class="row-pass">
+                                <td>1</td>
+                                <td><em>Culex pipiens</em></td>
+                                <td><code>PV094723</code></td>
+                                <td><span class="badge badge-success">98.94%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                            <tr class="row-pass">
+                                <td>2</td>
+                                <td><em>Culex pipiens</em></td>
+                                <td><code>PQ588186</code></td>
+                                <td><span class="badge badge-success">98.94%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                            <tr class="row-pass">
+                                <td>3</td>
+                                <td><em>Culex pipiens</em></td>
+                                <td><code>PV094722</code></td>
+                                <td><span class="badge badge-success">98.94%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                            <tr class="row-pass">
+                                <td>4</td>
+                                <td><em>Culex hutchinsoni</em></td>
+                                <td><code>NC_085461</code></td>
+                                <td><span class="badge badge-success">98.94%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                            <tr class="row-pass">
+                                <td>5</td>
+                                <td><em>Culex quinquefasciatus</em></td>
+                                <td><code>ON351297</code></td>
+                                <td><span class="badge badge-success">98.94%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Analysis Details -->
-            <h3 style="margin-top: 2rem;">Analysis Details</h3>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Parameter</th>
-                        <th>Value</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="row-pass">
-                        <td><strong>Method</strong></td>
-                        <td><span class="badge badge-primary">Maximum Likelihood</span></td>
-                        <td>Statistical method for inferring phylogeny</td>
-                    </tr>
-                    <tr class="row-pass">
-                        <td><strong>Software</strong></td>
-                        <td><span class="badge badge-primary">IQ-TREE</span></td>
-                        <td>State-of-the-art phylogenetic inference program</td>
-                    </tr>
-                    <tr class="row-pass">
-                        <td><strong>Bootstrap</strong></td>
-                        <td><span class="badge badge-success">1000 ultrafast replicates</span></td>
-                        <td>Measures confidence in tree topology</td>
-                    </tr>
-                    <tr class="row-pass">
-                        <td><strong>Model Selection</strong></td>
-                        <td><span class="badge badge-primary">ModelFinder Plus (MFP)</span></td>
-                        <td>Automatic selection of best-fit substitution model</td>
-                    </tr>
-                    <tr class="row-pass">
-                        <td><strong>Best-fit Model</strong></td>
-                        <td><code>GTR+F+I+G4 chosen according to BIC</code></td>
-                        <td>DNA substitution model used for tree inference</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="collapsible-section expanded">
+                <button class="collapsible-toggle">
+                    <span class="toggle-icon">▶</span>
+                    <strong>AT_ROCK_</strong>
+                    <span class="badge badge-warning">94.73% match</span>
+                    <em style="margin-left: auto; color: var(--text-secondary);">Aedes aegypti</em>
+                </button>
+                <div class="collapsible-content">
+                    <!-- Top Match Summary -->
+                    <div class="info-box info-success">
+                        <strong>🎯 Top Match:</strong>
+                        <div style="margin-top: 0.5rem;">
+                            <div style="font-size: 1.1rem; font-weight: 600; font-style: italic;">
+                                Aedes aegypti
+                            </div>
+                            <div style="color: var(--text-secondary); margin-top: 0.25rem;">Yellow fever mosquito</div>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="badge badge-warning">94.73% identity</span>
+                                <span class="badge badge-secondary">E-value: 0.00e+00</span>
+                                <span class="badge badge-secondary">Accession: LC832164</span>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Output Files -->
-            <h3 style="margin-top: 2rem;">Output Files</h3>
-            <div class="info-box info-secondary">
-                <strong>📁 Generated Files:</strong>
-                <ul>
-                    <li><code>tree.treefile</code> - Newick tree format (text file, open in FigTree)</li>
-                    <li><code>tree.png</code> - Tree visualization (this image)</li>
-                    <li><code>tree.iqtree</code> - Detailed analysis report with statistics</li>
-                    <li><code>tree.log</code> - IQ-TREE execution log</li>
-                </ul>
+                    <!-- All BLAST Hits Table -->
+                    <h4 style="margin-top: 1.5rem;">All BLAST Hits (Top 5)</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Species</th>
+                                <th>Accession</th>
+                                <th>Identity %</th>
+                                <th>E-value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr class="row-warning">
+                                <td>1</td>
+                                <td><em>Aedes aegypti</em></td>
+                                <td><code>LC832164</code></td>
+                                <td><span class="badge badge-warning">94.73%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                            <tr class="row-warning">
+                                <td>2</td>
+                                <td><em>Aedes aegypti</em></td>
+                                <td><code>LC832161</code></td>
+                                <td><span class="badge badge-warning">94.87%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                            <tr class="row-warning">
+                                <td>3</td>
+                                <td><em>Aedes aegypti</em></td>
+                                <td><code>LC832420</code></td>
+                                <td><span class="badge badge-warning">94.6%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                            <tr class="row-warning">
+                                <td>4</td>
+                                <td><em>Aedes aegypti</em></td>
+                                <td><code>OR413792</code></td>
+                                <td><span class="badge badge-warning">94.7%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                            <tr class="row-warning">
+                                <td>5</td>
+                                <td><em>Aedes aegypti</em></td>
+                                <td><code>MW339668</code></td>
+                                <td><span class="badge badge-warning">94.44%</span></td>
+                                <td>0.00e+00</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Advanced Viewing -->
-            <div class="info-box info-tip" style="margin-top: 1rem;">
-                <strong>🔬 Advanced Viewing with FigTree:</strong>
-                <p>For interactive tree exploration with bootstrap values and branch lengths:</p>
-                <ol>
-                    <li>Download <a href="http://tree.bio.ed.ac.uk/software/figtree/" target="_blank">FigTree</a> (free phylogenetic tree viewer)</li>
-                    <li>Open <code>tree.treefile</code> in FigTree</li>
-                    <li>Enable "Node Labels" to display bootstrap support values</li>
-                    <li>Adjust "Branch Labels" to show evolutionary distances</li>
-                    <li>Export high-resolution images for publications</li>
-                </ol>
-            </div>
         </div>
     </main>
 
     <!-- Footer with Help -->
     <footer class="report-footer">
         <div class="help-section">
-            <h3>Understanding Phylogenetic Trees</h3>
+            <h3>Understanding Your Results</h3>
 
-            <h4>What is a phylogenetic tree?</h4>
-            <p>A phylogenetic tree is a diagram showing the evolutionary relationships between organisms based on DNA sequence similarity. Closely related species appear near each other on the tree.</p>
+            <h4>What is BLAST?</h4>
+            <p>BLAST (Basic Local Alignment Search Tool) compares your DNA sequence against millions of sequences in GenBank to find the closest matches.</p>
 
-            <h4>How to interpret the tree</h4>
+            <h4>What does % identity mean?</h4>
             <ul>
-                <li><strong>Tips (leaves):</strong> Current species or samples being analyzed</li>
-                <li><strong>Branches:</strong> Evolutionary lineages; longer branches = more changes</li>
-                <li><strong>Nodes:</strong> Common ancestors where lineages split</li>
-                <li><strong>Root:</strong> Most recent common ancestor of all sequences</li>
+                <li><strong>99-100%:</strong> Almost certainly the same species</li>
+                <li><strong>97-99%:</strong> Same species (standard DNA barcoding threshold)</li>
+                <li><strong>95-97%:</strong> Likely same species, possibly subspecies variation</li>
+                <li><strong>90-95%:</strong> Closely related species</li>
+                <li><strong>&lt;90%:</strong> Different species, possibly same genus</li>
             </ul>
 
-            <h4>What are bootstrap values?</h4>
-            <p>Bootstrap values (0-100%) measure confidence in tree branching patterns:</p>
+            <h4>Why do multiple hits have identical % identity?</h4>
+            <div class="info-box info-success">
+                <strong>✓ This is completely normal!</strong>
+                <p style="margin-top: 0.5rem;">You might see several BLAST hits with the exact same % identity (e.g., 99.24%). This happens because:</p>
+                <ul style="margin-top: 0.5rem; margin-bottom: 0;">
+                    <li><strong>Same species, different database entries:</strong> GenBank contains multiple entries for the same species from different studies, locations, or researchers</li>
+                    <li><strong>COI is conserved:</strong> The COI barcode region is highly conserved within species, so individuals have nearly identical sequences</li>
+                    <li><strong>Different voucher specimens:</strong> Each entry represents a different specimen (e.g., RMNH.INS.1271356, Cx_pip_2) but from the same species</li>
+                    <li><strong>Multiple accessions:</strong> The same organism's genome may be submitted multiple times with different accession numbers</li>
+                </ul>
+                <p style="margin-top: 0.5rem; margin-bottom: 0;"><strong>What to do:</strong> Look at the species names - if they're the same across the top hits, you have a confident identification! The multiple entries actually increase your confidence that the match is correct.</p>
+            </div>
+
+            <h4>What if my top match isn't a mosquito?</h4>
+            <p>This could indicate:</p>
             <ul>
-                <li><strong>≥95%:</strong> Very strong support</li>
-                <li><strong>70-95%:</strong> Good support</li>
-                <li><strong>&lt;70%:</strong> Weak support (uncertain relationship)</li>
+                <li>Contamination in your sample</li>
+                <li>Poor sequence quality leading to incorrect matches</li>
+                <li>A novel or undescribed species</li>
             </ul>
-
-            <h4>What is Maximum Likelihood?</h4>
-            <p>Maximum Likelihood (ML) is a statistical method that finds the tree topology and branch lengths most likely to have produced the observed sequences, given a model of DNA evolution.</p>
-
-            <h4>Why use IQ-TREE?</h4>
-            <p>IQ-TREE is the fastest and most accurate ML phylogenetic software available. Key features:</p>
-            <ul>
-                <li>Automatic model selection (ModelFinder)</li>
-                <li>Ultrafast bootstrap (1000 replicates in seconds)</li>
-                <li>Handles large datasets efficiently</li>
-                <li>Widely used in published research</li>
-            </ul>
-
-            <h4>How to use this tree</h4>
-            <ol>
-                <li>Find your samples on the tree (student sequences)</li>
-                <li>Look at which reference species cluster with your samples</li>
-                <li>Check bootstrap values for branch reliability</li>
-                <li>Compare results with BLAST identification (next step)</li>
-            </ol>
+            <p>Review your chromatograms and quality scores if results seem unexpected.</p>
         </div>
     </footer>
+
+    <!-- JavaScript for collapsible sections -->
+    <script>
+        document.querySelectorAll('.collapsible-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const section = button.parentElement;
+                section.classList.toggle('expanded');
+            });
+        });
+    </script>
 </body>
 </html>

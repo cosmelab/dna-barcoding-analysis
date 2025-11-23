@@ -1,0 +1,421 @@
+IQ-TREE 3.0.1 built Jul  9 2025
+
+Input file name: results/my_analysis/03_alignment/aligned_sequences.fasta
+Type of analysis: ModelFinder + tree reconstruction + ultrafast bootstrap (1000 replicates)
+Random seed number: 221856
+
+REFERENCES
+----------
+
+To cite IQ-TREE 3 please use:
+
+Thomas K.F. Wong, Nhan Ly-Trong, Huaiyan Ren, Hector Banos, Andrew J. Roger,
+Edward Susko, Chris Bielow, Nicola De Maio, Nick Goldman, Matthew W. Hahn,
+Gavin Huttley, Robert Lanfear, Bui Quang Minh (2025)
+IQ-TREE 3: Phylogenomic Inference Software using Complex Evolutionary Models.
+Submitted.
+
+Please also cite the following paper(s) for the feature(s) that you used:
+
+To cite ModelFinder please use: 
+
+Subha Kalyaanamoorthy, Bui Quang Minh, Thomas KF Wong, Arndt von Haeseler,
+and Lars S Jermiin (2017) ModelFinder: Fast model selection for
+accurate phylogenetic estimates. Nature Methods, 14:587–589.
+https://doi.org/10.1038/nmeth.4285
+
+Since you used ultrafast bootstrap (UFBoot) please also cite: 
+
+Diep Thi Hoang, Olga Chernomor, Arndt von Haeseler, Bui Quang Minh,
+and Le Sy Vinh (2018) UFBoot2: Improving the ultrafast bootstrap
+approximation. Mol. Biol. Evol., 35:518–522.
+https://doi.org/10.1093/molbev/msx281
+
+SEQUENCE ALIGNMENT
+------------------
+
+Input data: 54 sequences with 908 nucleotide sites
+Number of constant sites: 564 (= 62.1145% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 564 (= 62.1145% of all sites)
+Number of parsimony informative sites: 258
+Number of distinct site patterns: 361
+
+ModelFinder
+-----------
+
+Best-fit model according to BIC: GTR+F+I+R2
+
+List of models sorted by BIC scores: 
+
+Model                  LogL         AIC      w-AIC        AICc     w-AICc         BIC      w-BIC
+GTR+F+I+R2        -7516.834   15257.668 +        1   15289.507 +        1   15796.528 +        1
+TVM+F+I+R2        -7541.660   15305.321 - 4.49e-11   15336.557 - 6.07e-11   15839.369 - 4.98e-10
+TIM+F+I+R2        -7550.265   15320.530 - 2.24e-14   15351.170 - 4.08e-14   15849.767 - 2.75e-12
+K3Pu+F+I+R2       -7572.026   15362.052 - 2.16e-23   15392.102 - 5.27e-23   15886.477 - 2.94e-20
+TIM2+F+I+R2       -7575.943   15371.886 - 1.58e-25   15402.526 - 2.87e-25   15901.123 - 1.94e-23
+TPM2u+F+I+R2      -7598.831   15415.662 - 4.92e-35   15445.712 -  1.2e-34   15940.087 - 6.71e-32
+TIM3+F+I+R2       -7598.186   15416.373 - 3.45e-35   15447.013 - 6.28e-35   15945.610 - 4.24e-33
+TPM3u+F+I+R2      -7619.403   15456.806 - 5.73e-44   15486.856 -  1.4e-43   15981.231 -  7.8e-41
+TN+F+I+R2         -7649.456   15516.912 - 5.08e-57   15546.962 - 1.24e-56   16041.338 - 6.92e-54
+GTR+I+R2          -7651.823   15521.647 - 4.76e-58   15551.697 - 1.16e-57   16046.072 - 6.49e-55
+SYM+I+R2          -7651.835   15521.670 - 4.71e-58   15551.720 - 1.15e-57   16046.095 - 6.41e-55
+SYM+I+R2          -7651.835   15521.670 - 4.71e-58   15551.720 - 1.15e-57   16046.095 - 6.41e-55
+HKY+F+I+R2        -7669.282   15554.564 - 3.39e-65   15584.031 - 1.11e-64   16074.179 - 5.11e-61
+TVM+I+R2          -7693.964   15603.928 - 6.47e-76   15633.395 - 2.12e-75   16123.542 - 9.77e-72
+TVMe+I+R2         -7693.981   15603.962 - 6.36e-76   15633.429 - 2.08e-75   16123.576 -  9.6e-72
+TVMe+I+R2         -7693.981   15603.962 - 6.36e-76   15633.429 - 2.08e-75   16123.576 -  9.6e-72
+TIM+I+R2          -7753.777   15721.554 - 1.86e-101   15750.444 - 8.11e-101   16236.357 - 3.11e-96
+TIMe+I+R2         -7753.779   15721.558 - 1.85e-101   15750.448 - 8.09e-101   16236.361 -  3.1e-96
+TIMe+I+R2         -7753.779   15721.558 - 1.85e-101   15750.448 - 8.09e-101   16236.361 -  3.1e-96
+F81+F+I+R2        -7782.124   15778.248 - 9.07e-114   15807.138 - 3.96e-113   16293.051 - 1.52e-108
+K3Pu+I+R2         -7788.665   15789.330 - 3.56e-116   15817.650 - 2.07e-115   16299.322 - 6.6e-110
+K3P+I+R2          -7788.666   15789.331 - 3.56e-116   15817.651 - 2.07e-115   16299.323 - 6.6e-110
+K3P+I+R2          -7788.666   15789.331 - 3.56e-116   15817.651 - 2.07e-115   16299.323 - 6.6e-110
+TIM2+I+R2         -7817.009   15848.017 - 6.42e-129   15876.907 - 2.8e-128   16362.820 - 1.07e-123
+TIM2e+I+R2        -7817.014   15848.027 - 6.39e-129   15876.917 - 2.79e-128   16362.831 - 1.07e-123
+TIM2e+I+R2        -7817.014   15848.027 - 6.39e-129   15876.917 - 2.79e-128   16362.831 - 1.07e-123
+TPM2u+I+R2        -7848.058   15908.115 - 5.72e-142   15936.435 - 3.32e-141   16418.107 - 1.06e-135
+TPM2+I+R2         -7848.058   15908.116 - 5.72e-142   15936.435 - 3.32e-141   16418.108 - 1.06e-135
+TPM2+I+R2         -7848.058   15908.116 - 5.72e-142   15936.435 - 3.32e-141   16418.108 - 1.06e-135
+TIM3+I+R2         -7863.015   15940.030 - 6.72e-149   15968.920 - 2.93e-148   16454.833 - 1.12e-143
+TIM3e+I+R2        -7863.023   15940.046 - 6.66e-149   15968.936 - 2.91e-148   16454.849 - 1.12e-143
+TIM3e+I+R2        -7863.023   15940.046 - 6.66e-149   15968.936 - 2.91e-148   16454.849 - 1.12e-143
+TPM3u+I+R2        -7908.417   16028.835 - 3.49e-168   16057.155 - 2.03e-167   16538.827 - 6.48e-162
+TPM3+I+R2         -7908.423   16028.847 - 3.47e-168   16057.166 - 2.02e-167   16538.839 - 6.44e-162
+TPM3+I+R2         -7908.423   16028.847 - 3.47e-168   16057.166 - 2.02e-167   16538.839 - 6.44e-162
+TN+I+R2           -7989.407   16190.814 - 2.34e-203   16219.133 - 1.36e-202   16700.806 - 4.35e-197
+TNe+I+R2          -7989.407   16190.814 - 2.34e-203   16219.133 - 1.36e-202   16700.806 - 4.35e-197
+TNe+I+R2          -7989.407   16190.814 - 2.34e-203   16219.133 - 1.36e-202   16700.806 - 4.35e-197
+HKY+I+R2          -8023.430   16256.860 - 1.07e-217   16284.615 - 8.22e-217   16762.040 - 2.2e-210
+K2P+I+R2          -8023.430   16256.860 - 1.07e-217   16284.616 - 8.22e-217   16762.041 - 2.2e-210
+K2P+I+R2          -8023.430   16256.860 - 1.07e-217   16284.616 - 8.22e-217   16762.041 - 2.2e-210
+F81+I+R2          -8068.263   16344.526 - 9.81e-237   16371.724 - 9.99e-236   16844.896 - 2.24e-228
+JC+I+R2           -8068.276   16344.552 - 9.69e-237   16371.750 - 9.86e-236   16844.921 - 2.21e-228
+JC+I+R2           -8068.276   16344.552 - 9.69e-237   16371.750 - 9.86e-236   16844.921 - 2.21e-228
+JC+I+R3           -8068.288   16348.576 - 1.3e-237   16376.896 - 7.53e-237   16858.568 - 2.4e-231
+JC+I+G4           -8079.172   16364.343 - 4.88e-241   16390.990 - 6.55e-240   16859.902 - 1.23e-231
+JC+G4             -8086.980   16377.959 - 5.39e-244   16404.061 - 9.5e-243   16868.706 - 1.51e-233
+JC+R3             -8080.223   16370.446 - 2.31e-242   16398.202 - 1.78e-241   16875.627 - 4.75e-235
+JC+R4             -8074.968   16363.936 - 5.98e-241   16392.826 - 2.61e-240   16878.740 -   1e-235
+JC+R2             -8123.981   16453.963 - 1.69e-260   16480.610 - 2.27e-259   16949.521 - 4.27e-251
+JC+I              -8206.621   16617.243 - 5.92e-296   16643.345 - 1.04e-294   17107.990 - 1.66e-285
+JC                -9088.468   18378.936 -        0   18404.499 -        0   18864.872 -        0
+
+AIC, w-AIC   : Akaike information criterion scores and weights.
+AICc, w-AICc : Corrected AIC scores and weights.
+BIC, w-BIC   : Bayesian information criterion scores and weights.
+
+Plus signs denote the 95% confidence sets.
+Minus signs denote significant exclusion.
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: GTR+F+I+R2
+
+Rate parameter R:
+
+  A-C: 0.9298
+  A-G: 5.9126
+  A-T: 6.5053
+  C-G: 0.7027
+  C-T: 12.3738
+  G-T: 1.0000
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.2947
+  pi(C) = 0.1554
+  pi(G) = 0.1569
+  pi(T) = 0.3929
+
+Rate matrix Q:
+
+  A   -0.9529   0.03795    0.2437    0.6713
+  C   0.07197    -1.378   0.02896     1.277
+  G    0.4577   0.02868   -0.5895    0.1032
+  T    0.5035    0.5051   0.04121     -1.05
+
+Model of rate heterogeneity: Invar+FreeRate with 2 categories
+Proportion of invariable sites: 0.5185
+Site proportion and rates:  (0.2388,0.6489) (0.2427,3.482)
+
+ Category  Relative_rate  Proportion
+  0         0              0.5185
+  1         0.6489         0.2388
+  2         3.482          0.2427
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -7509.0399 (s.e. 314.0539)
+Unconstrained log-likelihood (without tree): -3948.5827
+Number of free parameters (#branches + #model parameters): 112
+Akaike information criterion (AIC) score: 15242.0798
+Corrected Akaike information criterion (AICc) score: 15273.9188
+Bayesian information criterion (BIC) score: 15780.9392
+
+Total tree length (sum of branch lengths): 3.1544
+Sum of internal branch lengths: 1.0888 (34.5161% of tree length)
+
+WARNING: 7 near-zero internal branches (<0.0011) should be treated with caution
+         Such branches are denoted by '**' in the figure below
+
+NOTE: Tree is UNROOTED although outgroup taxon 'AT-HV1' is drawn at root
+Numbers in parentheses are  ultrafast bootstrap support (%)
+
++----AT-HV1
+|
+|                                                    +--AT-HV3
+|                                                 +--| (90)
+|                                                 |  +---AT-WL2
+|                                            +----| (100)
+|                                            |    +---AT-JM2
+|                                       +----| (100)
+|                                       |    |     +**Culex_pipiens_KP293422.1
+|                                       |    |  +**| (65)
+|                                       |    |  |  |        +**Culex_pipiens_KP293425.1
+|                                       |    |  |  |     +**| (57)
+|                                       |    |  |  |     |  +**Culex_quinquefasciatus_MN005046.1
+|                                       |    |  |  |  +**| (60)
+|                                       |    |  |  |  |  +**Culex_quinquefasciatus_MW509603
+|                                       |    |  |  +**| (35)
+|                                       |    |  |     +**Culex_quinquefasciatus_MN389462.1
+|                                       |    +**| (55)
+|                                       |       |     +**Culex_pipiens_MK714012.1
+|                                       |       |  +**| (55)
+|                                       |       |  |  +**Culex_quinquefasciatus_MH463059.1
+|                                       |       +--| (100)
+|                                       |          +**Culex_pipiens_MK714001.1
+|                                    +--| (25)
+|                                    |  |  +-----Culex_sitiens_NC_054318
+|                                    |  +--| (26)
+|                                    |     +-----Culex_tritaeniorhynchus_KT852976
+|                                 +--| (95)
+|                                 |  |         +**Culex_tarsalis_NC_036006.1
+|                                 |  |      +--| (99)
+|                                 |  |      |  +**Culex_coronator_NC_036006.1
+|                                 |  |  +---| (100)
+|                                 |  |  |   +--Culex_usquatissimus_NC_036007.1
+|                                 |  +--| (88)
+|                                 |     |  +--Culex_tarsalis_AF425847
+|                                 |     +--| (93)
+|                                 |        +--Culex_nigripalpus_NC_037823.1
+|                              +**| (36)
+|                              |  |                       +**Anopheles_quadrimaculatus_L04272
+|                              |  |                +------| (100)
+|                              |  |                |      +**Anopheles_quadrimaculatus_L04272.1
+|                              |  |             +--| (62)
+|                              |  |             |  |  +--------Anopheles_crucians_MT040812.1
+|                              |  |             |  +--| (64)
+|                              |  |             |     +----------------Anopheles_pseudopunctipennis_KC354820
+|                              |  |          +--| (49)
+|                              |  |          |  +------Anopheles_punctipennis_KR666470.1
+|                              |  |       +--| (26)
+|                              |  |       |  +------------Anopheles_albimanus_KC354824
+|                              |  |    +--| (49)
+|                              |  |    |  |     +-----------Aedes_vexans_MH032639
+|                              |  |    |  |  +--| (87)
+|                              |  |    |  |  |  +-----Anopheles_stephensi_KT899888
+|                              |  |    |  +--| (32)
+|                              |  |    |     +-------Anopheles_gambiae_MG753769
+|                              |  +----| (100)
+|                              |       +-------Anopheles_funestus_MT917175
+|                           +--| (70)
+|                           |  |             +--Culex_erraticus_MH129001
+|                           |  |  +----------| (100)
+|                           |  |  |          +--Culex_erraticus_MH128999.1
+|                           |  +--| (54)
+|                           |     +-----------------Deinocerites_magnus_MH376751.1
+|                        +--| (55)
+|                        |  +---------------------Mansonia_annulata_HQ341635
+|                     +--| (23)
+|                     |  |     +--------Psorophora_howardii_MG242538.1
+|                     |  |  +--| (96)
+|                     |  |  |  |  +---Psorophora_pygmaea_JX260116.1
+|                     |  |  |  +--| (97)
+|                     |  |  |     |  +---Psorophora_cingulata_KM592989.1
+|                     |  |  |     +--| (100)
+|                     |  |  |        +----Psorophora_confinis_KY859921.1
+|                     |  +--| (99)
+|                     |     +-----Psorophora_ferox_MK575485
+|                  +--| (27)
+|                  |  |            +**Aedes_taeniorhynchus_MN626442.1
+|                  |  |     +------| (100)
+|                  |  |     |      +**Culiseta_annulata_MN626442
+|                  |  |  +--| (98)
+|                  |  |  |  +-----Aedes_tortilis_JX259682.1
+|                  |  +--| (86)
+|                  |     +-------Aedes_triseriatus_MG242523.1
+|               +--| (73)
+|               |  |              +--Aedes_albopictus_KF211505
+|               |  |  +-----------| (100)
+|               |  |  |           +**Aedes_japonicus_KF211494.1
+|               |  +--| (27)
+|               |     +-----------Aedes_busckii_MN626443.1
+|            +--| (77)
+|            |  +-----Aedes_vexans_KP954638.1
++------------| (100)
+|            |            +--Aedes_aegypti_MN299002.1
+|            |         +--| (97)
+|            |         |  |     +**Aedes_aegypti_MN298992.1
+|            |         |  |  +--| (97)
+|            |         |  |  |  +--Aedes_aegypti_MN298993.1
+|            |         |  +--| (97)
+|            |         |     +--Aedes_aegypti_MK300224.1
+|            +---------| (100)
+|                      +**Aedes_aegypti_MK300221.1
+|
++**Aedes_albopictus_MN513368
+
+Tree in newick format:
+
+(AT-HV1:0.0454803668,(((((((((((((AT-HV3:0.0120786371,AT-WL2:0.0382202165)90:0.0106972313,AT-JM2:0.0353932785)100:0.0459476128,((Culex_pipiens_KP293422.1:0.0000009994,(((Culex_pipiens_KP293425.1:0.0000009994,Culex_quinquefasciatus_MN005046.1:0.0000009994)57:0.0000009994,Culex_quinquefasciatus_MW509603:0.0000009994)60:0.0000009994,Culex_quinquefasciatus_MN389462.1:0.0000009994)35:0.0000020325)65:0.0000021286,((Culex_pipiens_MK714012.1:0.0000009994,Culex_quinquefasciatus_MH463059.1:0.0000028983)55:0.0000020910,Culex_pipiens_MK714001.1:0.0000027107)100:0.0116035883)55:0.0000029350)100:0.0483655155,(Culex_sitiens_NC_054318:0.0519865803,Culex_tritaeniorhynchus_KT852976:0.0559387025)26:0.0049931401)25:0.0074750526,(((Culex_tarsalis_NC_036006.1:0.0000009994,Culex_coronator_NC_036006.1:0.0000009994)99:0.0032814273,Culex_usquatissimus_NC_036007.1:0.0014157970)100:0.0343423413,(Culex_tarsalis_AF425847:0.0236666157,Culex_nigripalpus_NC_037823.1:0.0161791187)93:0.0089643625)88:0.0129448319)95:0.0327408656,((((((Anopheles_quadrimaculatus_L04272:0.0000009994,Anopheles_quadrimaculatus_L04272.1:0.0000021597)100:0.0626383888,(Anopheles_crucians_MT040812.1:0.0839495758,Anopheles_pseudopunctipennis_KC354820:0.1513331999)64:0.0214542428)62:0.0171007645,Anopheles_punctipennis_KR666470.1:0.0605191485)49:0.0179195057,Anopheles_albimanus_KC354824:0.1193761189)26:0.0070322145,((Aedes_vexans_MH032639:0.1060935835,Anopheles_stephensi_KT899888:0.0534418573)87:0.0310318865,Anopheles_gambiae_MG753769:0.0752264751)32:0.0114630640)49:0.0172445691,Anopheles_funestus_MT917175:0.0717240970)100:0.0488629292)36:0.0005579620,((Culex_erraticus_MH129001:0.0084890141,Culex_erraticus_MH128999.1:0.0037766454)100:0.1009707941,Deinocerites_magnus_MH376751.1:0.1584496618)54:0.0299785770)70:0.0147836700,Mansonia_annulata_HQ341635:0.1949197974)55:0.0264676559,((Psorophora_howardii_MG242538.1:0.0785829362,(Psorophora_pygmaea_JX260116.1:0.0353173092,(Psorophora_cingulata_KM592989.1:0.0426584097,Psorophora_confinis_KY859921.1:0.0487388725)100:0.0330023559)97:0.0216775921)96:0.0219353451,Psorophora_ferox_MK575485:0.0567709853)99:0.0313416829)23:0.0154115460,(((Aedes_taeniorhynchus_MN626442.1:0.0000009994,Culiseta_annulata_MN626442:0.0000009994)100:0.0607253467,Aedes_tortilis_JX259682.1:0.0546565808)98:0.0151986046,Aedes_triseriatus_MG242523.1:0.0708621768)86:0.0223790683)27:0.0155970207,((Aedes_albopictus_KF211505:0.0015606756,Aedes_japonicus_KF211494.1:0.0000009994)100:0.1043284783,Aedes_busckii_MN626443.1:0.1042625606)27:0.0020709867)73:0.0217427191,Aedes_vexans_KP954638.1:0.0571149367)77:0.0189370110,((Aedes_aegypti_MN299002.1:0.0051375260,((Aedes_aegypti_MN298992.1:0.0000021735,Aedes_aegypti_MN298993.1:0.0016026184)97:0.0015849705,Aedes_aegypti_MK300224.1:0.0015548923)97:0.0020686296)97:0.0042983235,Aedes_aegypti_MK300221.1:0.0000025081)100:0.0862243150)100:0.1196336644,Aedes_albopictus_MN513368:0.0008589480);
+
+CONSENSUS TREE
+--------------
+
+Consensus tree is constructed from 1000 bootstrap trees
+Log-likelihood of consensus tree: -7509.931404
+Robinson-Foulds distance between ML tree and consensus tree: 10
+
+Branches with support >0.000000% are kept (extended consensus)
+Branch lengths are optimized by maximum likelihood on original alignment
+Numbers in parentheses are bootstrap supports (%)
+
++----AT-HV1
+|
+|                                                    +--AT-HV3
+|                                                 +--| (90)
+|                                                 |  +---AT-WL2
+|                                            +----| (100)
+|                                            |    +---AT-JM2
+|                                      +-----| (100)
+|                                      |     |        +**Culex_pipiens_KP293422.1
+|                                      |     |     +--|
+|                                      |     |     |  +**Culex_erraticus_MN389459
+|                                      |     |  +--| (65)
+|                                      |     |  |  |        +--Culex_pipiens_KP293425.1
+|                                      |     |  |  |     +--| (57)
+|                                      |     |  |  |     |  +--Culex_quinquefasciatus_MN005046.1
+|                                      |     |  |  |  +--| (60)
+|                                      |     |  |  |  |  +--Culex_quinquefasciatus_MW509603
+|                                      |     |  |  +--| (35)
+|                                      |     |  |     +--Culex_quinquefasciatus_MN389462.1
+|                                      |     +--| (55)
+|                                      |        |     +--Culex_pipiens_MK714012.1
+|                                      |        |  +--| (55)
+|                                      |        |  |  +--Culex_quinquefasciatus_MH463059.1
+|                                      |        +--| (100)
+|                                      |           +--Culex_pipiens_MK714001.1
+|                                   +--| (69)
+|                                   |  |         +--Culex_tarsalis_NC_036006.1
+|                                   |  |      +--| (99)
+|                                   |  |      |  +--Culex_coronator_NC_036006.1
+|                                   |  |  +---| (100)
+|                                   |  |  |   +--Culex_usquatissimus_NC_036007.1
+|                                   |  +--| (88)
+|                                   |     |  +--Culex_tarsalis_AF425847
+|                                   |     +--| (93)
+|                                   |        +--Culex_nigripalpus_NC_037823.1
+|                                +--| (71)
+|                                |  +------Culex_tritaeniorhynchus_KT852976
+|                            +---| (95)
+|                            |   +----Culex_sitiens_NC_054318
+|                         +--| (36)
+|                         |  |                        +--Anopheles_quadrimaculatus_L04272
+|                         |  |                +-------| (100)
+|                         |  |                |       +--Anopheles_quadrimaculatus_L04272.1
+|                         |  |             +--| (62)
+|                         |  |             |  |  +---------Anopheles_crucians_MT040812.1
+|                         |  |             |  +--| (64)
+|                         |  |             |     +------------------Anopheles_pseudopunctipennis_KC354820
+|                         |  |          +--| (49)
+|                         |  |          |  +------Anopheles_punctipennis_KR666470.1
+|                         |  |       +--| (26)
+|                         |  |       |  +--------------Anopheles_albimanus_KC354824
+|                         |  |    +--| (49)
+|                         |  |    |  |     +------------Aedes_vexans_MH032639
+|                         |  |    |  |  +--| (87)
+|                         |  |    |  |  |  +-----Anopheles_stephensi_KT899888
+|                         |  |    |  +--| (32)
+|                         |  |    |     +--------Anopheles_gambiae_MG753769
+|                         |  +----| (100)
+|                         |       +--------Anopheles_funestus_MT917175
+|                      +--| (70)
+|                      |  |              +--Culex_erraticus_MH129001
+|                      |  |  +-----------| (100)
+|                      |  |  |           +--Culex_erraticus_MH128999.1
+|                      |  +--| (54)
+|                      |     +-------------------Deinocerites_magnus_MH376751.1
+|                   +--| (55)
+|                   |  +-----------------------Mansonia_annulata_HQ341635
+|                +--| (73)
+|                |  |                 +--Aedes_albopictus_KF211505
+|                |  |  +--------------| (100)
+|                |  |  |              +--Aedes_japonicus_KF211494.1
+|                |  +--| (24)
+|                |     |                     +**Aedes_taeniorhynchus_MN626442.1
+|                |     |                  +--|
+|                |     |                  |  +**Ochlerotatus_taeniorhynchus_MN626442
+|                |     |           +------| (100)
+|                |     |           |      +--Culiseta_annulata_MN626442
+|                |     |        +--| (98)
+|                |     |        |  +------Aedes_tortilis_JX259682.1
+|                |     |     +--| (86)
+|                |     |     |  +--------Aedes_triseriatus_MG242523.1
+|                |     |  +--| (45)
+|                |     |  |  +-------------Aedes_busckii_MN626443.1
+|                |     +--| (37)
+|                |        |       +---------Psorophora_howardii_MG242538.1
+|                |        |    +--| (96)
+|                |        |    |  |  +---Psorophora_pygmaea_JX260116.1
+|                |        |    |  +--| (97)
+|                |        |    |     |  +----Psorophora_cingulata_KM592989.1
+|                |        |    |     +--| (100)
+|                |        |    |        +-----Psorophora_confinis_KY859921.1
+|                |        +----| (99)
+|                |             +-----Psorophora_ferox_MK575485
+|             +--| (77)
+|             |  +-------Aedes_vexans_KP954638.1
++-------------| (100)
+|             |             +--Aedes_aegypti_MN299002.1
+|             |          +--| (97)
+|             |          |  |     +--Aedes_aegypti_MN298992.1
+|             |          |  |  +--| (97)
+|             |          |  |  |  +--Aedes_aegypti_MN298993.1
+|             |          |  +--| (97)
+|             |          |     +--Aedes_aegypti_MK300224.1
+|             +----------| (100)
+|                        +--Aedes_aegypti_MK300221.1
+|
++--Aedes_albopictus_MN513368
+
+
+Consensus tree in newick format: 
+
+(AT-HV1:0.0454569493,((((((((((((AT-HV3:0.0120440726,AT-WL2:0.0380791930)90:0.0106686246,AT-JM2:0.0352686184)100:0.0457724850,(((Culex_pipiens_KP293422.1:0.0000000000,Culex_erraticus_MN389459:0.0000000000):0.0000020762,(((Culex_pipiens_KP293425.1:0.0000026437,Culex_quinquefasciatus_MN005046.1:0.0000026203)57:0.0000020322,Culex_quinquefasciatus_MW509603:0.0000020762)60:0.0000022446,Culex_quinquefasciatus_MN389462.1:0.0000020762)35:0.0000022446)65:0.0000029746,((Culex_pipiens_MK714012.1:0.0000020762,Culex_quinquefasciatus_MH463059.1:0.0000020762)55:0.0000020762,Culex_pipiens_MK714001.1:0.0000020762)100:0.0115638372)55:0.0000027440)100:0.0468519189,(((Culex_tarsalis_NC_036006.1:0.0000020762,Culex_coronator_NC_036006.1:0.0000020762)99:0.0032836923,Culex_usquatissimus_NC_036007.1:0.0013969319)100:0.0330462308,(Culex_tarsalis_AF425847:0.0240949049,Culex_nigripalpus_NC_037823.1:0.0155793518)93:0.0086283804)88:0.0167156952)69:0.0083020535,Culex_tritaeniorhynchus_KT852976:0.0580423920)71:0.0108035645,Culex_sitiens_NC_054318:0.0430895000)95:0.0331370452,((((((Anopheles_quadrimaculatus_L04272:0.0000020762,Anopheles_quadrimaculatus_L04272.1:0.0000020762)100:0.0623458525,(Anopheles_crucians_MT040812.1:0.0841631191,Anopheles_pseudopunctipennis_KC354820:0.1502677025)64:0.0212609518)62:0.0157338575,Anopheles_punctipennis_KR666470.1:0.0618080988)49:0.0181820964,Anopheles_albimanus_KC354824:0.1179903959)26:0.0069327533,((Aedes_vexans_MH032639:0.1051228661,Anopheles_stephensi_KT899888:0.0535292975)87:0.0293574653,Anopheles_gambiae_MG753769:0.0769900560)32:0.0115357810)49:0.0116429519,Anopheles_funestus_MT917175:0.0767059997)100:0.0455042667)36:0.0000029675,((Culex_erraticus_MH129001:0.0071134428,Culex_erraticus_MH128999.1:0.0050977035)100:0.0989516117,Deinocerites_magnus_MH376751.1:0.1556392268)54:0.0304408791)70:0.0186859251,Mansonia_annulata_HQ341635:0.1887516144)55:0.0239717703,((Aedes_albopictus_KF211505:0.0015549790,Aedes_japonicus_KF211494.1:0.0000020762)100:0.1188761110,((((((Aedes_taeniorhynchus_MN626442.1:0.0000000000,Ochlerotatus_taeniorhynchus_MN626442:0.0000000000):0.0000020762,Culiseta_annulata_MN626442:0.0000020762)100:0.0606362189,Aedes_tortilis_JX259682.1:0.0547255470)98:0.0168869903,Aedes_triseriatus_MG242523.1:0.0717463085)86:0.0102391713,Aedes_busckii_MN626443.1:0.1085365003)45:0.0151076296,((Psorophora_howardii_MG242538.1:0.0780937138,(Psorophora_pygmaea_JX260116.1:0.0379985897,(Psorophora_cingulata_KM592989.1:0.0424401146,Psorophora_confinis_KY859921.1:0.0485385242)100:0.0308828613)97:0.0207265147)96:0.0248956190,Psorophora_ferox_MK575485:0.0540271993)99:0.0424120872)37:0.0028733781)24:0.0065213351)73:0.0181121712,Aedes_vexans_KP954638.1:0.0644960745)77:0.0192208839,((Aedes_aegypti_MN299002.1:0.0051148060,((Aedes_aegypti_MN298992.1:0.0000020762,Aedes_aegypti_MN298993.1:0.0015964805)97:0.0015788834,Aedes_aegypti_MK300224.1:0.0015489816)97:0.0020608227)97:0.0042800975,Aedes_aegypti_MK300221.1:0.0000020762)100:0.0869125648)100:0.1147836438,Aedes_albopictus_MN513368:0.0009982919);
+
+ALISIM COMMAND
+--------------
+To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
+
+--alisim simulated_MSA -t results/my_analysis/04_phylogeny/tree.treefile -m "GTR{0.929786,5.91263,6.50526,0.70267,12.3738}+F{0.294743,0.155427,0.156914,0.392916}+I{0.518482}+R2{0.238842,0.648859,0.242676,3.48211}" --length 908
+
+To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
+
+iqtree -s results/my_analysis/03_alignment/aligned_sequences.fasta --alisim mimicked_MSA
+
+To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
+
+iqtree -s results/my_analysis/03_alignment/aligned_sequences.fasta --alisim mimicked_MSA --num-alignments 100
+
+For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
+
+TIME STAMP
+----------
+
+Date and time: Sun Nov 23 01:23:54 2025
+Total CPU time used: 135.629834 seconds (0h:2m:15s)
+Total wall-clock time used: 60.08437932 seconds (0h:1m:0s)
+

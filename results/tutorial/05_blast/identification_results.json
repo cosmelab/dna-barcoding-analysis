@@ -8,8 +8,8 @@
       "length": 15587,
       "e_value": 0.0,
       "identity": 654,
-      "alignment_length": 659,
-      "percent_identity": 99.24
+      "alignment_length": 661,
+      "percent_identity": 98.94
     },
     "all_hits": [
       {
@@ -18,8 +18,8 @@
         "length": 15587,
         "e_value": 0.0,
         "identity": 654,
-        "alignment_length": 659,
-        "percent_identity": 99.24
+        "alignment_length": 661,
+        "percent_identity": 98.94
       },
       {
         "accession": "PQ588186",
@@ -27,8 +27,8 @@
         "length": 15586,
         "e_value": 0.0,
         "identity": 654,
-        "alignment_length": 659,
-        "percent_identity": 99.24
+        "alignment_length": 661,
+        "percent_identity": 98.94
       },
       {
         "accession": "PV094722",
@@ -36,8 +36,8 @@
         "length": 15586,
         "e_value": 0.0,
         "identity": 654,
-        "alignment_length": 659,
-        "percent_identity": 99.24
+        "alignment_length": 661,
+        "percent_identity": 98.94
       },
       {
         "accession": "NC_085461",
@@ -45,8 +45,8 @@
         "length": 15586,
         "e_value": 0.0,
         "identity": 654,
-        "alignment_length": 659,
-        "percent_identity": 99.24
+        "alignment_length": 661,
+        "percent_identity": 98.94
       },
       {
         "accession": "ON351297",
@@ -54,8 +54,8 @@
         "length": 680,
         "e_value": 0.0,
         "identity": 654,
-        "alignment_length": 659,
-        "percent_identity": 99.24
+        "alignment_length": 661,
+        "percent_identity": 98.94
       }
     ]
   },
@@ -63,59 +63,59 @@
     "sequence_id": "AT_ROCK_",
     "status": "SUCCESS",
     "top_hit": {
-      "accession": "KC970270",
-      "definition": "gi|525316862|gb|KC970270.1| Aedes aegypti voucher BK6 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial",
-      "length": 658,
+      "accession": "LC832164",
+      "definition": "gi|2784637816|dbj|LC832164.1| Aedes aegypti Jeddah-5 mitochondrial COX1 gene, cytochrome c oxidase subunit 1, partial sequence",
+      "length": 687,
       "e_value": 0.0,
-      "identity": 637,
-      "alignment_length": 667,
-      "percent_identity": 95.5
+      "identity": 611,
+      "alignment_length": 645,
+      "percent_identity": 94.73
     },
     "all_hits": [
-      {
-        "accession": "KC970270",
-        "definition": "gi|525316862|gb|KC970270.1| Aedes aegypti voucher BK6 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial",
-        "length": 658,
-        "e_value": 0.0,
-        "identity": 637,
-        "alignment_length": 667,
-        "percent_identity": 95.5
-      },
       {
         "accession": "LC832164",
         "definition": "gi|2784637816|dbj|LC832164.1| Aedes aegypti Jeddah-5 mitochondrial COX1 gene, cytochrome c oxidase subunit 1, partial sequence",
         "length": 687,
         "e_value": 0.0,
-        "identity": 634,
-        "alignment_length": 663,
-        "percent_identity": 95.63
+        "identity": 611,
+        "alignment_length": 645,
+        "percent_identity": 94.73
       },
       {
-        "accession": "KT339654",
-        "definition": "gi|943463762|gb|KT339654.1| Aedes aegypti voucher BU-Zoo-Ae.a-02 cytochrome c oxidase subunit I (COI) gene, partial cds; mitochondrial",
-        "length": 652,
+        "accession": "LC832161",
+        "definition": "gi|2784637813|dbj|LC832161.1| Aedes aegypti Jeddah-2 mitochondrial COX1 gene, cytochrome c oxidase subunit 1, partial sequence",
+        "length": 686,
         "e_value": 0.0,
-        "identity": 634,
-        "alignment_length": 663,
-        "percent_identity": 95.63
+        "identity": 610,
+        "alignment_length": 643,
+        "percent_identity": 94.87
+      },
+      {
+        "accession": "LC832420",
+        "definition": "gi|2784637822|dbj|LC832420.1| Aedes aegypti Jeddah-11 mitochondrial COX1 gene, cytochrome c oxidase subunit 1, partial sequence",
+        "length": 683,
+        "e_value": 0.0,
+        "identity": 613,
+        "alignment_length": 648,
+        "percent_identity": 94.6
       },
       {
         "accession": "OR413792",
         "definition": "gi|2576393826|gb|OR413792.1| Aedes aegypti isolate D119 mitochondrion, complete genome",
         "length": 15406,
         "e_value": 0.0,
-        "identity": 634,
-        "alignment_length": 664,
-        "percent_identity": 95.48
+        "identity": 608,
+        "alignment_length": 642,
+        "percent_identity": 94.7
       },
       {
         "accession": "MW339668",
         "definition": "gi|2165128410|gb|MW339668.1| Aedes aegypti voucher CUL_0018 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial",
         "length": 658,
         "e_value": 0.0,
-        "identity": 636,
-        "alignment_length": 667,
-        "percent_identity": 95.35
+        "identity": 612,
+        "alignment_length": 648,
+        "percent_identity": 94.44
       }
     ]
   }
