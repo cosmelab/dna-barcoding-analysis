@@ -332,10 +332,10 @@ def generate_html_report(output_dir, pairs, unpaired, consensus_seqs, stats):
                                     match_line += 'x'
 
                             alignment_html += f'''
-                            <div style="margin-bottom: 1rem;">
-                                <div style="color: var(--cyan); font-weight: 600;">{seq1_name:12s} {i+1:5d}  {block_seq1}</div>
-                                <div style="color: var(--text-secondary);">{'':12s} {'':5s}  {match_line}</div>
-                                <div style="color: var(--purple); font-weight: 600;">{seq2_name:12s} {i+1:5d}  {block_seq2}</div>
+                            <div style="margin-bottom: 1.5rem; line-height: 1.2;">
+                                <div style="color: var(--cyan); font-weight: 600; margin: 0;">{seq1_name:12s} {i+1:5d}  {block_seq1}</div>
+                                <div style="color: var(--text-secondary); margin: 0.1rem 0;">{''':12s} {'':5s}  {match_line}</div>
+                                <div style="color: var(--purple); font-weight: 600; margin: 0;">{seq2_name:12s} {i+1:5d}  {block_seq2}</div>
                             </div>'''
 
                         # Determine identity color and add explanation

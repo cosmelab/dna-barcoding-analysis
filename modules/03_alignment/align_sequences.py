@@ -219,7 +219,8 @@ def generate_html_report(stats, alignment_file, output_file):
         .base-box:hover {{
             transform: scale(1.5);
             z-index: 10;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 15px 3px rgba(189, 97, 255, 0.8), 0 0 25px 5px rgba(255, 79, 195, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(189, 97, 255, 0.9);
         }}
 
         /* Conservation levels - grayscale heatmap */

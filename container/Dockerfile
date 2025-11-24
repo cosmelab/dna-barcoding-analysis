@@ -124,7 +124,10 @@ RUN pip3 install --no-cache-dir \
     biopython \
     pandas \
     matplotlib \
-    plotly
+    plotly \
+    ete3 \
+    PyQt5 \
+    legacy-cgi
 
 # Install and configure shell environment in a single layer
 RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
