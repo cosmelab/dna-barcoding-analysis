@@ -116,12 +116,6 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
     bioconductor-ggtree \
     -y && micromamba clean --all --yes
 
-# Install PyQt5 via conda (pre-built for ARM64)
-RUN --mount=type=cache,target=/opt/conda/pkgs \
-    micromamba install --channel-priority strict -c conda-forge \
-    pyqt \
-    -y && micromamba clean --all --yes
-
 # Set LD_LIBRARY_PATH to use conda's libstdc++
 ENV LD_LIBRARY_PATH=/opt/conda/lib
 
@@ -130,9 +124,7 @@ RUN pip3 install --no-cache-dir \
     biopython \
     pandas \
     matplotlib \
-    plotly \
-    ete3 \
-    legacy-cgi
+    plotly
 
 # Install and configure shell environment in a single layer
 RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
