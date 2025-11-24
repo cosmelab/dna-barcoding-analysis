@@ -13,6 +13,24 @@ next:
 
 ---
 
+## 2025-11-24 – claude-sonnet-4.5 – fix-tree-color-coding
+actions:
+  - debugged phylogenetic tree color-coding issue where all labels appeared blue despite detection logic
+  - discovered Bio.Phylo adds leading whitespace to labels (' AT-HV1' instead of 'AT-HV1')
+  - fixed is_student_sample() function to strip whitespace before checking label patterns
+  - created debug script (scripts/debug_tree_colors.py) to test label detection
+  - regenerated trees for both tutorial and my_analysis with correct colors
+results:
+  - student samples (AT-HV1, AT-HV3, AT-WL2, AT-JM2, AT_ROCK_) now display in RED (bold, 10pt)
+  - reference sequences display in TEAL (normal weight, 8pt)
+  - tree legends and titles accurately reflect color scheme
+  - both tutorial and my_analysis trees correctly colored
+next:
+  - final verification of all HTML reports and outputs
+  - cleanup and prepare for push
+
+---
+
 ## 2025-11-22 – claude-sonnet-4.5 – reference-trimming-and-methodology
 actions:
   - discovered reference sequences had varying lengths (639-2306bp) causing 2334bp alignments with ~1000 gaps

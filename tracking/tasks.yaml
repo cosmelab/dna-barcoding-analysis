@@ -410,3 +410,81 @@ tasks:
   - add-vscode-support-to-readme
   completed: '2025-11-21T21:00:00'
   notes: 'Updated footer with "Public Release - Student Ready" status, added Development section for instructors/developers, updated Last Updated date to Nov 21, added checkmarks to status indicators. Repository now looks professional and complete for public use.'
+- id: fix-tree-color-coding-bug
+  phase: visualization_fixes
+  status: done
+  summary: Fix phylogenetic tree color-coding (labels appeared blue despite detection logic)
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-24T21:00:00'
+  notes: 'Discovered Bio.Phylo adds leading whitespace to labels. Fixed is_student_sample() to strip whitespace. Student samples now display in RED (bold, 10pt), references in TEAL (8pt). Regenerated trees for both tutorial and my_analysis.'
+- id: fix-consensus-alignment-spacing
+  phase: html_improvements
+  status: todo
+  summary: Fix sequence alignment visual - forward and reverse reads too far apart in box
+  agent_allowed: true
+  depends_on: []
+  notes: 'In consensus_report.html, the Forward vs Reverse Complement alignment visualization shows reads too far apart vertically. Make lines closer together for better readability. The alignment shows with | = match, x = mismatch format.'
+- id: add-alignment-hover-glow
+  phase: html_improvements
+  status: todo
+  summary: Add purple/magenta glow around moused-over bases in alignment HTML
+  agent_allowed: true
+  depends_on: []
+  notes: 'User loves the hover animation where bases pop up. Add a purple or magenta glow effect around the currently moused-over base for better visual feedback. This is in the alignment visualization (likely alignment_report.html or consensus_report.html).'
+- id: move-tree-legend-outside
+  phase: visualization_fixes
+  status: todo
+  summary: Move phylogenetic tree legend outside plot area (currently blocking a sample)
+  agent_allowed: true
+  depends_on:
+  - fix-tree-color-coding-bug
+  notes: 'The legend in tree.png is positioned upper-left inside the plot and blocks one sample. Move legend outside the plot area or to a corner where it does not obscure any labels. Fix in modules/04_phylogeny/build_tree.py.'
+- id: research-modern-tree-viz
+  phase: visualization_enhancement
+  status: done
+  summary: Research modern tree visualization libraries (pyCirclize, ETE3, interactive options)
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-24T22:00:00'
+  notes: 'Deployed 3 agents to research: (1) pyCirclize for circular trees - beautiful but poor student sample visibility, (2) ETE3 - superior quality, multiple layouts, smaller files, recommended for future, (3) Name abbreviation system - 57% name reduction, optional tool approach. Full documentation created.'
+- id: cleanup-allcaps-files
+  phase: repository_cleanup
+  status: done
+  summary: Remove ALL CAPS files created by agents (violates tracking/assistant_rules.md)
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-24T22:30:00'
+  notes: 'Removed ABBREVIATION_SYSTEM_SUMMARY.md, ABBREVIATION_SYSTEM_INDEX.md from root. Renamed ETE3_vs_BioPbylo_comparison.md → ete3_comparison.md, ETE3_PROTOTYPE_SUMMARY.md → ete3_prototype_summary.md in scripts/. All agent research preserved in lowercase files.'
+- id: move-tree-legend-outside
+  phase: visualization_fixes
+  status: done
+  summary: Move phylogenetic tree legend outside plot area (currently blocking a sample)
+  agent_allowed: true
+  depends_on:
+  - fix-tree-color-coding-bug
+  completed: '2025-11-24T22:30:00'
+  notes: 'Fixed by using bbox_to_anchor=(0, 1) in ax.legend(). Legend positioned at upper left with better styling (framealpha=0.95, edgecolor=gray, fancybox=True). No longer blocks samples.'
+- id: document-tree-viz-findings
+  phase: documentation
+  status: todo
+  summary: Document tree visualization research findings in tracking system
+  agent_allowed: true
+  depends_on:
+  - research-modern-tree-viz
+  notes: 'Summarize agents findings: pyCirclize (not recommended), ETE3 (promising for future), name abbreviation (optional tool). Add to decisions.yaml and state.yaml appropriately. Keep as reference for future enhancements.'
+- id: fix-automatic-sample-detection-in-trees
+  phase: visualization_fixes
+  status: in_progress
+  summary: Only one sample showing as red - need automatic detection of ALL student samples
+  agent_allowed: true
+  depends_on:
+  - fix-tree-color-coding-bug
+  notes: 'IMPLEMENTED: Changed from hardcoded patterns to intelligent reference detection. New is_reference_sequence() function checks for Genus_species_Accession pattern (3+ underscore-separated parts, last part has letters+numbers). Anything not matching = student sample (RED). Works with ANY student names! Ready for testing.'
+- id: embed-tree-images-in-html
+  phase: html_improvements
+  status: todo
+  summary: Embed tree PNG images in phylogeny HTML reports
+  agent_allowed: true
+  depends_on: []
+  notes: 'Currently tree.png is generated but not embedded in phylogeny_report.html. Need to include the tree visualization in the HTML report so users can view it directly without opening separate PNG file.'

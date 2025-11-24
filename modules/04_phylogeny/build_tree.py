@@ -48,17 +48,38 @@ def visualize_tree(tree_file, output_image):
         tree = Phylo.read(tree_file, "newick")
 
         # Identify which sequences are student samples vs references
-        # Student samples typically start with: AT-, AT99, AT_ROCK, etc.
-        # Reference sequences have underscores and genus names
-        def is_student_sample(name):
-            """Check if this is a student/tutorial sample"""
+        # References follow pattern: Genus_species_AccessionNumber
+        # Anything else is a student sample
+        def is_reference_sequence(name):
+            """Check if this matches reference sequence pattern"""
             if not name:
                 return False
-            name_upper = name.upper()
-            # Student samples start with AT- or AT99, AT_ROCK patterns
-            if name_upper.startswith('AT-') or name_upper.startswith('AT_') or name_upper.startswith('AT99'):
+            name = name.strip()
+
+            # Reference pattern: Genus_species_AccessionNumber (e.g., Culex_pipiens_KP293422.1)
+            # Must have at least 2 underscores and contain accession-like pattern
+            parts = name.split('_')
+            if len(parts) < 3:  # Need at least Genus_species_Accession
+                return False
+
+            # Check if last part contains accession number pattern (letters + numbers)
+            last_part = parts[-1]
+            # Accessions typically have format like: KP293422, KP293422.1, NC_036006, etc.
+            has_letters = any(c.isalpha() for c in last_part)
+            has_numbers = any(c.isdigit() for c in last_part)
+
+            # Must have both letters and numbers to be an accession
+            if has_letters and has_numbers:
                 return True
+
             return False
+
+        def is_student_sample(name):
+            """Check if this is a student/tutorial sample (not a reference)"""
+            if not name:
+                return False
+            # If it's not a reference, it's a student sample
+            return not is_reference_sequence(name)
 
         # Color map for terminal nodes (leaves)
         def get_color_for_label(label):
@@ -93,13 +114,14 @@ def visualize_tree(tree_file, output_image):
                      "Red = Your Samples  •  Teal = Reference Sequences",
                      fontsize=14, fontweight='bold', pad=20)
 
-        # Add legend
+        # Add legend - position outside plot area to avoid blocking samples
         from matplotlib.patches import Patch
         legend_elements = [
             Patch(facecolor='#FF6B6B', label='Your Samples (Student/Tutorial)'),
             Patch(facecolor='#4ECDC4', label='Reference Sequences (Known Species)')
         ]
-        ax.legend(handles=legend_elements, loc='upper left', fontsize=10, framealpha=0.9)
+        ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(0, 1),
+                  fontsize=10, framealpha=0.95, edgecolor='gray', fancybox=True)
 
         # Save figure
         plt.tight_layout()

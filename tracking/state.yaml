@@ -1,32 +1,19 @@
 project: dna-barcoding-analysis
-current_phase: reference_optimization
-current_task: trimming_references_to_barcode_region
-last_updated: '2025-11-22T14:30:00'
+current_phase: visualization_enhancement
+current_task: exploring_modern_tree_visualization
+last_updated: '2025-11-24T21:00:00'
 active_jobs: []
 blocking_issues: []
 target_ready_date: '2025-11-19'
 lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products from UC genomics)
 strategy: '5-step consensus workflow, interactive tutorial required, reference sequences for tree context, zero-coding-experience friendly'
 completed_today:
-  - Enhanced HTML reports with beautiful colorful design
-  - Embedded CSS in all HTML reports for reliable loading
-  - Improved consensus creation using BioPython pairwise alignment
-  - Fixed low identity issue (27% -> 94.8% with proper alignment)
-  - Added sequence alignment visualization with match/mismatch indicators
-  - Implemented collapsible sections for detailed sequence views
-  - Added 80bp block formatting for sequences
-  - Created comprehensive instructions in consensus report
-  - Updated QC report to embed CSS like consensus
-  - Verified Hoque et al 2022 COI amplicon size (~712bp)
-  - Improved consensus merging strategy for overlapping reads
-  - MAJOR FIX - Trimmed reference sequences to barcode region
-  - Created trim_references_to_barcode.py script
-  - Reduced alignment length from 2334bp to 784bp (67% reduction!)
-  - Fixed excessive gaps issue (~1000 gaps -> minimal gaps)
-  - Documented trimming process in docs/reference_trimming.md
-  - Updated README with reference trimming explanation
-  - Regenerated all tutorial and student analyses with trimmed refs
-  - Student alignment improved from ~2500bp to 908bp
+  - Fixed phylogenetic tree color-coding bug (whitespace issue in Bio.Phylo labels)
+  - Student samples now display in RED, references in TEAL
+  - Regenerated trees for both tutorial and my_analysis
+  - Updated iqtree_guide.md with Maximum Likelihood explanation
+  - Researched modern tree visualization libraries (pyCirclize, ETE3, iTOL)
+  - Identified opportunity to improve tree aesthetics and layouts
 current_status:
   - Repository template READY for GitHub Classroom
   - Auto-grading workflow deployed and functional
@@ -42,8 +29,10 @@ pending_decisions:
   - Create LICENSE file (README mentions MIT + CC BY 4.0)
   - Remove student .ab1 files from data/student_sequences/
 next_up:
-  - Instructor creates GitHub Classroom assignment via web interface
-  - Generate invitation link for students
-  - Optional: Beta test with one student before full class rollout
+  - ACTIVE: Explore modern tree visualization options (circular, radial layouts)
+  - ACTIVE: Test pyCirclize, ETE3, or Plotly for better tree aesthetics
+  - ACTIVE: Implement name abbreviation system with full-name table
+  - Consider: Multiple tree layout options for students to choose from
   - Optional: Create documentation website (D018)
   - Optional: Test on Windows platform
+  - Ready: GitHub Classroom assignment creation by instructor
