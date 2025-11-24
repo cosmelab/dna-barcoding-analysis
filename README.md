@@ -89,6 +89,44 @@ code .
 
 **For beginners:** Stick with the regular workflow for now. You can explore Dev Containers later!
 
+### 🎨 Terminal Experience
+
+**The container includes a beautiful terminal setup!**
+
+When you run commands inside the Docker container, you get:
+- **Zsh** - Modern shell with better autocompletion than bash
+- **Oh-My-Zsh** - Popular framework with helpful plugins
+- **Dracula theme** - Professional dark theme
+- **Colorful output** - File listings with icons and colors
+- **Git integration** - See git status in your prompt
+- **Smart autosuggestions** - Suggests commands as you type
+
+**To use the nice terminal:**
+
+```bash
+# Run the container interactively with zsh (instead of running scripts directly)
+docker run --rm -it -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest zsh
+
+# Now you're inside the container with the fancy terminal!
+# Try these commands to see the colorful output:
+ls         # Colorful file listings
+ll         # Detailed view with git status
+lt         # Tree view
+
+# Run your analysis:
+./tutorial.sh
+./run-analysis.sh
+```
+
+**Why does this matter?**
+- Makes working in the terminal more enjoyable
+- Helps you see file types and git status at a glance
+- Teaches you professional development tools
+- Same setup used by many developers
+
+**Note:** The fancy terminal only shows when you're inside the container interactively. When running scripts directly with `docker run ... ./tutorial.sh`, you won't see it (but everything still works!).
+
 ---
 
 ## 🎯 For Students: START HERE
