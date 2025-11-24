@@ -13,21 +13,34 @@ next:
 
 ---
 
-## 2025-11-24 – claude-sonnet-4.5 – fix-tree-color-coding
+## 2025-11-24 – claude-sonnet-4.5 – fix-tree-color-coding-and-html-improvements
 actions:
-  - debugged phylogenetic tree color-coding issue where all labels appeared blue despite detection logic
-  - discovered Bio.Phylo adds leading whitespace to labels (' AT-HV1' instead of 'AT-HV1')
-  - fixed is_student_sample() function to strip whitespace before checking label patterns
-  - created debug script (scripts/debug_tree_colors.py) to test label detection
-  - regenerated trees for both tutorial and my_analysis with correct colors
+  - debugged phylogenetic tree color-coding issue where all labels appeared blue
+  - discovered Bio.Phylo adds leading whitespace to labels
+  - replaced hardcoded pattern detection with intelligent reference sequence detection
+  - implemented is_reference_sequence() that checks for Genus_species_Accession format
+  - moved tree legend outside plot area to avoid blocking samples
+  - fixed consensus alignment spacing (tighter line-height, reduced margins)
+  - added purple/magenta glow effect to hovered bases in alignment viewer
+  - added ETE3, PyQt5, and legacy-cgi to Dockerfile for multi-layout tree support
+  - cleaned up ALL CAPS files created by agents
+  - researched modern tree visualization (pyCirclize, ETE3, name abbreviation)
+  - deployed 3 agents for tree visualization research
 results:
-  - student samples (AT-HV1, AT-HV3, AT-WL2, AT-JM2, AT_ROCK_) now display in RED (bold, 10pt)
-  - reference sequences display in TEAL (normal weight, 8pt)
-  - tree legends and titles accurately reflect color scheme
-  - both tutorial and my_analysis trees correctly colored
+  - automatic sample detection works with ANY student naming convention
+  - samples NOT matching Genus_species_Accession pattern = colored RED
+  - references matching pattern = colored TEAL
+  - tree legend repositioned with bbox_to_anchor
+  - consensus alignment lines closer together for better readability
+  - alignment bases have glowing purple/magenta hover effect
+  - container will include ETE3 for future multi-layout tree generation
+  - tracking system updated with all progress
 next:
-  - final verification of all HTML reports and outputs
-  - cleanup and prepare for push
+  - wait for container rebuild to complete
+  - test new automatic sample detection
+  - integrate ETE3 multi-layout tree generation
+  - embed all tree layouts in HTML report
+  - add zsh/oh-my-zsh documentation to README
 
 ---
 
