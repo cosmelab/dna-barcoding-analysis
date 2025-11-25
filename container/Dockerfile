@@ -152,14 +152,14 @@ RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
     echo 'if command -v lsd > /dev/null; then' >> ~/.zshrc && \
     echo '  sed -i "/alias ls=/d" ~/.zshrc' >> ~/.zshrc && \
     echo '  sed -i "/LS_COLORS=/d" ~/.zshrc' >> ~/.zshrc && \
-    echo '  export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;94:ex=1;31:bd=1;95:cd=1;96:ur=0;32:uw=0;33:ux=0;31:ue=0;32:gr=0;32:gw=0;33:gx=0;31:tr=0;90:tw=0;93:tx=0;92"' >> ~/.zshrc && \
+    echo '  export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;94:ex=1;31:bd=1;95:cd=1;96"' >> ~/.zshrc && \
     echo '  alias ls="lsd --color=always --header"' >> ~/.zshrc && \
     echo '  alias ll="colorls --long --almost-all --sort-dirs --git-status"' >> ~/.zshrc && \
     echo '  alias la="lsd -la --color=always --header"' >> ~/.zshrc && \
     echo '  alias lt="lsd --tree --color=always --header"' >> ~/.zshrc && \
     echo 'fi' >> ~/.zshrc && \
     echo '# Match local colorls environment' >> ~/.zshrc && \
-    echo 'export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;94:ex=1;31:bd=1;95:cd=1;96:ur=0;32:uw=0;33:ux=0;31:ue=0;32:gr=0;32:gw=0;33:gx=0;31:tr=0;90:tw=0;93:tx=0;92"' >> ~/.zshrc && \
+    echo 'export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;94:ex=1;31:bd=1;95:cd=1;96"' >> ~/.zshrc && \
     echo 'export LSCOLORS="Gxfxcxdxbxegedabagacad"' >> ~/.zshrc && \
     echo 'export TERM="xterm-256color"' >> ~/.zshrc && \
     echo 'export COLORTERM="truecolor"' >> ~/.zshrc && \

@@ -141,10 +141,25 @@ lt         # Tree view
 ### Quick Version (3 commands):
 
 ```bash
-./tutorial.sh              # STEP 1: Learn with test data (15 min)
-./run-analysis.sh          # STEP 2: Analyze YOUR data (5 min)
+./tutorial.sh              # STEP 1: Learn with test data (~3 min)
+./run-analysis.sh          # STEP 2: Analyze YOUR data (~3-5 min)
 # STEP 3: Fill out assignment.md
 ```
+
+**These scripts automatically:**
+- Pull the Docker container if you don't have it (first time only)
+- Run all 5 pipeline steps sequentially:
+  1. Quality Control (QC)
+  2. Consensus Sequences
+  3. Combine with References
+  4. Alignment & Phylogenetic Tree
+  5. Species Identification (BLAST)
+- Generate HTML reports for each step
+
+**Requirements:**
+- Docker installed and running
+- Docker Hub account (run `docker login` first)
+- Your `.ab1` files in `data/student_sequences/` (for run-analysis.sh)
 
 **Check your progress anytime:**
 ```bash
@@ -566,6 +581,54 @@ For now, this README and the in-repo documentation provide everything you need t
 
 ---
 
+## 🔧 Running Individual Modules
+
+The pipeline has 5 modules that **must run sequentially** (each depends on the previous output):
+
+```bash
+# Step 1: Quality Control
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/01_quality_control/qc_chromatograms.py \
+  data/student_sequences/ results/my_analysis/01_qc/
+
+# Step 2: Consensus (requires Step 1 output)
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/02_consensus/create_consensus.py \
+  results/my_analysis/01_qc/passed_sequences.fasta \
+  results/my_analysis/02_consensus/ --pairs-only
+
+# Step 3: Combine with references (bash command)
+cat results/my_analysis/02_consensus/consensus_sequences.fasta \
+    data/reference_sequences/socal_mosquitoes.fasta \
+    > results/my_analysis/02_consensus/combined_with_references.fasta
+
+# Step 4: Alignment and Tree (requires Step 3 output)
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/03_alignment/align_sequences.py \
+  results/my_analysis/02_consensus/combined_with_references.fasta \
+  results/my_analysis/03_alignment/
+
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/04_phylogeny/build_tree.py \
+  results/my_analysis/03_alignment/aligned_sequences.fasta \
+  results/my_analysis/04_phylogeny/
+
+# Step 5: BLAST identification (requires Step 2 output)
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/05_identification/identify_species.py \
+  results/my_analysis/02_consensus/consensus_sequences.fasta \
+  results/my_analysis/05_blast/
+```
+
+**Note:** Using `./run-analysis.sh` or `./tutorial.sh` is easier - they run all steps automatically!
+
+---
+
 ## 🔄 Adapt for Your Own Project
 
 This pipeline is **generic** and works with any Sanger sequencing data. You can adapt it for:
@@ -590,17 +653,20 @@ This pipeline is **generic** and works with any Sanger sequencing data. You can 
      your_genbank_refs.fasta your_trimmed_refs.fasta --start 50 --end 750
    ```
 
-2. **Add your sequences:**
-   - Put your `.ab1` chromatograms in `data/student_sequences/`
+2. **Replace your sequences:**
+   - Delete files in `data/student_sequences/` and add your `.ab1` chromatograms
 
-3. **Update Step 3** (combine with references):
+3. **Update Step 3** in your workflow (combine with your custom references):
    ```bash
    cat results/my_analysis/02_consensus/consensus_sequences.fasta \
        data/reference_sequences/your_trimmed_refs.fasta \
        > results/my_analysis/02_consensus/combined_with_references.fasta
    ```
 
-4. **Run the pipeline** - Steps 1, 2, 4, 5 work unchanged!
+4. **Run the pipeline:**
+   - Use `./run-analysis.sh` (easiest - auto-runs all steps)
+   - Or run individual modules as shown above
+   - Steps 1, 2, 4, and 5 work unchanged with any organism!
 
 **BLAST will automatically search NCBI** for any organism, so species identification works for anything with sequences in GenBank.
 
