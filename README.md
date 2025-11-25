@@ -13,15 +13,20 @@ Complete workflow for analyzing Sanger sequencing chromatograms (.ab1 files) to 
 1. **Docker Desktop** - Must be running before you start
    - See: [Docker Setup Guide](https://cosmelab.github.io/entm201l-fall2025/setup/cli-tools.html)
 
-2. **VS Code** - **HIGHLY RECOMMENDED** for this project
+2. **Docker Hub Account** - Required to pull the analysis container
+   - **Create account**: Go to [https://hub.docker.com/signup](https://hub.docker.com/signup)
+   - **Free account is fine** - no payment needed
+   - Remember your username and password!
+
+3. **VS Code** - **HIGHLY RECOMMENDED** for this project
    - See: [CLI Tools Setup](https://cosmelab.github.io/entm201l-fall2025/setup/cli-tools.html)
    - Includes integrated terminal, Docker support, Dev Containers extension
    - Makes running commands much easier than switching between apps
 
-3. **GitHub Account** - For accessing your assignment
+4. **GitHub Account** - For accessing your assignment
    - See: [GitHub Setup Guide](https://cosmelab.github.io/entm201l-fall2025/setup/github-setup.html)
 
-4. **Git** - For cloning the repository
+5. **Git** - For cloning the repository
    - See: [Software Setup Guide](https://cosmelab.github.io/entm201l-fall2025/setup/index.html)
 
 **Platform-specific notes:**
@@ -145,7 +150,33 @@ lt         # Tree view
 
 ---
 
-## ⚠️ STEP 0: Complete the Tutorial FIRST (REQUIRED!)
+## 🔐 STEP 0: Log in to Docker (REQUIRED!)
+
+**Before you can pull the container, you must log in to Docker Hub:**
+
+```bash
+docker login
+```
+
+You'll be prompted for:
+- **Username**: Your Docker Hub username
+- **Password**: Your Docker Hub password (typing is hidden for security)
+
+**Success looks like:**
+```
+Login Succeeded
+```
+
+**Troubleshooting:**
+- **"permission denied"**: Make sure Docker Desktop is running
+- **"unauthorized"**: Double-check your username and password
+- **Don't have an account?**: See Prerequisites above - create free account at [https://hub.docker.com/signup](https://hub.docker.com/signup)
+
+**✅ Only need to do this ONCE per computer!** Docker will remember your login.
+
+---
+
+## 📚 STEP 1: Complete the Tutorial FIRST (REQUIRED!)
 
 **Before analyzing your own data, you MUST run the tutorial:**
 
