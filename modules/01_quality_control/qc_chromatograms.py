@@ -727,8 +727,7 @@ def generate_html_report(results, output_file):
                         <div class="chromatogram-header">
                             <h4 class="chromatogram-title">🔬 Interactive Chromatogram Viewer</h4>
                             <div class="chromatogram-meta">
-                                <span class="badge badge-success">NEW!</span>
-                                <span style="margin-left: 1rem;">Drag slider to explore • Full sequence: {len(trace_data['sequence'])} bases</span>
+                                <span>Drag slider to explore • Full sequence: {len(trace_data['sequence'])} bases</span>
                             </div>
                         </div>
 

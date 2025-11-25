@@ -17,8 +17,7 @@ from datetime import datetime
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio import pairwise2
-from Bio.pairwise2 import format_alignment
+from Bio.Align import PairwiseAligner
 from collections import defaultdict
 
 # Add parent directory to path to import utils
@@ -116,12 +115,18 @@ def create_consensus(forward_seq, reverse_seq, sample_name):
 
     # Use BioPython pairwise alignment to find best overlap
     # Match score=2, mismatch=-1, gap penalties
-    alignments = pairwise2.align.globalms(f_seq, r_seq, 2, -1, -2, -1, one_alignment_only=True)
+    aligner = PairwiseAligner()
+    aligner.mode = 'global'
+    aligner.match_score = 2
+    aligner.mismatch_score = -1
+    aligner.open_gap_score = -2
+    aligner.extend_gap_score = -1
+    alignments = list(aligner.align(f_seq, r_seq))
 
     if alignments:
         alignment = alignments[0]
-        aligned_f = alignment.seqA
-        aligned_r = alignment.seqB
+        aligned_f = str(alignment[0])
+        aligned_r = str(alignment[1])
         score = alignment.score
 
         # Calculate identity from alignment
@@ -298,14 +303,20 @@ def generate_html_report(output_dir, pairs, unpaired, consensus_seqs, stats):
                         """Create HTML visualization using BioPython pairwise alignment"""
 
                         # Use BioPython pairwise alignment
-                        alignments = pairwise2.align.globalms(seq1, seq2, 2, -1, -2, -1, one_alignment_only=True)
+                        aligner = PairwiseAligner()
+                        aligner.mode = 'global'
+                        aligner.match_score = 2
+                        aligner.mismatch_score = -1
+                        aligner.open_gap_score = -2
+                        aligner.extend_gap_score = -1
+                        alignments = list(aligner.align(seq1, seq2))
 
                         if not alignments:
                             return "<p>Alignment failed</p>"
 
                         alignment = alignments[0]
-                        aligned_seq1 = alignment.seqA
-                        aligned_seq2 = alignment.seqB
+                        aligned_seq1 = str(alignment[0])
+                        aligned_seq2 = str(alignment[1])
 
                         # Calculate statistics
                         matches = sum(1 for a, b in zip(aligned_seq1, aligned_seq2) if a == b and a != '-')
@@ -334,7 +345,7 @@ def generate_html_report(output_dir, pairs, unpaired, consensus_seqs, stats):
                             alignment_html += f'''
                             <div style="margin-bottom: 1.5rem; line-height: 1.2;">
                                 <div style="color: var(--cyan); font-weight: 600; margin: 0;">{seq1_name:12s} {i+1:5d}  {block_seq1}</div>
-                                <div style="color: var(--text-secondary); margin: 0.1rem 0;">{''':12s} {'':5s}  {match_line}</div>
+                                <div style="color: var(--text-secondary); margin: 0.1rem 0;">            {' '*5}  {match_line}</div>
                                 <div style="color: var(--purple); font-weight: 600; margin: 0;">{seq2_name:12s} {i+1:5d}  {block_seq2}</div>
                             </div>'''
 

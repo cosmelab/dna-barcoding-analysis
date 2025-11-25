@@ -322,16 +322,15 @@ def visualize_tree_toytree(tree_file, output_dir):
 
         for layout_name, params in layouts.items():
             try:
-                # Draw tree with bootstrap support values
+                # Draw tree with bootstrap support values on branches
                 canvas, axes, mark = tree.draw(
                     layout=params['layout'],
                     edge_type=params['edge_type'],
                     tip_labels=True,
                     tip_labels_colors=tip_colors,
-                    node_sizes=8,  # Show nodes with bootstrap values
-                    node_labels='support',  # Show bootstrap support values
-                    node_labels_style={'font-size': '9px', 'fill': '#333333'},
-                    node_colors='#CCCCCC',  # Light gray nodes
+                    node_sizes=0,  # Hide internal node markers
+                    node_labels='support',  # Show bootstrap support values at nodes
+                    node_labels_style={'font-size': '8px', 'fill': '#555555', 'font-weight': 'normal'},
                     edge_widths=2,
                     edge_colors='#666666',
                     tip_labels_style={'font-size': '10px'},
