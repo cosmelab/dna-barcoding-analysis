@@ -17,6 +17,7 @@ from datetime import datetime
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+from Bio import pairwise2
 from Bio.Align import PairwiseAligner
 from collections import defaultdict
 
@@ -90,6 +91,44 @@ def pair_sequences(sequences):
     return pairs, unpaired
 
 
+def trim_sequence_ends(seq_str, min_quality_window=20):
+    """
+    Trim N bases and low-quality regions from sequence ends
+
+    Removes:
+    - N bases from start and end
+    - Ambiguous bases (non-ACGT) from ends
+
+    This dramatically speeds up alignment and improves consensus quality
+
+    Args:
+        seq_str: DNA sequence string
+        min_quality_window: minimum window size to keep (default 20bp)
+
+    Returns:
+        str: Trimmed sequence
+    """
+    seq = seq_str.upper()
+
+    # Trim from start - remove N's and non-ACGT bases
+    start = 0
+    while start < len(seq) and seq[start] not in 'ACGT':
+        start += 1
+
+    # Trim from end - remove N's and non-ACGT bases
+    end = len(seq)
+    while end > start and seq[end-1] not in 'ACGT':
+        end -= 1
+
+    trimmed = seq[start:end]
+
+    # Keep at least min_quality_window bp, otherwise return empty
+    if len(trimmed) < min_quality_window:
+        return ""
+
+    return trimmed
+
+
 def create_consensus(forward_seq, reverse_seq, sample_name):
     """
     Create consensus sequence from forward and reverse complement using proper alignment
@@ -110,23 +149,41 @@ def create_consensus(forward_seq, reverse_seq, sample_name):
     # Reverse complement the reverse read
     rev_rc = reverse_seq.reverse_complement()
 
-    f_seq = str(forward_seq.seq).upper()
-    r_seq = str(rev_rc.seq).upper()
+    # Trim low-quality ends BEFORE alignment (much faster!)
+    f_seq = trim_sequence_ends(str(forward_seq.seq))
+    r_seq = trim_sequence_ends(str(rev_rc.seq))
 
-    # Use BioPython pairwise alignment to find best overlap
-    # Match score=2, mismatch=-1, gap penalties
-    aligner = PairwiseAligner()
-    aligner.mode = 'global'
-    aligner.match_score = 2
-    aligner.mismatch_score = -1
-    aligner.open_gap_score = -2
-    aligner.extend_gap_score = -1
-    alignments = list(aligner.align(f_seq, r_seq))
+    # Check if sequences are long enough after trimming
+    if len(f_seq) < 100 or len(r_seq) < 100:
+        # Sequences too short after trimming - use original
+        f_seq = str(forward_seq.seq).upper()
+        r_seq = str(rev_rc.seq).upper()
+
+    # For sequences with too many N's, use only central high-quality region
+    # This prevents pairwise2 from hanging on low-complexity regions
+    n_count_f = f_seq.count('N')
+    n_count_r = r_seq.count('N')
+
+    if n_count_f > len(f_seq) * 0.05 or n_count_r > len(r_seq) * 0.05:
+        # Too many N's - use only central 400bp region for alignment
+        f_mid = len(f_seq) // 2
+        r_mid = len(r_seq) // 2
+        f_align = f_seq[max(0, f_mid-200):f_mid+200]
+        r_align = r_seq[max(0, r_mid-200):r_mid+200]
+    else:
+        f_align = f_seq
+        r_align = r_seq
+
+    # Use Bio.pairwise2 (deprecated but faster than PairwiseAligner for this case)
+    # For COI barcoding, F and R should overlap almost completely
+    # globalms: global alignment, match=2, mismatch=-1, gap_open=-2, gap_extend=-1
+    # Returns list of alignments, we take the first (best-scoring) one
+    alignments = pairwise2.align.globalms(f_align, r_align, 2, -1, -2, -1, one_alignment_only=True)
 
     if alignments:
         alignment = alignments[0]
-        aligned_f = str(alignment[0])
-        aligned_r = str(alignment[1])
+        aligned_f = alignment.seqA
+        aligned_r = alignment.seqB
         score = alignment.score
 
         # Calculate identity from alignment
@@ -302,21 +359,15 @@ def generate_html_report(output_dir, pairs, unpaired, consensus_seqs, stats):
                     def create_alignment_html(seq1, seq2, seq1_name, seq2_name):
                         """Create HTML visualization using BioPython pairwise alignment"""
 
-                        # Use BioPython pairwise alignment
-                        aligner = PairwiseAligner()
-                        aligner.mode = 'global'
-                        aligner.match_score = 2
-                        aligner.mismatch_score = -1
-                        aligner.open_gap_score = -2
-                        aligner.extend_gap_score = -1
-                        alignments = list(aligner.align(seq1, seq2))
+                        # Use pairwise2 (faster for HTML visualization)
+                        alignments = pairwise2.align.globalms(seq1, seq2, 2, -1, -2, -1)
 
                         if not alignments:
                             return "<p>Alignment failed</p>"
 
                         alignment = alignments[0]
-                        aligned_seq1 = str(alignment[0])
-                        aligned_seq2 = str(alignment[1])
+                        aligned_seq1 = alignment.seqA
+                        aligned_seq2 = alignment.seqB
 
                         # Calculate statistics
                         matches = sum(1 for a, b in zip(aligned_seq1, aligned_seq2) if a == b and a != '-')

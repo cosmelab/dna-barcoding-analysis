@@ -42,7 +42,7 @@ def print_progress_bar(message, steps=20, delay=0.05):
 
 def run_iqtree(alignment_file, output_prefix):
     """Run IQ-TREE for phylogenetic inference"""
-    print(f"Running IQ-TREE (this may take a few minutes)...")
+    print("Running IQ-TREE (this may take a few minutes)...")
 
     try:
         result = subprocess.run(
@@ -60,7 +60,7 @@ def run_iqtree(alignment_file, output_prefix):
             text=True,
             check=True
         )
-        print(f"✓ Tree construction complete")
+        print("✓ Tree construction complete")
         return True
     except subprocess.CalledProcessError as e:
         print(f"✗ IQ-TREE failed: {e.stderr}")
@@ -321,20 +321,23 @@ def visualize_tree_toytree(tree_file, output_dir):
                 'edge_type': 'p',
                 'width': 1000,
                 'height': 900,
+                'use_edge_lengths': True,
                 'description': 'Traditional rectangular tree'
             },
             'circular': {
                 'layout': 'c',
-                'edge_type': 'c',  # Required for circular layout
-                'width': 1200,
-                'height': 1200,
-                'description': 'Circular tree layout'
+                'edge_type': 'c',  # Curved edges (required for circular layout)
+                'width': 1600,  # Increased for better spacing
+                'height': 1600,  # Increased for better spacing
+                'use_edge_lengths': False,  # Cladogram style - all tips at same radius
+                'description': 'Circular cladogram (all tips aligned)'
             },
             'unrooted': {
                 'layout': 'u',
                 'edge_type': 'p',
                 'width': 1200,
                 'height': 1200,
+                'use_edge_lengths': True,
                 'description': 'Unrooted radial layout'
             }
         }
@@ -343,26 +346,35 @@ def visualize_tree_toytree(tree_file, output_dir):
 
         for layout_name, params in layouts.items():
             try:
-                # Adjust label positioning based on layout type
-                label_shift = '8px' if layout_name != 'unrooted' else '12px'
+                # Adjust label positioning and sizing based on layout type
+                if layout_name == 'circular':
+                    label_shift = '15px'  # More spacing for circular layout
+                    tip_label_size = '12px'  # Larger labels for circular
+                elif layout_name == 'unrooted':
+                    label_shift = '12px'
+                    tip_label_size = '10px'
+                else:
+                    label_shift = '8px'
+                    tip_label_size = '10px'
 
                 # Draw tree with bootstrap support values on branches
                 canvas, axes, mark = tree.draw(
                     layout=params['layout'],
                     edge_type=params['edge_type'],
+                    use_edge_lengths=params['use_edge_lengths'],
                     tip_labels=True,
                     tip_labels_colors=tip_colors,
                     node_sizes=0,  # Hide internal node markers
                     node_labels=node_labels,  # Show filtered bootstrap values (0-100 only)
                     node_labels_style={
-                        'font-size': '10px',  # Readable font size
+                        'font-size': '11px',  # Slightly larger for better readability
                         'fill': '#000000',  # Black for maximum visibility
                         'font-weight': 'bold',  # Bold for emphasis
                         '-toyplot-anchor-shift': label_shift  # Layout-specific offset
                     },
-                    edge_widths=2,
-                    edge_colors='#666666',
-                    tip_labels_style={'font-size': '10px'},
+                    edge_widths=2.5 if layout_name == 'circular' else 2,  # Thicker edges for circular
+                    edge_colors='#555555',  # Slightly darker for better visibility
+                    tip_labels_style={'font-size': tip_label_size},
                     width=params['width'],
                     height=params['height'],
                 )

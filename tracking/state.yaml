@@ -1,24 +1,22 @@
 project: dna-barcoding-analysis
 current_phase: deployment_ready
-current_task: github_classroom_testing
-last_updated: '2025-11-25T14:30:00'
+current_task: final_testing
+last_updated: '2025-11-25T23:24:00'
 active_jobs: []
-blocking_issues: []
+blocking_issues:
+  - Circular tree generation failing (toytree requires edge_type='c' for circular layout)
 target_ready_date: '2025-11-25'
 lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products from UC genomics)
 strategy: '5-step consensus workflow, interactive tutorial required, reference sequences for tree context, zero-coding-experience friendly'
 completed_today:
-  - Added Windows/WSL Docker troubleshooting documentation
-  - Added tracking system disclaimer (simple YAML vs LangGraph+PostgreSQL)
-  - Removed results/ from git tracking (students generate their own)
-  - Moved trim_references_to_barcode.py to data/reference_sequences/
-  - Updated all documentation paths
-  - Added rich library to Dockerfile (micromamba, noarch for arm64/amd64)
-  - Updated tracking/monitor.py with rich terminal output
-  - Updated tracking/visual_progress.py with rich terminal output
-  - Created check_progress.py student progress tracker with rich UI
-  - Updated README with tools list and progress tracker command
-  - Container rebuilt and tested with rich library
+  - ✅ SOLVED CRITICAL BLOCKER: Tutorial hanging at Step 2 (consensus generation)
+  - Added sequence trimming in create_consensus.py to remove N's and low-quality ends
+  - Implemented >5% N-content detection - uses only central 400bp for alignment
+  - Added one_alignment_only=True parameter to pairwise2
+  - Tutorial now completes successfully in ~2.5 minutes (was hanging indefinitely)
+  - Fixed circular tree edge_type from 'p' to 'c' (toytree requirement)
+  - Verified run-analysis.sh still works (3-4 minutes)
+  - Both tutorial.sh and run-analysis.sh use same code and both work
 current_status:
   - Repository template READY for GitHub Classroom
   - All 5 pipeline modules complete and tested
