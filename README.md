@@ -411,11 +411,20 @@ dna-barcoding-analysis/
 
 ## 🛠️ Tools Included in Container
 
+**Bioinformatics:**
 - **BioPython**: Chromatogram parsing and sequence handling
 - **MAFFT**: Multiple sequence alignment
 - **IQ-TREE2**: Maximum likelihood phylogenetic inference
 - **BLAST+**: Species identification via NCBI
+
+**Visualization:**
+- **toytree**: Python phylogenetic tree visualization
+- **phytreeviz**: Additional tree plotting utilities
 - **R packages**: ape, ggtree for tree visualization
+
+**User Interface:**
+- **rich**: Pretty terminal output with progress bars and tables
+- **matplotlib/plotly**: Data visualization and interactive plots
 
 ---
 
