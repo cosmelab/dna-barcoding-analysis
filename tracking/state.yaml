@@ -1,7 +1,7 @@
 project: dna-barcoding-analysis
 current_phase: deployment_ready
 current_task: github_classroom_testing
-last_updated: '2025-11-25T12:00:00'
+last_updated: '2025-11-25T14:30:00'
 active_jobs: []
 blocking_issues: []
 target_ready_date: '2025-11-25'
@@ -16,6 +16,9 @@ completed_today:
   - Added rich library to Dockerfile (micromamba, noarch for arm64/amd64)
   - Updated tracking/monitor.py with rich terminal output
   - Updated tracking/visual_progress.py with rich terminal output
+  - Created check_progress.py student progress tracker with rich UI
+  - Updated README with tools list and progress tracker command
+  - Container rebuilt and tested with rich library
 current_status:
   - Repository template READY for GitHub Classroom
   - All 5 pipeline modules complete and tested
@@ -24,13 +27,31 @@ current_status:
   - Container publicly accessible (cosmelab/dna-barcoding-analysis:latest)
   - Documentation complete (README, github_classroom, start_here)
   - Windows/WSL Docker troubleshooting documented
-  - Rich library added for prettier terminal output
+  - Rich library working in container
+  - Student progress tracker (check_progress.py) working
   - READY FOR ANDRE TO TEST via GitHub Classroom
 pending_decisions:
   - Keep or hide tracking/ directory before public release
   - Create LICENSE file (README mentions MIT + CC BY 4.0)
 next_up:
   - Andre to test via GitHub Classroom
-  - Rebuild container with rich library
+  - Add customization guide for other use cases (optional)
   - Update pipeline modules to use rich for terminal output (optional)
   - Create documentation website (optional)
+extensibility_notes:
+  description: Pipeline is generic and can be adapted for other projects
+  current_setup:
+    - data/student_sequences/ - any .ab1 chromatograms
+    - data/reference_sequences/ - swappable reference FASTA
+    - trim_references_to_barcode.py - utility to trim GenBank refs
+  future_use_cases:
+    - Different organisms (insects, plants, fungi, bacteria)
+    - Different barcode regions (ITS, rbcL, matK, 16S, COI)
+    - Different reference databases
+    - Research projects beyond coursework
+    - Other courses at UCR or other institutions
+  how_to_customize:
+    - Replace socal_mosquitoes.fasta with your own references
+    - Put your .ab1 files in data/student_sequences/
+    - Use trim_references_to_barcode.py to prep GenBank sequences
+    - BLAST step will search NCBI for any organism

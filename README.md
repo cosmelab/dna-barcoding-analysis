@@ -566,6 +566,46 @@ For now, this README and the in-repo documentation provide everything you need t
 
 ---
 
+## 🔄 Adapt for Your Own Project
+
+This pipeline is **generic** and works with any Sanger sequencing data. You can adapt it for:
+
+**Different organisms:**
+- Insects, plants, fungi, bacteria, fish, etc.
+- Any organism with reference sequences in GenBank
+
+**Different barcode regions:**
+- COI (animals) - current default
+- ITS (fungi)
+- rbcL, matK (plants)
+- 16S (bacteria)
+
+**How to customize:**
+
+1. **Replace reference sequences:**
+   ```bash
+   # Put your reference FASTA in data/reference_sequences/
+   # Use the included utility to trim GenBank sequences:
+   python3 data/reference_sequences/trim_references_to_barcode.py \
+     your_genbank_refs.fasta your_trimmed_refs.fasta --start 50 --end 750
+   ```
+
+2. **Add your sequences:**
+   - Put your `.ab1` chromatograms in `data/student_sequences/`
+
+3. **Update Step 3** (combine with references):
+   ```bash
+   cat results/my_analysis/02_consensus/consensus_sequences.fasta \
+       data/reference_sequences/your_trimmed_refs.fasta \
+       > results/my_analysis/02_consensus/combined_with_references.fasta
+   ```
+
+4. **Run the pipeline** - Steps 1, 2, 4, 5 work unchanged!
+
+**BLAST will automatically search NCBI** for any organism, so species identification works for anything with sequences in GenBank.
+
+---
+
 ## 🔧 Development
 
 ### For Instructors and Developers
