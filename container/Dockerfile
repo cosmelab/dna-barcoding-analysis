@@ -119,11 +119,12 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
 # Set LD_LIBRARY_PATH to use conda's libstdc++
 ENV LD_LIBRARY_PATH=/opt/conda/lib
 
-# Install phylogenetic visualization tools
+# Install phylogenetic visualization tools and terminal UI
 # Note: Cache mount disabled due to ARM64 compatibility issues
 RUN micromamba install --channel-priority strict -c conda-forge \
     toytree \
     phytreeviz \
+    rich \
     -y && micromamba clean --all --yes
 
 # Install essential Python packages only
