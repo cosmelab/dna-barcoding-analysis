@@ -185,7 +185,7 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/01_quality_control/qc_chromatograms.py \
   data/student_sequences/ \
-  results/my_analysis/qc/ \
+  results/my_analysis/01_qc/ \
   --open
 ```
 
@@ -201,8 +201,8 @@ Combine forward and reverse reads:
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/02_consensus/create_consensus.py \
-  results/my_analysis/qc/passed_sequences.fasta \
-  results/my_analysis/consensus/ \
+  results/my_analysis/01_qc/passed_sequences.fasta \
+  results/my_analysis/02_consensus/ \
   --pairs-only \
   --open
 ```
@@ -214,9 +214,9 @@ The `--pairs-only` flag keeps only samples where BOTH F and R passed QC.
 Add your sequences to the database of known Southern California mosquitoes:
 
 ```bash
-cat results/my_analysis/consensus/consensus_sequences.fasta \
+cat results/my_analysis/02_consensus/consensus_sequences.fasta \
     data/reference_sequences/socal_mosquitoes.fasta \
-    > results/my_analysis/consensus/combined_with_references.fasta
+    > results/my_analysis/02_consensus/combined_with_references.fasta
 ```
 
 This creates a file with your sequences + 52 reference sequences.
@@ -229,8 +229,8 @@ This creates a file with your sequences + 52 reference sequences.
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/03_alignment/align_sequences.py \
-  results/my_analysis/consensus/combined_with_references.fasta \
-  results/my_analysis/alignment/
+  results/my_analysis/02_consensus/combined_with_references.fasta \
+  results/my_analysis/03_alignment/
 ```
 
 **Part B: Build tree** (takes ~2-3 minutes)
@@ -239,11 +239,11 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/04_phylogeny/build_tree.py \
-  results/my_analysis/alignment/aligned_sequences.fasta \
-  results/my_analysis/phylogeny/
+  results/my_analysis/03_alignment/aligned_sequences.fasta \
+  results/my_analysis/04_phylogeny/
 ```
 
-Look at `results/my_analysis/phylogeny/tree.png` to see where your samples cluster!
+Look at `results/my_analysis/04_phylogeny/tree.png` to see where your samples cluster!
 
 ### Step 5: Species Identification (BLAST)
 
@@ -253,8 +253,8 @@ Compare your sequences to GenBank database:
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   cosmelab/dna-barcoding-analysis:latest \
   python3 modules/05_identification/identify_species.py \
-  results/my_analysis/consensus/consensus_sequences.fasta \
-  results/my_analysis/blast/
+  results/my_analysis/02_consensus/consensus_sequences.fasta \
+  results/my_analysis/05_blast/
 ```
 
 Look at the HTML report to see species matches and % identity scores.
