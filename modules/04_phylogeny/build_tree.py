@@ -15,6 +15,18 @@ matplotlib.use('Agg')  # Non-interactive backend
 import matplotlib.pyplot as plt
 import time
 
+# Import toytree and toyplot for multiple tree layouts
+try:
+    import toytree
+    import toyplot
+    import toyplot.png
+    import toyplot.svg
+    import toyplot.pdf
+    TOYTREE_AVAILABLE = True
+except ImportError:
+    TOYTREE_AVAILABLE = False
+    print("⚠️  toytree not available - only Bio.Phylo visualization will be used")
+
 def print_progress_bar(message, steps=20, delay=0.05):
     """Print an ASCII progress bar"""
     print(f"\n{message}")
@@ -213,10 +225,157 @@ def visualize_tree(tree_file, output_image):
         print(f"✗ Visualization failed: {e}")
         return False
 
-def generate_html_report(tree_file, image_file, log_file, output_file):
+def visualize_tree_toytree(tree_file, output_dir):
+    """Generate multiple tree layouts using toytree"""
+    if not TOYTREE_AVAILABLE:
+        print("⚠️  Skipping toytree visualizations (library not available)")
+        return []
+
+    try:
+        # Load tree
+        tree = toytree.tree(str(tree_file))
+
+        # Define genus colors (same as Bio.Phylo visualization)
+        genus_colors = {
+            'Aedes': '#AA96DA',
+            'Anopheles': '#4ECDC4',
+            'Culex': '#95E1D3',
+            'Deinocerites': '#A8E6CF',
+            'Psorophora': '#8B7FD8',
+            'Uranotaenia': '#9BDEAC',
+            'Wyeomyia': '#5DADE2',
+            'Ochlerotatus': '#85C1E2',
+            'Toxorhynchites': '#AED6F1',
+            'Mansonia': '#B4E7CE',
+            'Culiseta': '#6DC5D1',
+        }
+
+        def is_reference_sequence(name):
+            """Check if this matches reference sequence pattern"""
+            if not name:
+                return False
+            name = name.strip()
+            parts = name.split('_')
+            if len(parts) < 3:
+                return False
+
+            last_part = parts[-1]
+            has_letters_last = any(c.isalpha() for c in last_part)
+            has_numbers_last = any(c.isdigit() for c in last_part)
+
+            if has_letters_last and has_numbers_last:
+                return True
+
+            if has_numbers_last and len(parts) >= 3:
+                second_to_last = parts[-2]
+                if any(c.isalpha() for c in second_to_last):
+                    return True
+
+            return False
+
+        def extract_genus(name):
+            """Extract genus from sequence name"""
+            if not name:
+                return None
+            parts = name.strip().split('_')
+            if len(parts) >= 1:
+                return parts[0]
+            return None
+
+        # Prepare tip colors
+        tip_colors = []
+        for tip_name in tree.get_tip_labels():
+            if is_reference_sequence(tip_name):
+                genus = extract_genus(tip_name)
+                color = genus_colors.get(genus, '#808080')
+                tip_colors.append(color)
+            else:
+                # Student sample (red)
+                tip_colors.append('#FF6B6B')
+
+        # Generate different layouts
+        layouts = {
+            'rectangular': {
+                'layout': 'r',
+                'edge_type': 'p',
+                'width': 1000,
+                'height': 900,
+                'description': 'Traditional rectangular tree'
+            },
+            'circular': {
+                'layout': 'c',
+                'edge_type': 'c',  # Required for circular layout
+                'width': 1200,
+                'height': 1200,
+                'description': 'Circular tree layout'
+            },
+            'unrooted': {
+                'layout': 'u',
+                'edge_type': 'p',
+                'width': 1200,
+                'height': 1200,
+                'description': 'Unrooted radial layout'
+            }
+        }
+
+        generated_files = []
+
+        for layout_name, params in layouts.items():
+            try:
+                # Draw tree with bootstrap support values
+                canvas, axes, mark = tree.draw(
+                    layout=params['layout'],
+                    edge_type=params['edge_type'],
+                    tip_labels=True,
+                    tip_labels_colors=tip_colors,
+                    node_sizes=8,  # Show nodes with bootstrap values
+                    node_labels='support',  # Show bootstrap support values
+                    node_labels_style={'font-size': '9px', 'fill': '#333333'},
+                    node_colors='#CCCCCC',  # Light gray nodes
+                    edge_widths=2,
+                    edge_colors='#666666',
+                    tip_labels_style={'font-size': '10px'},
+                    width=params['width'],
+                    height=params['height'],
+                )
+
+                # Save PNG
+                png_file = output_dir / f"tree_{layout_name}.png"
+                toyplot.png.render(canvas, str(png_file))
+
+                # Save SVG (scalable, editable)
+                svg_file = output_dir / f"tree_{layout_name}.svg"
+                toyplot.svg.render(canvas, str(svg_file))
+
+                # Save PDF (for Adobe Illustrator editing)
+                pdf_file = output_dir / f"tree_{layout_name}.pdf"
+                toyplot.pdf.render(canvas, str(pdf_file))
+
+                print(f"  ✓ {layout_name.capitalize()} layout: {png_file.name}")
+                generated_files.append({
+                    'name': layout_name,
+                    'png': png_file,
+                    'svg': svg_file,
+                    'pdf': pdf_file,
+                    'description': params['description']
+                })
+
+            except Exception as e:
+                print(f"  ✗ {layout_name.capitalize()} layout failed: {e}")
+
+        return generated_files
+
+    except Exception as e:
+        print(f"✗ toytree visualization failed: {e}")
+        return []
+
+def generate_html_report(tree_file, image_file, log_file, output_file, toytree_files=None):
     """Generate HTML report for phylogenetic tree using new design system"""
     from datetime import datetime
     from pathlib import Path
+
+    if toytree_files is None:
+        toytree_files = []
 
     # Try to extract model info from log
     model_info = "See .iqtree file for details"
@@ -305,13 +464,68 @@ def generate_html_report(tree_file, image_file, log_file, output_file):
                 </ul>
             </div>
 
-            <!-- Tree Visualization -->
-            <div class="figure-container">
-                <img src="{Path(image_file).name}" alt="Phylogenetic Tree" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
+            <!-- Tree Visualizations -->
+            <h3>Tree Layouts</h3>
+            <p>Multiple visualizations of the same phylogenetic tree to help you identify relationships:</p>
+
+            <!-- Bio.Phylo Traditional Tree -->
+            <div class="figure-container" style="margin-bottom: 2rem;">
+                <h4 style="margin-top: 1rem; color: var(--primary-color);">📊 Traditional Layout (Bio.Phylo)</h4>
+                <img src="{Path(image_file).name}" alt="Traditional Tree" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
                 <div class="figure-caption">
-                    <strong>Figure 1:</strong> Maximum likelihood phylogenetic tree constructed using IQ-TREE with {bootstrap_support} bootstrap replicates.
-                    Best-fit model: {model_info}
+                    <strong>Figure 1:</strong> Traditional rectangular tree layout with bootstrap values.
                 </div>
+            </div>
+
+            <!-- Toytree Layouts (if available) -->"""
+
+    # Generate HTML for toytree layouts
+    toytree_html = ""
+    if toytree_files:
+        layout_icons = {
+            'rectangular': '📐',
+            'circular': '🔵',
+            'unrooted': '🌟'
+        }
+        layout_titles = {
+            'rectangular': 'Rectangular Layout (toytree)',
+            'circular': 'Circular Layout (toytree)',
+            'unrooted': 'Unrooted Radial Layout (toytree)'
+        }
+
+        for i, tf in enumerate(toytree_files, start=2):
+            icon = layout_icons.get(tf['name'], '🎨')
+            title = layout_titles.get(tf['name'], tf['description'])
+            toytree_html += f"""
+            <div class="figure-container" style="margin-bottom: 2rem;">
+                <h4 style="margin-top: 1rem; color: var(--primary-color);">{icon} {title}</h4>
+                <img src="{tf['png'].name}" alt="{title}" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
+                <div class="figure-caption">
+                    <strong>Figure {i}:</strong> {tf['description']}.
+                    <br><small>Download: <a href="{tf['png'].name}">PNG</a> | <a href="{tf['svg'].name}">SVG</a> | <a href="{tf['pdf'].name}">PDF</a></small>
+                </div>
+            </div>"""
+
+    html += toytree_html + """
+
+            <div class="info-box info-secondary" style="margin-top: 1.5rem;">
+                <strong>📥 Download Options:</strong>
+                <p>All tree layouts are available in multiple formats:</p>
+                <ul>
+                    <li><strong>PNG</strong> - For presentations and documents</li>
+                    <li><strong>SVG</strong> - Scalable vector graphics (resizable without quality loss)</li>
+                    <li><strong>PDF</strong> - Edit in Adobe Illustrator for publication-quality figures</li>
+                </ul>
+            </div>
+
+            <div class="info-box info-tip">
+                <strong>💡 Which layout should I use?</strong>
+                <ul>
+                    <li><strong>Rectangular:</strong> Best for showing detailed branch lengths and bootstrap values</li>
+                    <li><strong>Circular:</strong> Compact, visually appealing, good for posters/presentations</li>
+                    <li><strong>Unrooted:</strong> Shows relationships without implying evolutionary direction</li>
+                </ul>
+                <p style="margin-bottom: 0;"><strong>Summary:</strong> Maximum likelihood phylogenetic tree constructed using IQ-TREE with {bootstrap_support} bootstrap replicates. Best-fit model: {model_info}</p>
             </div>
 
             <!-- Analysis Details -->
@@ -472,15 +686,23 @@ def main():
     iqtree_file = output_prefix.with_suffix('.iqtree')
 
     # Step 2: Visualize tree
-    print("\n[Step 2/3] Generating tree visualizations...")
+    print("\n[Step 2/4] Generating tree visualizations...")
     image_file = output_dir / "tree.png"
     visualize_tree(tree_file, image_file)
-    print_progress_bar("  ✓ Tree visualization saved!", steps=10, delay=0.03)
+    print_progress_bar("  ✓ Bio.Phylo visualization saved!", steps=10, delay=0.03)
 
-    # Step 3: Generate HTML report
-    print("\n[Step 3/3] Creating interactive HTML report...")
+    # Step 3: Generate multiple layouts with toytree
+    print("\n[Step 3/4] Generating additional tree layouts (toytree)...")
+    toytree_files = visualize_tree_toytree(tree_file, output_dir)
+    if toytree_files:
+        print_progress_bar(f"  ✓ Generated {len(toytree_files)} additional layouts!", steps=10, delay=0.03)
+    else:
+        print("  ⚠️  No additional layouts generated")
+
+    # Step 4: Generate HTML report
+    print("\n[Step 4/4] Creating interactive HTML report...")
     html_file = output_dir / "phylogeny_report.html"
-    generate_html_report(tree_file, image_file, log_file, html_file)
+    generate_html_report(tree_file, image_file, log_file, html_file, toytree_files)
     print_progress_bar("  ✓ HTML report generated!", steps=10, delay=0.03)
 
     print("\n" + "="*70)
@@ -488,8 +710,13 @@ def main():
     print("="*70)
     print(f"\n📁 Output files in {output_dir}:")
     print(f"  🌲 tree.treefile      - Newick format (open in FigTree)")
-    print(f"  🖼️  tree.png           - Tree visualization")
-    print(f"  🌐 phylogeny_report.html - Interactive HTML report")
+    print(f"  🖼️  tree.png           - Tree visualization (Bio.Phylo)")
+    if toytree_files:
+        print(f"\n  Additional layouts (PNG/SVG/PDF):")
+        for tf in toytree_files:
+            print(f"  🎨 {tf['name']:15} - {tf['description']}")
+        print(f"\n  💡 PDF files can be edited in Adobe Illustrator for publications!")
+    print(f"\n  🌐 phylogeny_report.html - Interactive HTML report")
     print(f"  📊 tree.iqtree        - Detailed analysis log")
     print(f"\n💡 Open the HTML report in your browser to view the tree!\n")
 

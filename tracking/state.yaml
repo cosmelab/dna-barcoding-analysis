@@ -1,19 +1,32 @@
 project: dna-barcoding-analysis
 current_phase: visualization_enhancement
-current_task: exploring_modern_tree_visualization
-last_updated: '2025-11-24T21:00:00'
-active_jobs: []
+current_task: toytree_multi_layout_implementation_complete
+last_updated: '2025-11-24T19:50:00'
+active_jobs:
+  - toytree_multi_layout_fully_integrated
+  - ready_for_end_to_end_testing
 blocking_issues: []
 target_ready_date: '2025-11-19'
 lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products from UC genomics)
 strategy: '5-step consensus workflow, interactive tutorial required, reference sequences for tree context, zero-coding-experience friendly'
 completed_today:
-  - Fixed phylogenetic tree color-coding bug (whitespace issue in Bio.Phylo labels)
-  - Student samples now display in RED, references in TEAL
-  - Regenerated trees for both tutorial and my_analysis
-  - Updated iqtree_guide.md with Maximum Likelihood explanation
-  - Researched modern tree visualization libraries (pyCirclize, ETE3, iTOL)
-  - Identified opportunity to improve tree aesthetics and layouts
+  - Fixed NC_ accession detection bug (NC_054318, NC_036006.1)
+  - Added toytree 3.0.10 and phyTreeViz to container (ARM64 compatible)
+  - Implemented visual ASCII progress bars with animations
+  - Fixed README paths to match numbered directories (01_qc, 02_consensus, etc)
+  - Implemented genus-based tree coloring (11 distinct non-red colors)
+  - Simplified tree legend (removed redundant labels, positioned outside)
+  - Fixed ARM64 build issues (removed problematic cache mount)
+  - Successfully rebuilt container for both amd64 and arm64
+  - Verified toytree and phyTreeViz installed and working
+  - Added Docker login instructions to README prerequisites
+  - Tested toytree layouts (rectangular, circular, unrooted) - all working perfectly
+  - Implemented multi-layout tree generation in build_tree.py
+  - Added PDF export for all layouts (Adobe Illustrator compatible)
+  - Embedded all 4 tree layouts in HTML report (Bio.Phylo + 3 toytree)
+  - Added download links for PNG/SVG/PDF formats in HTML
+  - Cleaned up old test files (pycirclize, ete3, debug files)
+  - Removed test_toytree_layouts.py (integrated into build_tree.py)
 current_status:
   - Repository template READY for GitHub Classroom
   - Auto-grading workflow deployed and functional
@@ -23,16 +36,19 @@ current_status:
   - No sensitive information in repository
   - Naming conventions followed (only README.md in caps)
   - 5-step workflow fully tested and working
+  - Multi-layout tree visualization fully implemented (4 layouts)
+  - Tree coloring system working correctly (student samples in red, genera in distinct colors)
   - AWAITING: GitHub Classroom assignment creation by instructor
 pending_decisions:
   - Keep or hide tracking/ directory before public release
   - Create LICENSE file (README mentions MIT + CC BY 4.0)
   - Remove student .ab1 files from data/student_sequences/
+  - Decide if we want to add tree abbreviation feature (optional)
 next_up:
-  - ACTIVE: Explore modern tree visualization options (circular, radial layouts)
-  - ACTIVE: Test pyCirclize, ETE3, or Plotly for better tree aesthetics
-  - ACTIVE: Implement name abbreviation system with full-name table
-  - Consider: Multiple tree layout options for students to choose from
+  - COMPLETED: Explore modern tree visualization options → toytree selected and implemented
+  - COMPLETED: Multiple tree layout options → 4 layouts (Bio.Phylo + 3 toytree)
+  - OPTIONAL: Implement name abbreviation system with full-name table
+  - TODO: Test all README commands end-to-end
   - Optional: Create documentation website (D018)
   - Optional: Test on Windows platform
   - Ready: GitHub Classroom assignment creation by instructor
