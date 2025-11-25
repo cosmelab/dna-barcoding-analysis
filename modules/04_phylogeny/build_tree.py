@@ -293,6 +293,27 @@ def visualize_tree_toytree(tree_file, output_dir):
                 # Student sample (red)
                 tip_colors.append('#FF6B6B')
 
+        # Prepare node labels - only show bootstrap values (0-100), hide branch lengths
+        node_labels = []
+        for node in tree.treenode.traverse():
+            if node.is_leaf():
+                node_labels.append('')  # No label for leaves
+            else:
+                # Node name might be bootstrap value or empty
+                if not node.name or node.name.strip() == '':
+                    node_labels.append('')  # Empty node name - no bootstrap value
+                else:
+                    try:
+                        value = float(node.name)
+                        # Only show if it looks like a bootstrap value (0-100)
+                        # Exclude 0 as it's likely not a real bootstrap value
+                        if 1 <= value <= 100:
+                            node_labels.append(str(int(value)))
+                        else:
+                            node_labels.append('')  # Hide branch lengths (>100) or 0
+                    except (ValueError, TypeError):
+                        node_labels.append('')  # Hide non-numeric values
+
         # Generate different layouts
         layouts = {
             'rectangular': {
@@ -329,8 +350,13 @@ def visualize_tree_toytree(tree_file, output_dir):
                     tip_labels=True,
                     tip_labels_colors=tip_colors,
                     node_sizes=0,  # Hide internal node markers
-                    node_labels='support',  # Show bootstrap support values at nodes
-                    node_labels_style={'font-size': '8px', 'fill': '#555555', 'font-weight': 'normal'},
+                    node_labels=node_labels,  # Show filtered bootstrap values (0-100 only)
+                    node_labels_style={
+                        'font-size': '9px',  # Readable font size
+                        'fill': '#666666',  # Gray for subtle visibility
+                        'font-weight': 'normal',  # Normal weight
+                        '-toyplot-anchor-shift': '8px'  # Small offset for better positioning
+                    },
                     edge_widths=2,
                     edge_colors='#666666',
                     tip_labels_style={'font-size': '10px'},
