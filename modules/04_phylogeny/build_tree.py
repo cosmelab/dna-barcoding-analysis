@@ -355,9 +355,9 @@ def visualize_tree_toytree(tree_file, output_dir):
                     node_sizes=0,  # Hide internal node markers
                     node_labels=node_labels,  # Show filtered bootstrap values (0-100 only)
                     node_labels_style={
-                        'font-size': '9px',  # Readable font size
-                        'fill': '#666666',  # Gray for subtle visibility
-                        'font-weight': 'normal',  # Normal weight
+                        'font-size': '10px',  # Readable font size
+                        'fill': '#000000',  # Black for maximum visibility
+                        'font-weight': 'bold',  # Bold for emphasis
                         '-toyplot-anchor-shift': label_shift  # Layout-specific offset
                     },
                     edge_widths=2,
@@ -653,6 +653,17 @@ def generate_html_report(tree_file, image_file, log_file, output_file, toytree_f
                 <li><strong>70-95%:</strong> Good support</li>
                 <li><strong>&lt;70%:</strong> Weak support (uncertain relationship)</li>
             </ul>
+
+            <div class="info-box info-tip" style="margin-top: 1rem;">
+                <strong>🔍 Why don't all branches have bootstrap values?</strong>
+                <p>This is normal! Bootstrap values are only calculated for internal nodes (branch points where lineages split). You won't see bootstrap values for:</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Terminal branches (tips):</strong> These lead directly to your samples/species - no branching point to test</li>
+                    <li><strong>Root node:</strong> The base of the tree has no parent node to calculate support for</li>
+                    <li><strong>Some very short branches:</strong> IQ-TREE may skip bootstrap calculation for branches with very little evolutionary change</li>
+                </ul>
+                <p style="margin-top: 0.5rem; margin-bottom: 0;"><em>In this analysis, IQ-TREE calculated ~79 bootstrap values for ~98 total nodes, which is typical. Focus on the bootstrap values at key branching points that are relevant to your sample identification.</em></p>
+            </div>
 
             <h4>What is Maximum Likelihood?</h4>
             <p>Maximum Likelihood (ML) is a statistical method that finds the tree topology and branch lengths most likely to have produced the observed sequences, given a model of DNA evolution.</p>
