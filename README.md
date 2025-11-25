@@ -375,6 +375,8 @@ dna-barcoding-analysis/
 │   ├── student_sequences/       # PUT YOUR .ab1 FILES HERE
 │   ├── test_data/               # Tutorial uses this (8 .ab1 files)
 │   └── reference_sequences/     # 52 known SoCal mosquito sequences
+│       ├── socal_mosquitoes.fasta       # Pre-trimmed reference sequences
+│       └── trim_references_to_barcode.py  # Utility: trim GenBank refs to ~700bp
 │
 ├── results/
 │   ├── tutorial/                # Tutorial output (test data)
@@ -396,9 +398,6 @@ dna-barcoding-analysis/
 │   ├── 03_alignment/
 │   ├── 04_phylogeny/
 │   └── 05_identification/
-│
-├── scripts/                     # Utility scripts
-│   └── trim_references_to_barcode.py  # Trim GenBank references to ~700bp
 │
 ├── docs/                        # Reference documentation
 │   ├── pipeline_workflow.md

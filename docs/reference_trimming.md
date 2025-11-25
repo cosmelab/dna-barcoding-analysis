@@ -45,7 +45,7 @@ Aligned reference:   ATCG...full sequence...ATCG
 
 ### The Solution: Trim to the Barcode Region
 
-We created a Python script (`scripts/trim_references_to_barcode.py`) that:
+We created a Python script (`data/reference_sequences/trim_references_to_barcode.py`) that:
 
 1. **Finds the barcode region** in each reference using the AUCOS primer sequences from [Hoque et al. 2022](https://doi.org/10.1186/s13071-022-05494-2)
 2. **Trims** references longer than 800bp down to ~712bp (the AUCOS amplicon size)
@@ -90,7 +90,7 @@ The trimming script:
 
 - **Original references:** `data/reference_sequences/socal_mosquitoes_original.fasta` (backup)
 - **Trimmed references:** `data/reference_sequences/socal_mosquitoes.fasta` (active)
-- **Trimming script:** `scripts/trim_references_to_barcode.py`
+- **Trimming script:** `data/reference_sequences/trim_references_to_barcode.py`
 
 ## Reference
 

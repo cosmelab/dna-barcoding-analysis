@@ -1,11 +1,13 @@
 project: dna-barcoding-analysis
-current_phase: visualization_enhancement
-current_task: toytree_multi_layout_implementation_complete
-last_updated: '2025-11-24T19:50:00'
+current_phase: pipeline_validation
+current_task: fix_tutorial_consensus_pipeline
+last_updated: '2025-11-25T11:10:00'
 active_jobs:
-  - toytree_multi_layout_fully_integrated
-  - ready_for_end_to_end_testing
-blocking_issues: []
+  - fix_tutorial_consensus_step
+  - add_windows_wsl_documentation
+  - push_changes_to_repository
+blocking_issues:
+  - tutorial_consensus_not_generating_output
 target_ready_date: '2025-11-19'
 lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products from UC genomics)
 strategy: '5-step consensus workflow, interactive tutorial required, reference sequences for tree context, zero-coding-experience friendly'

@@ -733,7 +733,7 @@ def generate_html_report(results, output_file):
 
                         <div class="chromatogram-viewer">
                             <!-- Canvas for rendering traces -->
-                            <canvas id="chromato-canvas-{filename.replace('.', '_')}"
+                            <canvas id="chromato-canvas-{filename.replace('.', '_').replace('-', '_')}"
                                     width="1400"
                                     height="350"
                                     style="width: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white; cursor: crosshair;">
@@ -789,12 +789,19 @@ def generate_html_report(results, output_file):
                     <!-- JavaScript for this chromatogram -->
                     <script>
                         // Store trace data for this sample
-                        window.traceData_{filename.replace('.', '_')} = {trace_data_json};
+                        window.traceData_{filename.replace('.', '_').replace('-', '_')} = {trace_data_json};
 
                         // Initialize the chromatogram viewer
-                        document.addEventListener('DOMContentLoaded', function() {{
-                            renderChromatogram('{filename.replace('.', '_')}', 50);
-                        }});
+                        // Check if DOM is already loaded (for inline scripts executed after DOMContentLoaded)
+                        if (document.readyState === 'loading') {{
+                            // DOM is still loading, add event listener
+                            document.addEventListener('DOMContentLoaded', function() {{
+                                renderChromatogram('{filename.replace('.', '_').replace('-', '_')}', 50);
+                            }});
+                        }} else {{
+                            // DOM is already loaded, render immediately
+                            renderChromatogram('{filename.replace('.', '_').replace('-', '_')}', 50);
+                        }}
                     </script>
 """
         # Fallback to static image if trace data not available

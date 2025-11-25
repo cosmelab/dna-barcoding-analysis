@@ -1,9 +1,6 @@
-# Results directory - COMMIT YOUR RESULTS FOR AUTO-GRADING
-# The results/ directory should be committed so GitHub Actions can verify completion
-# Note: Only commit results after completing tutorial.sh and run-analysis.sh
-!results/
-results/**/qc_results.json
-results/**/*.log
+# Results directory - Students generate their own results
+# The scripts create these directories automatically with os.makedirs()
+results/
 
 # Python
 __pycache__/

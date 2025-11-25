@@ -682,6 +682,18 @@ Examples:
     SeqIO.write(consensus_seqs, output_fasta, "fasta")
     print_success(f"Consensus sequences: {output_fasta}")
 
+    # Combine with reference sequences
+    reference_file = Path("data/reference_sequences/socal_mosquitoes.fasta")
+    if reference_file.exists():
+        print_info("Adding reference sequences for phylogenetic analysis...")
+        reference_seqs = list(SeqIO.parse(reference_file, "fasta"))
+        combined_seqs = consensus_seqs + reference_seqs
+        combined_fasta = args.output_dir / "combined_with_references.fasta"
+        SeqIO.write(combined_seqs, combined_fasta, "fasta")
+        print_success(f"Combined sequences: {combined_fasta} ({len(consensus_seqs)} samples + {len(reference_seqs)} references)")
+    else:
+        print_info(f"⚠ Reference file not found: {reference_file}")
+
     # Generate HTML report
     html_file = generate_html_report(args.output_dir, pairs, unpaired, consensus_seqs, stats)
     print_success(f"HTML report: {html_file}")
