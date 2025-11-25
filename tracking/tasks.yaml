@@ -488,3 +488,27 @@ tasks:
   agent_allowed: true
   depends_on: []
   notes: 'Currently tree.png is generated but not embedded in phylogeny_report.html. Need to include the tree visualization in the HTML report so users can view it directly without opening separate PNG file.'
+- id: implement-genus-based-tree-coloring
+  phase: visualization_enhancement
+  status: done
+  summary: Color phylogenetic tree by mosquito genus instead of just student vs reference
+  agent_allowed: true
+  depends_on:
+  - fix-automatic-sample-detection-in-trees
+  completed: '2025-11-24T23:45:00'
+  notes: 'IMPLEMENTED: Each mosquito genus gets unique color (Aedes=pink, Anopheles=teal, Culex=mint, etc). Student samples stay RED and BOLD for emphasis. Legend auto-generates from genera present in tree, positioned outside (bbox_to_anchor=(1.02, 1)). Colors: 10 distinct pastel colors for readability. Makes it easy to visually group species by genus while highlighting student samples. HTML report updated to explain coloring system.'
+- id: test-readme-commands-end-to-end
+  phase: testing_and_validation
+  status: todo
+  summary: Test all README commands from start to finish with real data
+  agent_allowed: true
+  depends_on: []
+  notes: 'User discovered README paths were wrong (consensus/ vs 02_consensus/). Fixed all paths but need to test complete workflow: Step 1 QC → Step 2 Consensus → Step 3 Combine → Step 4 Alignment → Step 5 BLAST. Ensure all commands work and output files are created in correct locations. This prevents students from hitting errors when following README.'
+- id: fix-readme-path-inconsistencies
+  phase: documentation
+  status: done
+  summary: Fix README paths to match numbered directory structure (01_qc, 02_consensus, etc.)
+  agent_allowed: true
+  depends_on: []
+  completed: '2025-11-25T00:42:00'
+  notes: 'Fixed all paths in README to use numbered directories: qc/ → 01_qc/, consensus/ → 02_consensus/, alignment/ → 03_alignment/, phylogeny/ → 04_phylogeny/, blast/ → 05_blast/. User reported file not found errors when following README commands.'
