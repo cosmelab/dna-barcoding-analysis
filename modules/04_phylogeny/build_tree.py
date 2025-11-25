@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Phylogenetic Tree Construction
-Uses IQ-TREE for tree building and Bio.Phylo for visualization
+Uses IQ-TREE for tree building and multiple visualization tools
+Generates trees with full names and abbreviated names in different layouts
 """
 
 import os
@@ -12,6 +13,20 @@ from Bio import Phylo
 import matplotlib
 matplotlib.use('Agg')  # Non-interactive backend
 import matplotlib.pyplot as plt
+import time
+
+def print_progress_bar(message, steps=20, delay=0.05):
+    """Print an ASCII progress bar"""
+    print(f"\n{message}")
+    bar = "█"
+    empty = "░"
+    for i in range(steps + 1):
+        filled = bar * i
+        remaining = empty * (steps - i)
+        percent = (i / steps) * 100
+        print(f"\r  [{filled}{remaining}] {percent:.0f}%", end="", flush=True)
+        time.sleep(delay)
+    print("\n")
 
 def run_iqtree(alignment_file, output_prefix):
     """Run IQ-TREE for phylogenetic inference"""
@@ -440,34 +455,43 @@ def main():
         sys.exit(1)
 
     print(f"Input alignment: {input_fasta}")
+    print("\n" + "="*70)
+    print("  🌳  PHYLOGENETIC TREE CONSTRUCTION PIPELINE")
+    print("="*70)
 
-    # Run IQ-TREE
+    # Step 1: Run IQ-TREE
+    print("\n[Step 1/3] Building phylogenetic tree with IQ-TREE...")
     output_prefix = output_dir / "tree"
     if not run_iqtree(input_fasta, output_prefix):
         sys.exit(1)
+    print_progress_bar("  ✓ Tree construction complete!", steps=15, delay=0.02)
 
     # IQ-TREE creates these files
     tree_file = output_prefix.with_suffix('.treefile')
     log_file = output_prefix.with_suffix('.log')
     iqtree_file = output_prefix.with_suffix('.iqtree')
 
-    # Visualize tree
-    print("\nGenerating tree visualization...")
+    # Step 2: Visualize tree
+    print("\n[Step 2/3] Generating tree visualizations...")
     image_file = output_dir / "tree.png"
     visualize_tree(tree_file, image_file)
+    print_progress_bar("  ✓ Tree visualization saved!", steps=10, delay=0.03)
 
-    # Generate HTML report
-    print("\nGenerating HTML report...")
+    # Step 3: Generate HTML report
+    print("\n[Step 3/3] Creating interactive HTML report...")
     html_file = output_dir / "phylogeny_report.html"
     generate_html_report(tree_file, image_file, log_file, html_file)
-    print(f"HTML report: {html_file}")
+    print_progress_bar("  ✓ HTML report generated!", steps=10, delay=0.03)
 
-    print(f"\nPhylogeny Analysis Complete!")
-    print(f"\nOutput files in {output_dir}:")
-    print(f"  - tree.treefile - Newick format (open in FigTree)")
-    print(f"  - tree.png - Simple visualization")
-    print(f"  - phylogeny_report.html - HTML report")
-    print(f"  - tree.iqtree - Detailed analysis log")
+    print("\n" + "="*70)
+    print("  ✓ PHYLOGENY ANALYSIS COMPLETE!")
+    print("="*70)
+    print(f"\n📁 Output files in {output_dir}:")
+    print(f"  🌲 tree.treefile      - Newick format (open in FigTree)")
+    print(f"  🖼️  tree.png           - Tree visualization")
+    print(f"  🌐 phylogeny_report.html - Interactive HTML report")
+    print(f"  📊 tree.iqtree        - Detailed analysis log")
+    print(f"\n💡 Open the HTML report in your browser to view the tree!\n")
 
 if __name__ == "__main__":
     main()
