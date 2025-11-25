@@ -187,20 +187,20 @@ def visualize_tree(tree_file, output_image):
         # Build legend dynamically based on genera present in tree
         from matplotlib.patches import Patch
         legend_elements = [
-            Patch(facecolor='#FF6B6B', label='Your Samples (Student/Tutorial)', edgecolor='darkred', linewidth=1.5)
+            Patch(facecolor='#FF6B6B', label='Your Samples', edgecolor='darkred', linewidth=1.5)
         ]
 
         # Add genera in alphabetical order
         for genus in sorted(genera):
             color = genus_colors.get(genus, '#808080')
             legend_elements.append(
-                Patch(facecolor=color, label=f'{genus} (genus)', edgecolor='gray', linewidth=0.5)
+                Patch(facecolor=color, label=genus, edgecolor='gray', linewidth=0.5)
             )
 
         # Position legend outside plot area to avoid blocking samples
         ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.02, 1),
                   fontsize=9, framealpha=0.95, edgecolor='gray', fancybox=True,
-                  title='Species Groups', title_fontsize=10)
+                  title='Mosquito Genera', title_fontsize=10)
 
         # Save figure
         plt.tight_layout()
