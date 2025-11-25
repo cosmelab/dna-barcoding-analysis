@@ -146,6 +146,12 @@ lt         # Tree view
 # STEP 3: Fill out assignment.md
 ```
 
+**Check your progress anytime:**
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest python3 check_progress.py
+```
+
 **That's it!** Everything else below is reference documentation.
 
 ---
@@ -370,6 +376,7 @@ dna-barcoding-analysis/
 ├── tutorial.sh                  # Step 1: Interactive tutorial (test data)
 ├── run-analysis.sh              # Step 2: Analyze YOUR data
 ├── assignment.md                # Step 3: Fill this out
+├── check_progress.py            # Check your progress (run in container)
 │
 ├── data/
 │   ├── student_sequences/       # PUT YOUR .ab1 FILES HERE
