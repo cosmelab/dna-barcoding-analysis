@@ -62,15 +62,26 @@ def visualize_tree(tree_file, output_image):
             if len(parts) < 3:  # Need at least Genus_species_Accession
                 return False
 
-            # Check if last part contains accession number pattern (letters + numbers)
-            last_part = parts[-1]
-            # Accessions typically have format like: KP293422, KP293422.1, NC_036006, etc.
-            has_letters = any(c.isalpha() for c in last_part)
-            has_numbers = any(c.isdigit() for c in last_part)
+            # Accessions can have underscores (NC_054318) or dots (KP293422.1)
+            # Check if the last 1-2 parts look like an accession:
+            # 1. Last part has letters+numbers (KP293422, KP293422.1)
+            # 2. Last part is only numbers AND second-to-last has letters (NC_054318 → NC + 054318)
+            # 3. Last part is only numbers with dot (036006.1) AND prior part has letters
 
-            # Must have both letters and numbers to be an accession
-            if has_letters and has_numbers:
+            last_part = parts[-1]
+            has_letters_last = any(c.isalpha() for c in last_part)
+            has_numbers_last = any(c.isdigit() for c in last_part)
+
+            # Case 1: Last part has both letters and numbers (e.g., KP293422.1, MH376751.1)
+            if has_letters_last and has_numbers_last:
                 return True
+
+            # Case 2: Last part is numeric-only, check if second-to-last has letters
+            # This catches: NC_054318, NC_036006.1, etc.
+            if has_numbers_last and len(parts) >= 3:
+                second_to_last = parts[-2]
+                if any(c.isalpha() for c in second_to_last):
+                    return True
 
             return False
 
@@ -81,13 +92,42 @@ def visualize_tree(tree_file, output_image):
             # If it's not a reference, it's a student sample
             return not is_reference_sequence(name)
 
+        # Extract all unique genera from reference sequences
+        genera = set()
+        for terminal in tree.get_terminals():
+            if terminal.name and is_reference_sequence(terminal.name):
+                parts = terminal.name.strip().split('_')
+                if len(parts) >= 1:
+                    genus = parts[0]
+                    genera.add(genus)
+
+        # Create color palette for genera (avoid red tones - reserved for student samples)
+        genus_colors = {
+            'Aedes': '#AA96DA',      # Purple
+            'Anopheles': '#4ECDC4',  # Teal
+            'Culex': '#95E1D3',      # Mint
+            'Deinocerites': '#A8E6CF',   # Seafoam
+            'Psorophora': '#8B7FD8',  # Lavender
+            'Uranotaenia': '#9BDEAC', # Light green
+            'Wyeomyia': '#5DADE2',   # Sky blue
+            'Ochlerotatus': '#85C1E2', # Light blue
+            'Toxorhynchites': '#AED6F1', # Pale blue
+            'Mansonia': '#B4E7CE',   # Pale green
+            'Culiseta': '#6DC5D1',   # Turquoise
+        }
+
         # Color map for terminal nodes (leaves)
         def get_color_for_label(label):
-            """Return color based on whether it's a sample or reference"""
+            """Return color based on genus or if it's a student sample"""
             if is_student_sample(str(label)):
-                return '#FF6B6B'  # Red/coral for student samples
+                return '#FF6B6B'  # Bright red for student samples
             else:
-                return '#4ECDC4'  # Teal for reference sequences
+                # Extract genus from reference sequence
+                parts = str(label).strip().split('_')
+                if len(parts) >= 1:
+                    genus = parts[0]
+                    return genus_colors.get(genus, '#808080')  # Gray as fallback
+                return '#808080'  # Gray fallback
 
         # Create figure with more space
         fig, ax = plt.subplots(1, 1, figsize=(14, 10))
@@ -96,32 +136,56 @@ def visualize_tree(tree_file, output_image):
         Phylo.draw(tree, axes=ax, do_show=False,
                    label_func=lambda x: x.name if x.name else '')
 
-        # Now customize all text labels after drawing
+        # Get all terminal node names for filtering
+        terminal_names = {str(term.name).strip() for term in tree.get_terminals() if term.name}
+
+        # Now customize ONLY terminal labels (not bootstrap values or other text)
         for text in ax.texts:
-            label = text.get_text()
+            label = text.get_text().strip()
+
+            # Skip if this text is not a terminal node label
+            if label not in terminal_names:
+                continue
+
             if is_student_sample(label):
                 # Student samples: Bold red labels, larger font
                 text.set_fontweight('bold')
                 text.set_fontsize(10)
                 text.set_color('#FF6B6B')
             else:
-                # Reference sequences: Normal teal labels, smaller font
-                text.set_fontsize(8)
-                text.set_color('#4ECDC4')
+                # Reference sequences: Color by genus
+                parts = label.split('_')
+                if len(parts) >= 1:
+                    genus = parts[0]
+                    color = genus_colors.get(genus, '#808080')
+                    text.set_fontsize(8)
+                    text.set_color(color)
+                else:
+                    text.set_fontsize(8)
+                    text.set_color('#808080')
 
         # Add title
         ax.set_title("Phylogenetic Tree (Maximum Likelihood)\n" +
-                     "Red = Your Samples  •  Teal = Reference Sequences",
+                     "Red = Your Samples  •  Colors = Reference Genera",
                      fontsize=14, fontweight='bold', pad=20)
 
-        # Add legend - position outside plot area to avoid blocking samples
+        # Build legend dynamically based on genera present in tree
         from matplotlib.patches import Patch
         legend_elements = [
-            Patch(facecolor='#FF6B6B', label='Your Samples (Student/Tutorial)'),
-            Patch(facecolor='#4ECDC4', label='Reference Sequences (Known Species)')
+            Patch(facecolor='#FF6B6B', label='Your Samples (Student/Tutorial)', edgecolor='darkred', linewidth=1.5)
         ]
-        ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(0, 1),
-                  fontsize=10, framealpha=0.95, edgecolor='gray', fancybox=True)
+
+        # Add genera in alphabetical order
+        for genus in sorted(genera):
+            color = genus_colors.get(genus, '#808080')
+            legend_elements.append(
+                Patch(facecolor=color, label=f'{genus} (genus)', edgecolor='gray', linewidth=0.5)
+            )
+
+        # Position legend outside plot area to avoid blocking samples
+        ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.02, 1),
+                  fontsize=9, framealpha=0.95, edgecolor='gray', fancybox=True,
+                  title='Species Groups', title_fontsize=10)
 
         # Save figure
         plt.tight_layout()
@@ -221,7 +285,8 @@ def generate_html_report(tree_file, image_file, log_file, output_file):
                     <li><strong>Branch lengths:</strong> Evolutionary distance (substitutions per site)</li>
                     <li><strong>Bootstrap values:</strong> Statistical support (≥70% considered reliable)</li>
                     <li><strong>Topology:</strong> Shows relationships, not time</li>
-                    <li><strong>Your samples:</strong> Compare with reference species to identify unknown specimens</li>
+                    <li><strong>Your samples (red, bold):</strong> Compare with reference species to identify unknown specimens</li>
+                    <li><strong>Reference sequences (colored by genus):</strong> Each mosquito genus has its own color for easy visual grouping</li>
                 </ul>
             </div>
 
@@ -296,6 +361,14 @@ def generate_html_report(tree_file, image_file, log_file, output_file):
                     <li>Adjust "Branch Labels" to show evolutionary distances</li>
                     <li>Export high-resolution images for publications</li>
                 </ol>
+            </div>
+
+            <!-- Optional: Tree Abbreviation -->
+            <div class="info-box info-secondary" style="margin-top: 1rem;">
+                <strong>📝 Optional: Shorten Species Names</strong>
+                <p>If your tree labels are crowded or you want a cleaner appearance for publications:</p>
+                <pre style="background: var(--bg-code); padding: 0.5rem; border-radius: var(--radius-sm); margin: 0.5rem 0;">python scripts/abbreviate_tree_names.py {Path(tree_file)}</pre>
+                <p style="margin-bottom: 0; font-size: 0.9rem;">This creates an abbreviated version with shorter names (e.g., <code>Culex_pipiens_KP293422.1</code> → <code>cu_pip_KP29</code>) plus a reference table. Your sample names stay unchanged. See <code>docs/optional_tree_abbreviation.md</code> for details.</p>
             </div>
         </div>
     </main>

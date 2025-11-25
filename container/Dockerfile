@@ -119,12 +119,20 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
 # Set LD_LIBRARY_PATH to use conda's libstdc++
 ENV LD_LIBRARY_PATH=/opt/conda/lib
 
+# Install phylogenetic visualization tools
+RUN --mount=type=cache,target=/opt/conda/pkgs \
+    micromamba install --channel-priority strict -c conda-forge \
+    toytree \
+    phytreeviz \
+    -y && micromamba clean --all --yes
+
 # Install essential Python packages only
 RUN pip3 install --no-cache-dir \
     biopython \
     pandas \
     matplotlib \
-    plotly
+    plotly \
+    tqdm
 
 # Install and configure shell environment in a single layer
 RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
