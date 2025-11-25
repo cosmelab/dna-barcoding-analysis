@@ -178,10 +178,58 @@ Login Succeeded
 
 ## 📚 STEP 1: Complete the Tutorial FIRST (REQUIRED!)
 
-**Before analyzing your own data, you MUST run the tutorial:**
+**Before analyzing your own data, you MUST run the tutorial with the test data:**
 
+### Tutorial Step 1: Quality Control
 ```bash
-./tutorial.sh
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/01_quality_control/qc_chromatograms.py \
+  data/test_data/ \
+  results/tutorial/01_qc/
+```
+
+### Tutorial Step 2: Consensus Sequences
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/02_consensus/create_consensus.py \
+  results/tutorial/01_qc/passed_sequences.fasta \
+  results/tutorial/02_consensus/
+```
+
+### Tutorial Step 3: Combine with References
+```bash
+cat results/tutorial/02_consensus/consensus_sequences.fasta \
+    data/reference_sequences/socal_mosquitoes.fasta \
+    > results/tutorial/02_consensus/combined_with_references.fasta
+```
+
+### Tutorial Step 4a: Alignment
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/03_alignment/align_sequences.py \
+  results/tutorial/02_consensus/combined_with_references.fasta \
+  results/tutorial/03_alignment/
+```
+
+### Tutorial Step 4b: Build Tree
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/04_phylogeny/build_tree.py \
+  results/tutorial/03_alignment/aligned_sequences.fasta \
+  results/tutorial/04_phylogeny/
+```
+
+### Tutorial Step 5: Species Identification
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/05_identification/identify_species.py \
+  results/tutorial/02_consensus/consensus_sequences.fasta \
+  results/tutorial/05_blast/
 ```
 
 **This tutorial:**
@@ -399,6 +447,45 @@ dna-barcoding-analysis/
 **Problem**: Container is slow
 - **Solution**: Allocate more RAM to Docker (4GB+) in Docker Desktop settings
 
+### Windows/WSL Docker Setup
+
+If you're on Windows and experiencing Docker issues, follow these steps:
+
+**1. Enable Virtualization in BIOS**
+- Restart your computer and enter BIOS/UEFI settings (usually F2, F10, Del, or Esc during boot)
+- Look for "Intel Virtualization Technology" or "AMD-V" and enable it
+- Save and exit BIOS
+
+**2. Configure Docker Desktop for WSL**
+- Open Docker Desktop → Settings → Resources → WSL Integration
+- Enable integration with your WSL distro (e.g., Ubuntu)
+- Apply & Restart
+
+**3. Fix Docker Socket Permissions**
+If you get "permission denied" errors in WSL:
+```bash
+# Check if docker socket exists
+ls -la /var/run/docker.sock
+
+# If missing, you may need to set the Docker context
+docker context use default
+```
+
+**4. WSL2 Backend Issues**
+If Docker commands hang or fail:
+```bash
+# Restart WSL from PowerShell (as Administrator)
+wsl --shutdown
+# Then reopen your WSL terminal and try again
+```
+
+**5. Verify Docker Works**
+```bash
+docker run hello-world
+```
+
+**Tested on**: Windows 10/11 with WSL2 (including older hardware)
+
 ### Analysis Issues
 
 **Problem**: No sequences pass QC
@@ -478,7 +565,7 @@ See `tracking/` directory for development documentation.
 
 ---
 
-**Last Updated**: November 21, 2025
+**Last Updated**: November 25, 2025
 **Status**: ✅ Public Release - Student Ready
 **Container**: `cosmelab/dna-barcoding-analysis:latest` (multi-architecture: amd64 + arm64)
 **GitHub Classroom**: ✅ Compatible - use as template repository

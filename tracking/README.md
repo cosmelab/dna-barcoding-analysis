@@ -10,6 +10,8 @@ This tracking system ensures:
 - ✅ Clear project state and progress tracking
 - ✅ Transparent development process (open science)
 
+**Note:** This is a simple YAML-based tracking system suitable for educational projects and small teams. For production agentic workflows requiring persistent memory across sessions and multi-agent coordination, consider using LangGraph with PostgreSQL for stateful persistence.
+
 ## File Structure
 
 ### Core Tracking Files
