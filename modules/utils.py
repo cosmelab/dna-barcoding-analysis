@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Shared utility functions for DNA barcoding analysis modules
-Provides consistent terminal output formatting and browser opening
+Provides consistent terminal output formatting with rich library and browser opening
 """
 
 from pathlib import Path
@@ -18,7 +18,7 @@ def print_header(text):
 
 def print_step(step_num, total_steps, description):
     """Print a step indicator"""
-    print(f"\n[Step {step_num}/{total_steps}] {description}")
+    print(f"\nStep {step_num}/{total_steps}: {description}")
     print("-" * 70)
 
 

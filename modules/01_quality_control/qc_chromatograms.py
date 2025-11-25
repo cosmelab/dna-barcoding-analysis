@@ -28,7 +28,7 @@ def print_header(text):
 
 def print_step(step_num, total_steps, description):
     """Print a step indicator"""
-    print(f"\n[Step {step_num}/{total_steps}] {description}")
+    print(f"\nStep {step_num}/{total_steps}: {description}")
     print("-" * 70)
 
 def print_success(message):
@@ -187,8 +187,15 @@ def analyze_chromatogram(ab1_file, output_dir=None):
         high_quality_bases = sum(1 for q in quality_scores if q >= 20)
         low_quality_bases = sum(1 for q in quality_scores if q < 20)
 
-        # Determine pass/fail
-        qc_pass = avg_quality >= 20 and high_quality_bases / seq_length >= 0.8
+        # Determine pass/fail with specific reasons
+        fail_reasons = []
+        if avg_quality < 20:
+            fail_reasons.append(f"low avg quality ({avg_quality:.1f} < 20)")
+        if high_quality_bases / seq_length < 0.8:
+            pct = 100 * high_quality_bases / seq_length
+            fail_reasons.append(f"<80% high quality bases ({pct:.0f}%)")
+
+        qc_pass = len(fail_reasons) == 0
 
         result = {
             "file": ab1_file.name,
@@ -198,6 +205,7 @@ def analyze_chromatogram(ab1_file, output_dir=None):
             "low_quality_bases": low_quality_bases,
             "percent_high_quality": round(100 * high_quality_bases / seq_length, 2),
             "qc_status": "PASS" if qc_pass else "FAIL",
+            "fail_reason": "; ".join(fail_reasons) if fail_reasons else None,
             "sequence": str(record.seq),
             "quality_scores": quality_scores
         }
@@ -742,20 +750,20 @@ def generate_html_report(results, output_file):
                             <!-- Navigation Controls -->
                             <div class="chromato-controls">
                                 <div class="control-group">
-                                    <button class="btn btn-nav" onclick="moveChromatogram('{filename.replace('.', '_')}', -20)">
+                                    <button class="btn btn-nav" onclick="moveChromatogram('{filename.replace('.', '_').replace('-', '_')}', -20)">
                                         ⏮️ Back 20
                                     </button>
-                                    <button class="btn btn-nav" onclick="moveChromatogram('{filename.replace('.', '_')}', 20)">
+                                    <button class="btn btn-nav" onclick="moveChromatogram('{filename.replace('.', '_').replace('-', '_')}', 20)">
                                         Forward 20 ⏭️
                                     </button>
-                                    <button class="btn btn-secondary" onclick="resetChromatogram('{filename.replace('.', '_')}')">
+                                    <button class="btn btn-secondary" onclick="resetChromatogram('{filename.replace('.', '_').replace('-', '_')}')">
                                         🔄 Reset
                                     </button>
                                 </div>
 
                                 <div class="slider-group">
-                                    <label for="chromato-slider-{filename.replace('.', '_')}" style="font-weight: 600; margin-right: 1rem; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                        <span id="chromato-position-{filename.replace('.', '_')}" style="font-size: 0.95rem;">
+                                    <label for="chromato-slider-{filename.replace('.', '_').replace('-', '_')}" style="font-weight: 600; margin-right: 1rem; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                                        <span id="chromato-position-{filename.replace('.', '_').replace('-', '_')}" style="font-size: 0.95rem;">
                                             <span style="color: var(--purple);">📍 Base:</span>
                                             <span style="color: var(--text-primary); font-weight: 700;">50-110</span>
                                             <span style="color: var(--text-secondary);"> (of {len(trace_data['sequence'])})</span>
@@ -765,12 +773,12 @@ def generate_html_report(results, output_file):
                                         </span>
                                     </label>
                                     <input type="range"
-                                           id="chromato-slider-{filename.replace('.', '_')}"
+                                           id="chromato-slider-{filename.replace('.', '_').replace('-', '_')}"
                                            class="chromato-slider"
                                            min="0"
                                            max="{max(0, len(trace_data['sequence']) - 60)}"
                                            value="50"
-                                           oninput="updateChromatogram('{filename.replace('.', '_')}', this.value)"
+                                           oninput="updateChromatogram('{filename.replace('.', '_').replace('-', '_')}', this.value)"
                                            style="width: 100%; max-width: 600px;">
                                 </div>
                             </div>

@@ -4,49 +4,20 @@
 
 set -e
 
-# Colors
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+# No colors for clean logs
+GREEN=''
+BLUE=''
+YELLOW=''
+NC=''
 
-# Function to prompt user to open HTML report with timeout
-prompt_open_report() {
-    local report_path="$1"
-    local timeout_seconds=5
+# Create output directories automatically
+mkdir -p results/my_analysis/{01_qc,02_consensus,03_alignment,04_phylogeny,05_blast}
 
-    echo ""
-    echo -n "Press ENTER to open report in your browser (auto-continues in ${timeout_seconds}s)... "
+# Start logging
+LOG_FILE="results/my_analysis/student.log"
+exec > >(tee "$LOG_FILE") 2>&1
+echo "=== Student Analysis Pipeline Started: $(date) ==="
 
-    if read -t $timeout_seconds 2>/dev/null; then
-        # User pressed ENTER within timeout
-        echo "Opening report..."
-
-        # Convert to absolute path
-        local abs_path=$(cd "$(dirname "$report_path")" && pwd)/$(basename "$report_path")
-
-        # Detect OS and open file
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            # macOS
-            open "file://${abs_path}" 2>/dev/null && echo "✓ Report opened successfully" || echo "Could not open browser"
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            # Linux
-            xdg-open "file://${abs_path}" 2>/dev/null && echo "✓ Report opened successfully" || echo "Could not open browser"
-        elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-            # Windows Git Bash
-            start "file://${abs_path}" 2>/dev/null && echo "✓ Report opened successfully" || echo "Could not open browser"
-        else
-            echo "Could not auto-open browser. Please open manually: ${abs_path}"
-        fi
-    else
-        # Timeout - continue without opening
-        echo ""
-        echo "(continuing without opening...)"
-    fi
-    echo ""
-}
-
-clear
 echo "╔══════════════════════════════════════════════════════════════════════╗"
 echo "║                   DNA BARCODING ANALYSIS                             ║"
 echo "║                                                                      ║"
@@ -57,15 +28,15 @@ echo "REQUIREMENTS:"
 echo "  1. Your .ab1 files must be in: data/student_sequences/"
 echo "  2. You must have completed the tutorial first: ./tutorial.sh"
 echo ""
-read -p "Press ENTER to start analysis..."
+echo "Starting analysis..."
 
 CONTAINER="cosmelab/dna-barcoding-analysis:latest"
 OUTPUT_DIR="results/my_analysis"
 
 echo ""
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}STEP 1 of 5: Quality Control${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "STEP 1 of 5: Quality Control"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
@@ -74,17 +45,12 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   data/student_sequences/ \
   $OUTPUT_DIR/01_qc/
 
-# Prompt to open the HTML report with timeout
-prompt_open_report "$OUTPUT_DIR/01_qc/qc_report.html"
-
-echo -e "${GREEN}✓ Step 1 complete!${NC}"
-echo ""
-read -p "Press ENTER for Step 2..."
+echo "✓ Step 1 complete!"
 
 echo ""
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}STEP 2 of 5: Create Consensus Sequences${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "STEP 2 of 5: Create Consensus Sequences"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
@@ -94,17 +60,12 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   $OUTPUT_DIR/02_consensus/ \
   --pairs-only
 
-# Prompt to open the HTML report with timeout
-prompt_open_report "$OUTPUT_DIR/02_consensus/consensus_report.html"
-
-echo -e "${GREEN}✓ Step 2 complete!${NC}"
-echo ""
-read -p "Press ENTER for Step 3..."
+echo "✓ Step 2 complete!"
 
 echo ""
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}STEP 3 of 5: Combine with Reference Sequences${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "STEP 3 of 5: Combine with Reference Sequences"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
 cat $OUTPUT_DIR/02_consensus/consensus_sequences.fasta \
@@ -114,14 +75,12 @@ cat $OUTPUT_DIR/02_consensus/consensus_sequences.fasta \
 NUM_SEQS=$(grep -c "^>" $OUTPUT_DIR/02_consensus/combined_with_references.fasta)
 echo "Combined $NUM_SEQS sequences (your samples + references)"
 
-echo -e "${GREEN}✓ Step 3 complete!${NC}"
-echo ""
-read -p "Press ENTER for Step 4..."
+echo "✓ Step 3 complete!"
 
 echo ""
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}STEP 4 of 5: Alignment & Phylogenetic Tree${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "STEP 4 of 5: Alignment & Phylogenetic Tree"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "This step takes ~2-3 minutes..."
 echo ""
@@ -141,14 +100,12 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   $OUTPUT_DIR/03_alignment/aligned_sequences.fasta \
   $OUTPUT_DIR/04_phylogeny/
 
-echo -e "${GREEN}✓ Step 4 complete!${NC}"
-echo ""
-read -p "Press ENTER for Step 5 (final step)..."
+echo "✓ Step 4 complete!"
 
 echo ""
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}STEP 5 of 5: Species Identification (BLAST)${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "STEP 5 of 5: Species Identification (BLAST)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
@@ -158,9 +115,9 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   $OUTPUT_DIR/05_blast/
 
 echo ""
-echo -e "${GREEN}╔══════════════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║                     ✓ ANALYSIS COMPLETE! ✓                          ║${NC}"
-echo -e "${GREEN}╚══════════════════════════════════════════════════════════════════════╝${NC}"
+echo "╔══════════════════════════════════════════════════════════════════════╗"
+echo "║                     ✓ ANALYSIS COMPLETE! ✓                          ║"
+echo "╚══════════════════════════════════════════════════════════════════════╝"
 echo ""
 echo "Your results are in: $OUTPUT_DIR/"
 echo ""
@@ -175,3 +132,5 @@ echo "  • $OUTPUT_DIR/01_qc/qc_report.html"
 echo "  • $OUTPUT_DIR/04_phylogeny/tree.png"
 echo "  • $OUTPUT_DIR/05_blast/identification_report.html"
 echo ""
+echo "=== Student Analysis Pipeline Completed: $(date) ==="
+echo "Log saved to: $LOG_FILE"

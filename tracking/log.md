@@ -13,6 +13,30 @@ next:
 
 ---
 
+## 2025-11-25 – claude-sonnet-4.5 – log-formatting-and-tree-improvements
+actions:
+  - attempted to implement rich library for better terminal logging
+  - discovered rich library created unreadable logs with ANSI color codes
+  - removed rich library from all modules (utils.py, qc_chromatograms.py, build_tree.py)
+  - reverted to clean, simple print statements for readable logs
+  - improved circular tree layout: increased canvas size (1200→1600px), larger labels (10→12px), better spacing (8→15px shift)
+  - thicker edges for circular trees (2→2.5px), darker edge colors (#666→#555)
+  - cleaned results directories and ran test analysis
+results:
+  - log files now clean and readable in any text editor (no ANSI codes)
+  - Python output uses simple print statements with ✓/✗ symbols
+  - bash script colors still provide visual appeal during runtime
+  - circular tree visualizations improved with better spacing and readability
+  - run-analysis.sh and tutorial.sh both working with clean logs
+  - students can now open log files in text editors and read them easily
+next:
+  - run fresh analysis to verify clean logs are generated
+  - test complete tutorial workflow end-to-end
+  - verify all tree layouts (rectangular, circular, unrooted) working properly
+  - consider updating HTML reports to reference clean log files
+
+---
+
 ## 2025-11-24 – claude-sonnet-4.5 – container-rebuild-and-tool-verification
 actions:
   - fixed README path inconsistencies (all paths now use 01_qc, 02_consensus format)
