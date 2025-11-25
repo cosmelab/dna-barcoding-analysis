@@ -13,6 +13,90 @@ next:
 
 ---
 
+## 2025-11-24 – claude-sonnet-4.5 – container-rebuild-and-tool-verification
+actions:
+  - fixed README path inconsistencies (all paths now use 01_qc, 02_consensus format)
+  - user reported "file not found" when copying README commands
+  - identified ARM64 build failure (cache mount causing libmamba errors)
+  - removed cache mount from toytree/phyTreeViz installation step
+  - triggered container rebuild without cache mount
+  - both builds (amd64 + arm64) completed successfully
+  - pulled new container and verified tools installed
+  - deleted empty test_consensus directory
+  - updated tracking system with comprehensive session summary
+results:
+  - README commands now work correctly (paths match actual output)
+  - container build successful on both architectures
+  - toytree 3.0.10 verified installed and working
+  - phyTreeViz verified installed and working
+  - tqdm available for progress bars
+  - all previous tools still working (BioPython, MAFFT, IQ-TREE, BLAST, R)
+  - ready to implement multiple tree layouts
+next:
+  - test toytree circular and rectangular layouts with real data
+  - implement multi-layout tree generation in build_tree.py
+  - consider ETE3 for amd64-only with architecture detection
+  - generate both full-name and abbreviated trees
+  - embed all tree layouts in HTML report
+  - test complete README workflow end-to-end
+
+---
+
+## 2025-11-24 – claude-sonnet-4.5 – add-progress-bars-and-fix-nc-accessions
+actions:
+  - fixed critical bug: NC_ accessions (NC_054318, NC_036006.1) detected as students
+  - updated is_reference_sequence() to handle accessions with underscores
+  - changed genus color palette to avoid red tones (reserved for student samples)
+  - fixed terminal label filtering to exclude bootstrap values from coloring
+  - researched ARM64-compatible tree visualization tools (toytree, phyTreeViz)
+  - added toytree and phyTreeViz to Dockerfile via conda-forge
+  - implemented visual ASCII progress bars with animated filling (█░)
+  - added step-by-step progress indicators [Step 1/3], [Step 2/3], [Step 3/3]
+  - enhanced terminal output with emojis and formatted sections
+  - committed and pushed changes, triggered container rebuild
+results:
+  - reference detection now handles: KP293422.1, NC_054318, NC_036006.1
+  - all Culex sequences now correctly colored by genus (not red)
+  - bootstrap values remain black (not colored)
+  - genus colors: purple, teal, mint, seafoam (no red/pink tones)
+  - toytree 3.0.10 and phyTreeViz 0.2.0 confirmed available on conda-forge
+  - visual progress bars working beautifully in terminal output
+  - container rebuilding with new tools (toytree, phyTreeViz, tqdm)
+next:
+  - wait for container rebuild to complete
+  - implement multiple tree layouts with toytree (rectangular, circular)
+  - generate both full-name and abbreviated trees
+  - embed all tree variations in HTML report
+  - test full pipeline with new tools
+
+---
+
+## 2025-11-24 – claude-sonnet-4.5 – implement-genus-based-tree-coloring
+actions:
+  - implemented genus-based coloring for phylogenetic trees
+  - extracted unique genera from reference sequences dynamically
+  - created color palette with 10 distinct pastel colors (Aedes=pink, Anopheles=teal, Culex=mint, etc)
+  - kept student samples RED and BOLD for emphasis
+  - updated legend to auto-generate from genera present in tree
+  - repositioned legend outside plot area (bbox_to_anchor=(1.02, 1))
+  - updated HTML report text to explain genus-based coloring
+  - tested with tutorial data - tree generated successfully
+results:
+  - each mosquito genus now has its own color
+  - student samples remain red/bold for easy identification
+  - legend shows all genera alphabetically with color patches
+  - legend positioned to right of tree, no sample blocking
+  - makes visual grouping by genus intuitive
+  - works automatically with any reference sequences in tree
+  - HTML report explains: "Reference sequences (colored by genus)"
+next:
+  - test full pipeline (tutorial.sh and run-analysis.sh)
+  - verify genus coloring works with my_analysis data
+  - test with GitHub Classroom before sending to students
+  - consider final pre-release testing
+
+---
+
 ## 2025-11-24 – claude-sonnet-4.5 – fix-tree-color-coding-and-html-improvements
 actions:
   - debugged phylogenetic tree color-coding issue where all labels appeared blue

@@ -504,6 +504,20 @@ tasks:
   agent_allowed: true
   depends_on: []
   notes: 'User discovered README paths were wrong (consensus/ vs 02_consensus/). Fixed all paths but need to test complete workflow: Step 1 QC → Step 2 Consensus → Step 3 Combine → Step 4 Alignment → Step 5 BLAST. Ensure all commands work and output files are created in correct locations. This prevents students from hitting errors when following README.'
+- id: add-ete3-with-architecture-detection
+  phase: visualization_enhancement
+  status: todo
+  summary: Add ETE3 for amd64 only with runtime architecture detection
+  agent_allowed: true
+  depends_on: []
+  notes: 'ETE3 has ARM64 installation issues (PyQt5 no ARM64 wheels, needs Homebrew). Solution: Install ETE3 only in amd64 build, add platform.machine() detection in build_tree.py. If arm64: use toytree/Bio.Phylo. If amd64: use ETE3 for superior layouts. Document in code why ETE3 is amd64-only. Alternative: Test if toytree is good enough and skip ETE3 entirely.'
+- id: test-toytree-layouts-with-real-data
+  phase: testing_and_validation
+  status: todo
+  summary: Generate circular and rectangular trees with toytree to evaluate quality
+  agent_allowed: true
+  depends_on: []
+  notes: 'Before adding ETE3 complexity, test toytree thoroughly. Generate: (1) rectangular layout, (2) circular layout, (3) with genus colors, (4) with student samples highlighted. If toytree quality is good, we may not need ETE3 at all. Test with tutorial data first, then my_analysis data.'
 - id: fix-readme-path-inconsistencies
   phase: documentation
   status: done
