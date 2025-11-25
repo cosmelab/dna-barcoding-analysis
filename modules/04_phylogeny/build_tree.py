@@ -343,6 +343,9 @@ def visualize_tree_toytree(tree_file, output_dir):
 
         for layout_name, params in layouts.items():
             try:
+                # Adjust label positioning based on layout type
+                label_shift = '8px' if layout_name != 'unrooted' else '12px'
+
                 # Draw tree with bootstrap support values on branches
                 canvas, axes, mark = tree.draw(
                     layout=params['layout'],
@@ -355,7 +358,7 @@ def visualize_tree_toytree(tree_file, output_dir):
                         'font-size': '9px',  # Readable font size
                         'fill': '#666666',  # Gray for subtle visibility
                         'font-weight': 'normal',  # Normal weight
-                        '-toyplot-anchor-shift': '8px'  # Small offset for better positioning
+                        '-toyplot-anchor-shift': label_shift  # Layout-specific offset
                     },
                     edge_widths=2,
                     edge_colors='#666666',
