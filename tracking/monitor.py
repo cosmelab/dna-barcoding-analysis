@@ -16,6 +16,19 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Tuple, Any
 
+# Try to import rich for pretty output, fall back to plain text
+try:
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.table import Table
+    from rich.progress import Progress, BarColumn, TextColumn
+    from rich import print as rprint
+    RICH_AVAILABLE = True
+    console = Console()
+except ImportError:
+    RICH_AVAILABLE = False
+    console = None
+
 
 class TrackingMonitor:
     """Monitor and enforce tracking system v3.0 rules"""
@@ -208,6 +221,63 @@ class TrackingMonitor:
         """Print human-readable status report"""
         status = self.get_status()
 
+        if RICH_AVAILABLE:
+            self._print_status_rich(status)
+        else:
+            self._print_status_plain(status)
+
+    def _print_status_rich(self, status: Dict[str, Any]) -> None:
+        """Print status using rich formatting"""
+        # Header panel
+        console.print(Panel.fit(
+            "[bold cyan]TRACKING SYSTEM v3.0[/bold cyan]",
+            border_style="cyan"
+        ))
+
+        # Status table
+        table = Table(show_header=False, box=None, padding=(0, 2))
+        table.add_column("Key", style="dim")
+        table.add_column("Value")
+
+        table.add_row("Cycle", f"[bold]{status['cycle']}[/bold]")
+        table.add_row("Active tasks", str(status['active_tasks']))
+
+        # Progress bar for completed tasks
+        completed = status['completed_tasks']
+        progress_bar = "█" * completed + "░" * (10 - completed)
+        table.add_row("Completed", f"[green]{progress_bar}[/green] {completed}/10")
+
+        # Archive status with color
+        archive_color = "yellow" if status['archive_action'] == "archive" else "green"
+        table.add_row("Archive", f"[{archive_color}]{status['archive_action'].upper()}[/{archive_color}]")
+
+        if status['archive_reason']:
+            table.add_row("", f"[dim]→ {status['archive_reason']}[/dim]")
+
+        # Health status
+        health_color = "green" if status['health'] == "good" else "yellow"
+        table.add_row("Health", f"[{health_color}]{status['health'].upper()}[/{health_color}]")
+
+        console.print(table)
+
+        # Violations
+        if status['violations']:
+            console.print(f"\n[yellow]⚠ VIOLATIONS ({len(status['violations'])})[/yellow]")
+            for v in status['violations']:
+                items = v.get('files', v.get('directories', []))
+                console.print(f"  [red]•[/red] {v['type']}: {len(items)} items")
+                console.print(f"    [dim]Action: {v['action']}[/dim]")
+
+        # Consolidation warnings
+        if status['consolidation']['warnings']:
+            console.print(f"\n[yellow]⚠ CONSOLIDATION WARNINGS[/yellow]")
+            for w in status['consolidation']['warnings']:
+                console.print(f"  [yellow]•[/yellow] {w}")
+
+        console.print()
+
+    def _print_status_plain(self, status: Dict[str, Any]) -> None:
+        """Print status using plain text (fallback)"""
         print("\n" + "="*60)
         print("TRACKING SYSTEM v3.0 STATUS")
         print("="*60)

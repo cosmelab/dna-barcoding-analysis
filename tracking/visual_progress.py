@@ -9,6 +9,18 @@ import json
 from pathlib import Path
 from datetime import datetime
 
+# Try to import rich for pretty output
+try:
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.table import Table
+    from rich.text import Text
+    RICH_AVAILABLE = True
+    console = Console()
+except ImportError:
+    RICH_AVAILABLE = False
+    console = None
+
 PROJECT_ROOT = Path(__file__).parent.parent
 TRACKING_DIR = PROJECT_ROOT / "tracking"
 STATE_FILE = TRACKING_DIR / "master_state.json"
@@ -28,9 +40,111 @@ def load_state():
 def create_visual():
     state = load_state()
 
-    output = []
+    if RICH_AVAILABLE:
+        create_visual_rich(state)
+    else:
+        create_visual_plain(state)
 
+
+def create_visual_rich(state):
+    """Create visual progress with rich formatting"""
     # Header
+    console.print(Panel.fit(
+        "[bold cyan]DNA BARCODING ANALYSIS[/bold cyan]\n[dim]ENTM201L GitHub Classroom Repository[/dim]",
+        border_style="cyan"
+    ))
+
+    # Info table
+    info_table = Table(show_header=False, box=None, padding=(0, 2))
+    info_table.add_column("Key", style="dim")
+    info_table.add_column("Value")
+    info_table.add_row("Generated", datetime.now().strftime('%Y-%m-%d %H:%M'))
+    info_table.add_row("Cycle", str(state.get('cycle', 0)))
+    info_table.add_row("Last Updated", state.get('last_updated', 'Not initialized'))
+    console.print(info_table)
+
+    # Repository Purpose
+    console.print("\n[bold cyan]REPOSITORY PURPOSE[/bold cyan]")
+    console.print("[dim]─" * 60 + "[/dim]")
+    console.print("Teaching DNA barcoding bioinformatics for ENTM201L students")
+    console.print("Two pathways: GUI (beginner-friendly) and CLI (reproducible)")
+
+    # Analysis Pathways
+    console.print("\n[bold cyan]ANALYSIS PATHWAYS[/bold cyan]")
+    console.print("[dim]─" * 60 + "[/dim]")
+
+    pathway_table = Table(show_header=True, header_style="bold")
+    pathway_table.add_column("GUI Pathway", style="green")
+    pathway_table.add_column("CLI Pathway", style="blue")
+    pathway_table.add_row("Tracy web → QC", "Python scripts → QC")
+    pathway_table.add_row("UGENE/SeaView → Align", "MAFFT → Align")
+    pathway_table.add_row("Built-in trees", "IQ-TREE2 → Trees")
+    pathway_table.add_row("[dim]No Docker needed[/dim]", "[dim]Docker container[/dim]")
+    console.print(pathway_table)
+
+    # Module Status
+    console.print("\n[bold cyan]MODULE STATUS[/bold cyan]")
+    console.print("[dim]─" * 60 + "[/dim]")
+
+    modules = [
+        ("modules/01_quality_control", "Quality Control"),
+        ("modules/02_consensus", "Consensus Generation"),
+        ("modules/03_alignment", "Sequence Alignment"),
+        ("modules/04_phylogeny", "Phylogenetic Trees"),
+        ("modules/05_identification", "Species ID (BLAST)"),
+    ]
+
+    for module_path, module_name in modules:
+        module_dir = PROJECT_ROOT / module_path
+        if module_dir.exists():
+            console.print(f"  [green]✓[/green] {module_name}")
+        else:
+            console.print(f"  [dim]○[/dim] {module_name}")
+
+    # Active Tasks
+    active_tasks = state.get('active_tasks', [])
+    console.print("\n[bold cyan]ACTIVE TASKS[/bold cyan]")
+    console.print("[dim]─" * 60 + "[/dim]")
+
+    if active_tasks:
+        for task in active_tasks:
+            status_color = {'pending': 'yellow', 'in_progress': 'blue', 'blocked': 'red'}.get(task.get('status'), 'white')
+            priority = " [red][HIGH][/red]" if task.get('priority') == 'HIGH' else ""
+            console.print(f"  [{status_color}]●[/{status_color}] {task['task']}{priority}")
+    else:
+        console.print("  [green]✓[/green] No active tasks - ready for students!")
+
+    # Development Status
+    console.print("\n[bold cyan]STATUS[/bold cyan]")
+    console.print("[dim]─" * 60 + "[/dim]")
+    console.print("  [green]✓[/green] GitHub Classroom: Ready")
+    console.print("  [green]✓[/green] Docker container: Available")
+    console.print("  [green]✓[/green] All modules: Complete")
+
+    # Commands
+    console.print("\n[bold cyan]COMMANDS[/bold cyan]")
+    console.print("[dim]─" * 60 + "[/dim]")
+    console.print("  [dim]python3 tracking/monitor.py status[/dim]")
+    console.print("  [dim]python3 tracking/visual_progress.py[/dim]")
+    console.print()
+
+    # Also save plain text version
+    save_plain_output(state)
+
+
+def save_plain_output(state):
+    """Save plain text version to file"""
+    output = create_plain_output(state)
+    output_file = TRACKING_DIR / 'visual_progress.txt'
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_file, 'w') as f:
+        f.write('\n'.join(output))
+    console.print(f"[dim]Saved to: {output_file}[/dim]")
+
+
+def create_plain_output(state):
+    """Generate plain text output lines"""
+    output = []
     output.append("="*80)
     output.append("DNA BARCODING ANALYSIS - ENTM201L GITHUB CLASSROOM REPO")
     output.append("="*80)
@@ -38,119 +152,29 @@ def create_visual():
     output.append(f"Cycle: {state.get('cycle', 0)}")
     output.append(f"Last Updated: {state.get('last_updated', 'Not initialized')}")
     output.append("="*80)
-
-    # Repository Purpose
-    output.append("\n📚 REPOSITORY PURPOSE:")
-    output.append("-" * 80)
-    output.append("Teaching DNA barcoding bioinformatics for ENTM201L students")
-    output.append("Two pathways: GUI (beginner-friendly) and CLI (reproducible science)")
-    output.append("GitHub Classroom ready - students get individual repositories")
-
-    # Current Session Focus
-    session = state.get('current_session', {})
-    if session:
-        output.append("\n🎯 CURRENT FOCUS:")
-        output.append("-" * 80)
-        output.append(f"Session: {session.get('focus', 'Unknown')}")
-        output.append(f"Environment: {session.get('environment', 'Unknown')}")
-        output.append(f"Status: {session.get('user_status', 'Unknown')}")
-
-    # Analysis Pathways
-    output.append("\n🔬 ANALYSIS PATHWAYS:")
-    output.append("-" * 80)
-    output.append("GUI PATHWAY (Easiest - No command-line required):")
-    output.append("  • Tracy web interface → chromatogram QC")
-    output.append("  • UGENE or SeaView → alignment + phylogenetic trees")
-    output.append("  • No Docker required")
-    output.append("")
-    output.append("CLI PATHWAY (Reproducible - Learn bioinformatics):")
-    output.append("  • Tracy CLI → chromatogram QC")
-    output.append("  • MAFFT → sequence alignment")
-    output.append("  • IQ-TREE2 → phylogenetic trees")
-    output.append("  • ggtree/FigTree → tree visualization")
-    output.append("  • All in Docker container")
-
-    # Active Tasks
-    output.append("\n📋 ACTIVE TASKS:")
+    output.append("\nMODULE STATUS:")
     output.append("-" * 80)
 
-    active_tasks = state.get('active_tasks', [])
-    if active_tasks:
-        for task in active_tasks:
-            status_icon = {
-                'pending': '⏳',
-                'in_progress': '🔄',
-                'blocked': '🚫'
-            }.get(task.get('status', 'pending'), '❓')
-
-            priority_badge = ''
-            if task.get('priority') == 'HIGH':
-                priority_badge = ' [HIGH PRIORITY]'
-
-            output.append(f"{status_icon} {task['task']}{priority_badge}")
-            output.append(f"   ID: {task['id']}")
-            if task.get('description'):
-                output.append(f"   {task['description']}")
-            output.append("")
-    else:
-        output.append("✅ No active tasks - ready for students!")
-
-    # Module Status
-    output.append("\n📖 MODULE STATUS:")
-    output.append("-" * 80)
     modules = [
-        "00_introduction - Course overview and setup",
-        "01_linux_basics - Command-line fundamentals",
-        "02_python_basics - Python for bioinformatics",
-        "03_r_basics - R and data visualization",
-        "04_data - Sample sequencing data",
-        "05_quality_control - Sanger chromatogram QC",
-        "06_alignment - Multiple sequence alignment",
-        "07_phylogeny - Phylogenetic tree building",
-        "08_identification - Species identification"
+        ("modules/01_quality_control", "Quality Control"),
+        ("modules/02_consensus", "Consensus Generation"),
+        ("modules/03_alignment", "Sequence Alignment"),
+        ("modules/04_phylogeny", "Phylogenetic Trees"),
+        ("modules/05_identification", "Species ID (BLAST)"),
     ]
 
-    for module in modules:
-        module_dir = PROJECT_ROOT / module.split(' - ')[0]
-        if module_dir.exists():
-            output.append(f"  ✅ {module}")
-        else:
-            output.append(f"  ⏳ {module}")
+    for module_path, module_name in modules:
+        module_dir = PROJECT_ROOT / module_path
+        status = "✓" if module_dir.exists() else "○"
+        output.append(f"  {status} {module_name}")
 
-    # Completed This Cycle
-    completed = state.get('completed_this_cycle', [])
-    if completed:
-        output.append(f"\n✅ COMPLETED THIS CYCLE ({len(completed)} tasks):")
-        output.append("-" * 80)
-        for task in completed[-5:]:  # Show last 5
-            output.append(f"  • {task.get('task', 'Unknown')}")
-            if task.get('completed'):
-                completed_date = task['completed'].split('T')[0]
-                output.append(f"    Completed: {completed_date}")
-
-    # Development Status
-    output.append("\n🚧 DEVELOPMENT STATUS:")
-    output.append("-" * 80)
-    output.append("⚠️  Repository is in active development")
-    output.append("⚠️  Students: Do NOT run scripts yet")
-    output.append("✅ Expected ready: Week 8 (November 20, 2025)")
-    output.append("✅ GitHub Classroom integration: Ready")
-    output.append("✅ Docker container: Available")
-
-    # Key Resources
-    output.append("\n🔗 KEY RESOURCES:")
-    output.append("-" * 80)
-    output.append("  • Setup guide: ../entm201l-fall2025/setup/docker-installation.html")
-    output.append("  • Course website: http://138.23.14.176:8001/")
-    output.append("  • Container: cosmelab/entm201l:latest")
-    output.append("  • Tracy web QC: https://www.gear-genomics.com")
-
-    # Footer
     output.append("\n" + "="*80)
-    output.append("COMMANDS:")
-    output.append("  • View status: python3 tracking/monitor.py status")
-    output.append("  • Update progress: python3 tracking/visual_progress.py")
-    output.append("="*80)
+    return output
+
+
+def create_visual_plain(state):
+    """Create visual progress with plain text (fallback)"""
+    output = create_plain_output(state)
 
     # Write to file
     output_file = TRACKING_DIR / 'visual_progress.txt'
@@ -158,7 +182,7 @@ def create_visual():
     with open(output_file, 'w') as f:
         f.write('\n'.join(output))
 
-    # Also print to console
+    # Print to console
     print('\n'.join(output))
     print(f"\n✅ Visual progress saved to: {output_file}")
 

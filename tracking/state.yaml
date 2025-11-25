@@ -1,56 +1,36 @@
 project: dna-barcoding-analysis
-current_phase: pipeline_validation
-current_task: fix_tutorial_consensus_pipeline
-last_updated: '2025-11-25T11:10:00'
-active_jobs:
-  - fix_tutorial_consensus_step
-  - add_windows_wsl_documentation
-  - push_changes_to_repository
-blocking_issues:
-  - tutorial_consensus_not_generating_output
-target_ready_date: '2025-11-19'
+current_phase: deployment_ready
+current_task: github_classroom_testing
+last_updated: '2025-11-25T12:00:00'
+active_jobs: []
+blocking_issues: []
+target_ready_date: '2025-11-25'
 lab_context: Week 8 - Sanger sequencing analysis (students will analyze their PCR products from UC genomics)
 strategy: '5-step consensus workflow, interactive tutorial required, reference sequences for tree context, zero-coding-experience friendly'
 completed_today:
-  - Fixed NC_ accession detection bug (NC_054318, NC_036006.1)
-  - Added toytree 3.0.10 and phyTreeViz to container (ARM64 compatible)
-  - Implemented visual ASCII progress bars with animations
-  - Fixed README paths to match numbered directories (01_qc, 02_consensus, etc)
-  - Implemented genus-based tree coloring (11 distinct non-red colors)
-  - Simplified tree legend (removed redundant labels, positioned outside)
-  - Fixed ARM64 build issues (removed problematic cache mount)
-  - Successfully rebuilt container for both amd64 and arm64
-  - Verified toytree and phyTreeViz installed and working
-  - Added Docker login instructions to README prerequisites
-  - Tested toytree layouts (rectangular, circular, unrooted) - all working perfectly
-  - Implemented multi-layout tree generation in build_tree.py
-  - Added PDF export for all layouts (Adobe Illustrator compatible)
-  - Embedded all 4 tree layouts in HTML report (Bio.Phylo + 3 toytree)
-  - Added download links for PNG/SVG/PDF formats in HTML
-  - Cleaned up old test files (pycirclize, ete3, debug files)
-  - Removed test_toytree_layouts.py (integrated into build_tree.py)
+  - Added Windows/WSL Docker troubleshooting documentation
+  - Added tracking system disclaimer (simple YAML vs LangGraph+PostgreSQL)
+  - Removed results/ from git tracking (students generate their own)
+  - Moved trim_references_to_barcode.py to data/reference_sequences/
+  - Updated all documentation paths
+  - Added rich library to Dockerfile (micromamba, noarch for arm64/amd64)
+  - Updated tracking/monitor.py with rich terminal output
+  - Updated tracking/visual_progress.py with rich terminal output
 current_status:
   - Repository template READY for GitHub Classroom
-  - Auto-grading workflow deployed and functional
-  - All scripts tested with interactive prompts
-  - Documentation complete (README, github_classroom, start_here)
+  - All 5 pipeline modules complete and tested
+  - Multi-layout tree visualization working (4 layouts)
+  - Tree coloring system working (student samples red, genera colored)
   - Container publicly accessible (cosmelab/dna-barcoding-analysis:latest)
-  - No sensitive information in repository
-  - Naming conventions followed (only README.md in caps)
-  - 5-step workflow fully tested and working
-  - Multi-layout tree visualization fully implemented (4 layouts)
-  - Tree coloring system working correctly (student samples in red, genera in distinct colors)
-  - AWAITING: GitHub Classroom assignment creation by instructor
+  - Documentation complete (README, github_classroom, start_here)
+  - Windows/WSL Docker troubleshooting documented
+  - Rich library added for prettier terminal output
+  - READY FOR ANDRE TO TEST via GitHub Classroom
 pending_decisions:
   - Keep or hide tracking/ directory before public release
   - Create LICENSE file (README mentions MIT + CC BY 4.0)
-  - Remove student .ab1 files from data/student_sequences/
-  - Decide if we want to add tree abbreviation feature (optional)
 next_up:
-  - COMPLETED: Explore modern tree visualization options → toytree selected and implemented
-  - COMPLETED: Multiple tree layout options → 4 layouts (Bio.Phylo + 3 toytree)
-  - OPTIONAL: Implement name abbreviation system with full-name table
-  - TODO: Test all README commands end-to-end
-  - Optional: Create documentation website (D018)
-  - Optional: Test on Windows platform
-  - Ready: GitHub Classroom assignment creation by instructor
+  - Andre to test via GitHub Classroom
+  - Rebuild container with rich library
+  - Update pipeline modules to use rich for terminal output (optional)
+  - Create documentation website (optional)

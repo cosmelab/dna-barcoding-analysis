@@ -1,64 +1,17 @@
 ================================================================================
 DNA BARCODING ANALYSIS - ENTM201L GITHUB CLASSROOM REPO
 ================================================================================
-Generated: 2025-11-19 12:23
+Generated: 2025-11-25 11:58
 Cycle: 0
 Last Updated: 2025-11-19T12:00:00.000000+00:00
 ================================================================================
 
-📚 REPOSITORY PURPOSE:
+MODULE STATUS:
 --------------------------------------------------------------------------------
-Teaching DNA barcoding bioinformatics for ENTM201L students
-Two pathways: GUI (beginner-friendly) and CLI (reproducible science)
-GitHub Classroom ready - students get individual repositories
+  ✓ Quality Control
+  ✓ Consensus Generation
+  ✓ Sequence Alignment
+  ✓ Phylogenetic Trees
+  ✓ Species ID (BLAST)
 
-🔬 ANALYSIS PATHWAYS:
---------------------------------------------------------------------------------
-GUI PATHWAY (Easiest - No command-line required):
-  • Tracy web interface → chromatogram QC
-  • UGENE or SeaView → alignment + phylogenetic trees
-  • No Docker required
-
-CLI PATHWAY (Reproducible - Learn bioinformatics):
-  • Tracy CLI → chromatogram QC
-  • MAFFT → sequence alignment
-  • IQ-TREE2 → phylogenetic trees
-  • ggtree/FigTree → tree visualization
-  • All in Docker container
-
-📋 ACTIVE TASKS:
---------------------------------------------------------------------------------
-✅ No active tasks - ready for students!
-
-📖 MODULE STATUS:
---------------------------------------------------------------------------------
-  ⏳ 00_introduction - Course overview and setup
-  ⏳ 01_linux_basics - Command-line fundamentals
-  ⏳ 02_python_basics - Python for bioinformatics
-  ⏳ 03_r_basics - R and data visualization
-  ⏳ 04_data - Sample sequencing data
-  ⏳ 05_quality_control - Sanger chromatogram QC
-  ⏳ 06_alignment - Multiple sequence alignment
-  ⏳ 07_phylogeny - Phylogenetic tree building
-  ⏳ 08_identification - Species identification
-
-🚧 DEVELOPMENT STATUS:
---------------------------------------------------------------------------------
-⚠️  Repository is in active development
-⚠️  Students: Do NOT run scripts yet
-✅ Expected ready: Week 8 (November 20, 2025)
-✅ GitHub Classroom integration: Ready
-✅ Docker container: Available
-
-🔗 KEY RESOURCES:
---------------------------------------------------------------------------------
-  • Setup guide: ../entm201l-fall2025/setup/docker-installation.html
-  • Course website: http://138.23.14.176:8001/
-  • Container: cosmelab/entm201l:latest
-  • Tracy web QC: https://www.gear-genomics.com
-
-================================================================================
-COMMANDS:
-  • View status: python3 tracking/monitor.py status
-  • Update progress: python3 tracking/visual_progress.py
 ================================================================================
