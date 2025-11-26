@@ -1,0 +1,8 @@
+# Ignore everything not needed in the container
+*.md
+.git
+.github
+results/
+__pycache__/
+*.pyc
+.DS_Store

@@ -8,9 +8,11 @@ architecture.md
 github_classroom.md
 tracking/
 .tracking/
-container/
 .devcontainer/
 docs/student_ux_demo.md
+
+# Note: container/ is kept in git for GitHub Actions auto-build
+# Students don't need to interact with it
 
 # Python
 __pycache__/

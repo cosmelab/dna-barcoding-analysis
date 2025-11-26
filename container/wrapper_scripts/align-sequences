@@ -1,0 +1,16 @@
+#!/bin/bash
+# Sequence Alignment Only
+# Aligns FASTA sequences using MAFFT
+
+set -e
+
+INPUT_FASTA="${1:-/workspace/results/qc/passed_sequences.fasta}"
+OUTPUT_DIR="${2:-/workspace/results/alignment}"
+
+echo "Running Multiple Sequence Alignment..."
+python /workspace/modules/02_alignment/align_sequences.py \
+    "$INPUT_FASTA" \
+    "$OUTPUT_DIR"
+
+echo ""
+echo "Alignment Complete! Output: $OUTPUT_DIR/aligned_sequences.fasta"

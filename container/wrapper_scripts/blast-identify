@@ -1,0 +1,16 @@
+#!/bin/bash
+# Species Identification Only
+# BLASTs sequences against NCBI database
+
+set -e
+
+INPUT_FASTA="${1:-/workspace/results/qc/passed_sequences.fasta}"
+OUTPUT_DIR="${2:-/workspace/results/identification}"
+
+echo "Running BLAST Species Identification..."
+python /workspace/modules/04_identification/identify_species.py \
+    "$INPUT_FASTA" \
+    "$OUTPUT_DIR"
+
+echo ""
+echo "Identification Complete! Open: $OUTPUT_DIR/identification_report.html"
