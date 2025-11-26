@@ -2,6 +2,16 @@
 # The scripts create these directories automatically with os.makedirs()
 results/
 
+# Instructor-only materials (not for students)
+.instructor/
+architecture.md
+github_classroom.md
+tracking/
+.tracking/
+container/
+.devcontainer/
+docs/student_ux_demo.md
+
 # Python
 __pycache__/
 *.py[cod]

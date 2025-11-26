@@ -568,19 +568,6 @@ This workflow teaches you:
 
 ---
 
-## 🌐 Documentation Website
-
-A comprehensive documentation website is planned for future release, which will include:
-- Interactive setup guides
-- Step-by-step tutorials with screenshots
-- Detailed module documentation
-- Video walkthroughs
-- FAQ and troubleshooting guides
-
-For now, this README and the in-repo documentation provide everything you need to complete the analysis.
-
----
-
 ## 🔧 Running Individual Modules
 
 The pipeline has 5 modules that **must run sequentially** (each depends on the previous output):
@@ -672,17 +659,13 @@ This pipeline is **generic** and works with any Sanger sequencing data. You can 
 
 ---
 
-## 🔧 Development
-
-### For Instructors and Developers
+## 🔧 For Advanced Users
 
 This repository includes:
-- **Dev Container** configuration (`.devcontainer/`) for VS Code development
-- **Modular CSS** design system (`tracking/styles/`) for HTML reports
-- **Comprehensive tracking** (`tracking/`) for project management
-- **Multi-architecture** Docker container (amd64 + arm64)
-
-See `tracking/` directory for development documentation.
+- **Dev Container** configuration for VS Code development
+- **Multi-architecture** Docker container (amd64 + arm64) - works on Intel and Apple Silicon Macs
+- **Modular Python scripts** - each analysis step is a standalone module
+- **Customizable** - adapt for other organisms and barcode regions (see above)
 
 ---
 
