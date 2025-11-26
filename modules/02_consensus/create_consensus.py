@@ -241,9 +241,9 @@ def generate_html_report(output_dir, pairs, unpaired, consensus_seqs, stats):
     from pathlib import Path
 
     project_root = Path(__file__).parent.parent.parent
-    base_css = (project_root / "tracking/styles/base.css").read_text()
-    components_css = (project_root / "tracking/styles/components.css").read_text()
-    reports_css = (project_root / "tracking/styles/reports.css").read_text()
+    base_css = (project_root / "modules/styles/base.css").read_text()
+    components_css = (project_root / "modules/styles/components.css").read_text()
+    reports_css = (project_root / "modules/styles/reports.css").read_text()
 
     html = f"""<!DOCTYPE html>
 <html lang="en">

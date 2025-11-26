@@ -272,10 +272,10 @@ def generate_html_report(results, output_file):
 
     # Read CSS files and embed them
     project_root = Path(__file__).parent.parent.parent
-    base_css = (project_root / "tracking/styles/base.css").read_text()
-    components_css = (project_root / "tracking/styles/components.css").read_text()
-    reports_css = (project_root / "tracking/styles/reports.css").read_text()
-    chromatogram_css = (project_root / "tracking/styles/chromatogram.css").read_text()
+    base_css = (project_root / "modules/styles/base.css").read_text()
+    components_css = (project_root / "modules/styles/components.css").read_text()
+    reports_css = (project_root / "modules/styles/reports.css").read_text()
+    chromatogram_css = (project_root / "modules/styles/chromatogram.css").read_text()
 
     # Build HTML
     html = f"""<!DOCTYPE html>
