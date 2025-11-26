@@ -2,6 +2,29 @@
 
 ## For Students: 3 Simple Steps
 
+### ⚠️ WINDOWS USERS - Read This First!
+
+If you're on **Windows**, you need to install Git before starting. **Mac/Linux users can skip this section.**
+
+#### Install Git for Windows
+
+1. **Download Git:** https://git-scm.com/download/win
+2. **Run the installer** (Git-2.x.x-64-bit.exe)
+3. **IMPORTANT:** When asked "Adjusting your PATH environment", select:
+   - ✅ **"Git from the command line and also from 3rd-party software"**
+4. Accept all other defaults
+5. **Close and reopen VSCode completely** after installation
+
+**Verify Git is installed:**
+```powershell
+git --version
+```
+Expected output: `git version 2.x.x`
+
+**If you get an error:** Git is not installed correctly. Try again or ask for help.
+
+---
+
 ### STEP 0: Setup (one time only)
 
 **Complete these steps IN ORDER:**

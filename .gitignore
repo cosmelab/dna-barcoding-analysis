@@ -16,6 +16,7 @@ tracking/
 .tracking/
 .devcontainer/
 docs/student_ux_demo.md
+student_data_raw/
 
 # Note: container/ is kept in git for GitHub Actions auto-build
 # Students don't need to interact with it
