@@ -16,7 +16,15 @@
    docker pull cosmelab/dna-barcoding-analysis:latest
    ```
 
-4. **Get this repository:**
+4. **Get your assignment repository:**
+
+   **GitHub Classroom students:** Clone YOUR assignment repo (link from Canvas)
+   ```bash
+   git clone https://github.com/cosmelab/dna-barcoding-analysis-YOUR-GITHUB-USERNAME.git
+   cd dna-barcoding-analysis-YOUR-GITHUB-USERNAME
+   ```
+
+   **Or if using the template directly:**
    ```bash
    git clone https://github.com/cosmelab/dna-barcoding-analysis.git
    cd dna-barcoding-analysis
