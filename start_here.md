@@ -104,6 +104,62 @@ ls
 
 ---
 
+## 🎯 Two Ways to Run the Analysis
+
+You can run the analysis in two ways:
+
+### Option 1: Automated Scripts (RECOMMENDED for beginners)
+
+**Easy, one-command approach:**
+```bash
+./tutorial.sh        # Runs all 5 steps automatically
+./run-analysis.sh    # Runs all 5 steps on your data
+```
+
+**Pros:**
+- ✅ Simple - just one command
+- ✅ Everything runs automatically
+- ✅ Can't mess up the order
+
+**This is what most students should use!**
+
+### Option 2: Run Each Module Separately (For learning)
+
+**If you want to understand what's happening, you can run each step individually.**
+
+The scripts use commands like this:
+```bash
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest \
+  python3 modules/01_quality_control/qc_chromatograms.py \
+  data/student_sequences/ \
+  results/my_analysis/qc/ \
+  --open
+```
+
+**What does this mean?**
+- `docker run` = Run the Docker container
+- `-v $(pwd):/workspace` = Share your current folder with Docker
+- `python3 modules/01_quality_control/qc_chromatograms.py` = Run the QC Python script
+- `data/student_sequences/` = Input: where your .ab1 files are
+- `results/my_analysis/qc/` = Output: where results go
+- `--open` = Automatically open the HTML report
+
+**All individual commands are in `assignment.md` if you want to run steps one by one.**
+
+**Pros:**
+- ✅ Understand each step
+- ✅ Can re-run just one step if needed
+- ✅ See exactly what's happening
+
+**Cons:**
+- ❌ More typing
+- ❌ Easy to miss a step or mess up the order
+
+**For this assignment, we recommend using the automated scripts (Option 1).** But if you're curious about how things work, check out `assignment.md` for the individual commands!
+
+---
+
 ### OPTIONAL: Interactive Terminal (Advanced)
 
 **Want a fancy terminal with colorful output?** The container includes a beautiful Zsh shell setup!

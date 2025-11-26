@@ -48,6 +48,24 @@ The dataset includes:
 - Reverse reads (sample names ending in R)
 - Example: AT-HV1F and AT-HV1R are a pair
 
+---
+
+### 💡 How to Run the Analysis
+
+**OPTION 1 (RECOMMENDED): Use the automated script**
+```bash
+./run-analysis.sh
+```
+This runs all 6 steps below automatically. **This is the easiest way!**
+
+**OPTION 2: Run each step individually (shown below)**
+
+The commands below show you what happens in each step. You can run them one by one if you want to understand the process better, or if you need to re-run just one step.
+
+**These commands run in your VSCode terminal on your computer** - Docker is called automatically.
+
+---
+
 ### Step 1: Quality Control (10 points)
 
 Check which sequences are good enough to use:
