@@ -148,6 +148,8 @@ jobs:
 
     - name: Grade Assignment Answers
       id: grading
+      env:
+        ANSWER_KEY: ${{ secrets.ANSWER_KEY_JSON }}
       run: |
         echo "Grading assignment answers..."
 
@@ -157,9 +159,15 @@ jobs:
           exit 0
         fi
 
+        # Create answer key from secret
+        echo "$ANSWER_KEY" > /tmp/answer_key.json
+
         # Run grading script
-        python3 .github/grading/grade_answers.py answers.json .github/grading/answer_key.json
+        python3 .github/grading/grade_answers.py answers.json /tmp/answer_key.json
         GRADE_EXIT_CODE=$?
+
+        # Clean up answer key
+        rm /tmp/answer_key.json
 
         if [ $GRADE_EXIT_CODE -eq 0 ]; then
           echo "answers_graded=pass" >> $GITHUB_OUTPUT
