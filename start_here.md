@@ -84,12 +84,9 @@ This teaches you all 5 steps using example data. **DO NOT SKIP THIS!**
 
 ---
 
-### STEP 2: Analyze Your Own Mosquito Sequences
+### STEP 2: Analyze the Class Mosquito Sequences
 
-**Put your .ab1 files in the data folder:**
-```bash
-cp ~/Desktop/*.ab1 data/student_sequences/
-```
+**Important:** Everyone analyzes the **same class dataset**. The .ab1 files are already in `data/student_sequences/`
 
 **Run the complete analysis:**
 ```bash
@@ -107,23 +104,49 @@ Your results will be in: `results/my_analysis/`
 
 ---
 
-### STEP 3: Fill Out Assignment
+### STEP 3: Answer Assignment Questions
 
-Open these files and answer the questions in `assignment.md`:
+**Run the interactive question script:**
+```bash
+python3 answer_assignment.py
+```
 
-- `results/my_analysis/01_qc/qc_report.html` - How many sequences passed?
-- `results/my_analysis/04_phylogeny/tree.png` - What species cluster together?
-- `results/my_analysis/05_blast/identification_report.html` - What species did you find?
+This script will:
+- Guide you through your analysis results
+- Ask questions about QC, BLAST, and phylogeny
+- Save your answers to `answers.json`
+
+It's interactive and easy - just follow the prompts!
+
+---
+
+### STEP 4: Submit to GitHub
+
+**Commit and push your work:**
+```bash
+git add answers.json results/
+git commit -m "Complete DNA barcoding analysis"
+git push origin main
+```
+
+**Check auto-grading:**
+1. Go to your GitHub repository
+2. Click the "Actions" tab
+3. Look for ✅ (passed) or ❌ (failed)
+4. If failed, click on it to see feedback
 
 ---
 
 ## That's It!
 
-**The workflow in 3 commands:**
+**The complete workflow:**
 ```bash
-./tutorial.sh              # Learn (15 min)
-./run-analysis.sh          # Analyze your data (5 min)
-# Fill out assignment.md
+./tutorial.sh              # STEP 1: Learn (15 min)
+./run-analysis.sh          # STEP 2: Analyze class data (5 min)
+python3 answer_assignment.py  # STEP 3: Answer questions (10 min)
+git add answers.json results/
+git commit -m "Complete assignment"
+git push origin main       # STEP 4: Submit (auto-graded!)
 ```
 
 **Need help?**

@@ -40,10 +40,16 @@ See **[start_here.md](start_here.md)** for the complete beginner's guide.
 # STEP 1: Learn with test data (15 min)
 ./tutorial.sh
 
-# STEP 2: Analyze YOUR mosquito sequences (5 min)
+# STEP 2: Analyze the class mosquito sequences (5 min)
 ./run-analysis.sh
 
-# STEP 3: Fill out assignment.md
+# STEP 3: Answer questions interactively (10 min)
+python3 answer_assignment.py
+
+# STEP 4: Submit to GitHub (auto-graded!)
+git add answers.json results/
+git commit -m "Complete assignment"
+git push origin main
 ```
 
 ### For Instructors
