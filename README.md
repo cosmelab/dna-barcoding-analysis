@@ -410,6 +410,98 @@ If you use this pipeline in your research or teaching, please cite:
 
 ---
 
+## 👨‍💻 For Developers & Advanced Users
+
+### GitHub CLI Authentication
+
+**Need to interact with GitHub Packages or use `gh` CLI?** Set up authentication:
+
+#### 1. Create GitHub Personal Access Token
+
+Go to: https://github.com/settings/tokens/new
+
+**Required scopes:**
+- ✅ `repo` - Full control of repositories
+- ✅ `read:packages` - Download packages
+- ✅ `write:packages` - Upload packages
+
+#### 2. Store Token Securely
+
+```bash
+# Create secure token file (only you can read it)
+touch ~/.github_token
+chmod 600 ~/.github_token
+
+# Add your token (replace YOUR_TOKEN with actual token)
+echo "export GITHUB_TOKEN=YOUR_TOKEN" > ~/.github_token
+
+# Load in shell profiles
+echo 'source ~/.github_token 2>/dev/null' >> ~/.zshrc
+echo 'source ~/.github_token 2>/dev/null' >> ~/.bashrc
+
+# Reload shell
+source ~/.zshrc
+```
+
+#### 3. Verify Setup
+
+```bash
+# Check if token is loaded
+echo $GITHUB_TOKEN
+
+# Test GitHub CLI
+gh api /user --jq '.login'
+# Should print your username
+```
+
+#### 4. Use with Docker
+
+```bash
+# Login to GitHub Container Registry
+echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_USERNAME --password-stdin
+
+# Pull from GitHub Packages
+docker pull ghcr.io/cosmelab/dna-barcoding-analysis:latest
+```
+
+**Full documentation:** [GitHub CLI Setup Guide](docs/github_cli_setup.md)
+
+### Container Development
+
+**Modify the Docker container:**
+
+```bash
+# Edit container/Dockerfile
+vim container/Dockerfile
+
+# Build locally (test before pushing)
+cd container
+./build.sh
+
+# Push to main branch → GitHub Actions auto-builds and publishes
+git add container/Dockerfile
+git commit -m "Update container"
+git push origin main
+```
+
+**Auto-publish to:**
+- Docker Hub: `docker.io/cosmelab/dna-barcoding-analysis:latest`
+- GitHub Packages: `ghcr.io/cosmelab/dna-barcoding-analysis:latest`
+
+### Contributing
+
+Want to improve the pipeline or add features?
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes
+4. Test with both `./tutorial.sh` and `./run-analysis.sh`
+5. Commit: `git commit -m "Add amazing feature"`
+6. Push: `git push origin feature/amazing-feature`
+7. Open a Pull Request
+
+---
+
 ## 📜 License
 
 <div align="center">
