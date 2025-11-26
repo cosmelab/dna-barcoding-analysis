@@ -111,12 +111,14 @@ Your results will be in: `results/my_analysis/`
 python3 answer_assignment.py
 ```
 
-This script will:
-- Guide you through your analysis results
-- Ask questions about QC, BLAST, and phylogeny
-- Save your answers to `answers.json`
+**How it works:**
+1. Script tells you which HTML file to open (e.g., QC report, BLAST results, tree)
+2. You open the file and look at the results
+3. Script asks you questions about what you see
+4. You type your answers
+5. Script saves everything to `answers.json`
 
-It's interactive and easy - just follow the prompts!
+**This is interactive!** The script guides you step-by-step through your results. Just follow the prompts and answer based on what you see in the HTML reports.
 
 ---
 
