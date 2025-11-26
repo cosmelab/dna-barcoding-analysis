@@ -6,17 +6,29 @@
 
 1. **Make sure Docker Desktop is running**
 
-2. **Login to Docker:**
+2. **Login to Docker Hub:**
    ```bash
    docker login
    ```
+   Enter your Docker Hub username and password.
 
-3. **Pull the container:**
+3. **Login to GitHub (for private repos):**
+
+   **Option A - GitHub CLI (easiest):**
+   ```bash
+   gh auth login
+   ```
+   Follow the prompts to authenticate via browser.
+
+   **Option B - SSH key (if already set up):**
+   Use the SSH clone URL instead of HTTPS.
+
+4. **Pull the container:**
    ```bash
    docker pull cosmelab/dna-barcoding-analysis:latest
    ```
 
-4. **Get your assignment repository:**
+5. **Get your assignment repository:**
 
    **GitHub Classroom students:** Clone YOUR assignment repo (link from Canvas)
    ```bash
