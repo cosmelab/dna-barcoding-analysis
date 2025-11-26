@@ -4,44 +4,103 @@
 
 ### STEP 0: Setup (one time only)
 
-1. **Make sure Docker Desktop is running**
+**Complete these steps IN ORDER:**
 
-2. **Login to Docker Hub:**
-   ```bash
-   docker login
-   ```
-   Enter your Docker Hub username and password.
+#### 1. Open VSCode
 
-3. **Pull the container:**
-   ```bash
-   docker pull cosmelab/dna-barcoding-analysis:latest
-   ```
+Open Visual Studio Code on your computer (Mac or Windows).
 
-4. **Get your assignment repository:**
+#### 2. Open Terminal in VSCode
 
-   **GitHub Classroom students - IMPORTANT:**
+- **Mac:** Press `Control + ~` (tilde) or go to Terminal → New Terminal
+- **Windows:** Press `Ctrl + ~` or go to Terminal → New Terminal
 
-   a. **Click the assignment link from Canvas**
+You should see a terminal window at the bottom of VSCode.
 
-   b. **Accept the assignment** - this creates YOUR personal repo
+#### 3. Navigate to Where You Want the Project
 
-   c. **Refresh the page** to see your new repository
+```bash
+# Example: Go to your Documents folder
+cd ~/Documents
 
-   d. **Copy the clone URL** from the green Code button
+# Or create a course folder first
+mkdir -p ~/Documents/ENTM201L
+cd ~/Documents/ENTM201L
+```
 
-   e. **Clone your repo:**
+#### 4. Check Docker is Running
+
+**IMPORTANT:** Make sure Docker Desktop is running BEFORE continuing!
+
+```bash
+# Check Docker is installed and running
+docker --version
+```
+
+**Expected output:** `Docker version 24.x.x` or similar
+
+**If you get an error:**
+- Open Docker Desktop application
+- Wait for it to fully start (whale icon stops animating)
+- Try `docker --version` again
+
+#### 5. Login to Docker Hub
+
+```bash
+docker login
+```
+
+Enter your Docker Hub username and password when prompted.
+
+**Expected output:** `Login Succeeded`
+
+#### 6. Pull the Analysis Container
+
+```bash
+docker pull cosmelab/dna-barcoding-analysis:latest
+```
+
+This downloads the container (~2.5GB). Wait for it to complete.
+
+#### 7. Get Your Assignment Repository
+
+**GitHub Classroom students - IMPORTANT:**
+
+a. **Click the assignment link from Canvas**
+
+b. **Accept the assignment** - this creates YOUR personal repo
+
+c. **Refresh the page** to see your new repository
+
+d. **Copy the clone URL** from the green Code button
+
+e. **Clone your repo in the terminal:**
    ```bash
    git clone YOUR-REPO-URL
    cd dna-barcoding-analysis-YOUR-GITHUB-USERNAME
    ```
 
+   Replace `YOUR-REPO-URL` with the URL you copied!
+   Replace `YOUR-GITHUB-USERNAME` with your actual GitHub username!
+
    Git will automatically prompt you to login to GitHub.
 
-   **Or if using the template directly (not GitHub Classroom):**
-   ```bash
-   git clone https://github.com/cosmelab/dna-barcoding-analysis.git
-   cd dna-barcoding-analysis
-   ```
+**Or if using the template directly (not GitHub Classroom):**
+```bash
+git clone https://github.com/cosmelab/dna-barcoding-analysis.git
+cd dna-barcoding-analysis
+```
+
+#### 8. Verify You're in the Right Place
+
+```bash
+# Check you're in the project directory
+ls
+```
+
+**You should see:** `tutorial.sh`, `run-analysis.sh`, `data/`, `modules/`, etc.
+
+**Now you're ready to run the analysis!**
 
 ---
 
@@ -70,6 +129,25 @@ docker run --rm -it -v $(pwd):/workspace -w /workspace \
 - **Colorful output** - File types shown with different colors and icons
 
 **For beginners:** Just use `./tutorial.sh` and `./run-analysis.sh` normally - they work perfectly without the fancy terminal!
+
+---
+
+## ⚠️ IMPORTANT: Where to Run Commands
+
+**Run all commands ON YOUR COMPUTER (Mac/Windows/Linux), NOT inside Docker!**
+
+✅ **CORRECT:**
+- Open terminal/VSCode on your Mac or Windows computer
+- Navigate to your project folder
+- Run `./tutorial.sh` from there
+- The script automatically uses Docker for you
+
+❌ **WRONG:**
+- Don't try to run commands inside the Docker container
+- Don't manually start Docker and work inside it
+- The scripts handle Docker automatically!
+
+**Think of Docker like a tool:** The scripts call Docker for you. You don't need to "go inside" Docker.
 
 ---
 
