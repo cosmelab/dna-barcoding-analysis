@@ -416,14 +416,35 @@ If you use this pipeline in your research or teaching, please cite:
 
 **Need to interact with GitHub Packages or use `gh` CLI?** Set up authentication:
 
-#### 1. Create GitHub Personal Access Token
+#### 1. Create GitHub Personal Access Token (Classic)
 
-Go to: https://github.com/settings/tokens/new
+**Important:** Use a **classic token** (not fine-grained) for full API access.
 
-**Required scopes:**
-- ✅ `repo` - Full control of repositories
-- ✅ `read:packages` - Download packages
-- ✅ `write:packages` - Upload packages
+**Go to:** https://github.com/settings/tokens/new
+
+**Configure your token:**
+
+**Note:** Give it a descriptive name (e.g., `gh-cli-packages`)
+
+**Expiration:** Choose 90 days or custom (tokens expire for security)
+
+**Select scopes** (check these boxes):
+
+- ✅ **`repo`** (Full control of private repositories)
+  - This automatically checks all sub-scopes under `repo`
+
+- ✅ **`read:packages`** (Download packages from GitHub Package Registry)
+
+- ✅ **`write:packages`** (Upload packages to GitHub Package Registry)
+
+- ✅ **`delete:packages`** (Delete packages - optional, for cleanup)
+
+**Click "Generate token"** at the bottom
+
+**⚠️ IMPORTANT:** Copy the token immediately! You won't see it again.
+
+**Token format:** Starts with `ghp_` followed by 36 characters
+- Example: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
 #### 2. Store Token Securely
 
