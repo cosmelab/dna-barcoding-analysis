@@ -36,6 +36,8 @@ Instructor        Luciano Cosme, Department of Entomology
 
 See **[start_here.md](start_here.md)** for the complete beginner's guide.
 
+**IMPORTANT:** Run these commands **on your computer** (Mac/Windows/Linux), NOT inside Docker. The scripts automatically use Docker for you.
+
 ```bash
 # STEP 1: Learn with test data (15 min)
 ./tutorial.sh
