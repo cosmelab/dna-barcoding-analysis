@@ -2,6 +2,34 @@
 
 ## For Students: 3 Simple Steps
 
+### OPTIONAL: Interactive Terminal (Advanced)
+
+**Want a fancy terminal with colorful output?** The container includes a beautiful Zsh shell setup!
+
+Instead of running `./tutorial.sh` directly, you can run commands inside the container interactively:
+
+```bash
+docker run --rm -it -v $(pwd):/workspace -w /workspace \
+  cosmelab/dna-barcoding-analysis:latest zsh
+```
+
+**Inside the container, try these commands:**
+- `ls` - Colorful file listings with icons
+- `ll` - Detailed view with file sizes, dates, and git status
+- `lt` - Tree view of directories
+- `./tutorial.sh` - Run the tutorial
+- `exit` - Leave the container
+
+**What makes it fancy?**
+- **Zsh** - Modern shell with smart tab completion
+- **Dracula theme** - Professional dark color scheme
+- **Git integration** - See git status in your prompt
+- **Colorful output** - File types shown with different colors and icons
+
+**For beginners:** Just use `./tutorial.sh` and `./run-analysis.sh` normally - they work perfectly without the fancy terminal!
+
+---
+
 ### STEP 0: Setup (one time only)
 
 1. **Make sure Docker Desktop is running**
