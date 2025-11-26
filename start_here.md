@@ -19,15 +19,25 @@
 
 4. **Get your assignment repository:**
 
-   **GitHub Classroom students:** Clone YOUR assignment repo (link from Canvas)
+   **GitHub Classroom students - IMPORTANT:**
+
+   a. **Click the assignment link from Canvas**
+
+   b. **Accept the assignment** - this creates YOUR personal repo
+
+   c. **Refresh the page** to see your new repository
+
+   d. **Copy the clone URL** from the green Code button
+
+   e. **Clone your repo:**
    ```bash
-   git clone https://github.com/cosmelab/dna-barcoding-analysis-YOUR-GITHUB-USERNAME.git
+   git clone YOUR-REPO-URL
    cd dna-barcoding-analysis-YOUR-GITHUB-USERNAME
    ```
 
-   **Note:** Git will automatically prompt you to login to GitHub when cloning the private repo.
+   Git will automatically prompt you to login to GitHub.
 
-   **Or if using the template directly:**
+   **Or if using the template directly (not GitHub Classroom):**
    ```bash
    git clone https://github.com/cosmelab/dna-barcoding-analysis.git
    cd dna-barcoding-analysis
