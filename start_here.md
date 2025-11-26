@@ -2,6 +2,28 @@
 
 ## For Students: 3 Simple Steps
 
+### STEP 0: Setup (one time only)
+
+1. **Make sure Docker Desktop is running**
+
+2. **Login to Docker:**
+   ```bash
+   docker login
+   ```
+
+3. **Pull the container:**
+   ```bash
+   docker pull cosmelab/dna-barcoding-analysis:latest
+   ```
+
+4. **Get this repository:**
+   ```bash
+   git clone https://github.com/cosmelab/dna-barcoding-analysis.git
+   cd dna-barcoding-analysis
+   ```
+
+---
+
 ### OPTIONAL: Interactive Terminal (Advanced)
 
 **Want a fancy terminal with colorful output?** The container includes a beautiful Zsh shell setup!
@@ -27,28 +49,6 @@ docker run --rm -it -v $(pwd):/workspace -w /workspace \
 - **Colorful output** - File types shown with different colors and icons
 
 **For beginners:** Just use `./tutorial.sh` and `./run-analysis.sh` normally - they work perfectly without the fancy terminal!
-
----
-
-### STEP 0: Setup (one time only)
-
-1. **Make sure Docker Desktop is running**
-
-2. **Login to Docker:**
-   ```bash
-   docker login
-   ```
-
-3. **Pull the container:**
-   ```bash
-   docker pull cosmelab/dna-barcoding-analysis:latest
-   ```
-
-4. **Get this repository:**
-   ```bash
-   git clone https://github.com/cosmelab/dna-barcoding-analysis.git
-   cd dna-barcoding-analysis
-   ```
 
 ---
 
