@@ -436,6 +436,8 @@ If you use this pipeline in your research or teaching, please cite:
 - **ENTM201L Students** (Fall 2025)
 - **Hoque et al. 2022** for Southern California mosquito COI sequences
 - **Open-source developers**: BioPython, MAFFT, IQ-TREE, BLAST+, toytree teams
+- **GitHub** for hosting and GitHub Classroom infrastructure
+- **Docker Hub** for container distribution
 
 ---
 
