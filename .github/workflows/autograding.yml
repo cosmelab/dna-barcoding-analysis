@@ -15,11 +15,54 @@ jobs:
   check-completion:
     runs-on: ubuntu-latest
 
+    env:
+      # CONFIGURE DEADLINE HERE (Format: YYYY-MM-DD HH:MM:SS UTC)
+      # December 4, 2025 at 11:59 PM PST = December 5, 2025 at 07:59 AM UTC
+      ASSIGNMENT_DEADLINE: "2025-12-05 07:59:00"
+      # Set to 'true' to enforce deadline (reject late submissions)
+      # Set to 'false' to allow late submissions but mark them
+      STRICT_DEADLINE: "false"
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         lfs: true
+
+    - name: Check Deadline
+      id: deadline
+      run: |
+        echo "Checking submission deadline..."
+
+        # Get current UTC time
+        CURRENT_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
+        DEADLINE="${ASSIGNMENT_DEADLINE}"
+
+        echo "Current time (UTC): $CURRENT_TIME"
+        echo "Deadline (UTC):     $DEADLINE"
+
+        # Convert to epoch for comparison
+        CURRENT_EPOCH=$(date -d "$CURRENT_TIME" +%s 2>/dev/null || date -j -f "%Y-%m-%d %H:%M:%S" "$CURRENT_TIME" +%s)
+        DEADLINE_EPOCH=$(date -d "$DEADLINE" +%s 2>/dev/null || date -j -f "%Y-%m-%d %H:%M:%S" "$DEADLINE" +%s)
+
+        if [ $CURRENT_EPOCH -gt $DEADLINE_EPOCH ]; then
+          HOURS_LATE=$(( ($CURRENT_EPOCH - $DEADLINE_EPOCH) / 3600 ))
+          echo "⚠️  LATE SUBMISSION: ${HOURS_LATE} hours after deadline"
+          echo "is_late=true" >> $GITHUB_OUTPUT
+          echo "hours_late=$HOURS_LATE" >> $GITHUB_OUTPUT
+
+          if [ "$STRICT_DEADLINE" = "true" ]; then
+            echo "❌ STRICT DEADLINE ENFORCED - Late submissions not accepted"
+            echo "Please contact your instructor about late submission policy."
+            exit 1
+          else
+            echo "⚠️  Proceeding with grading (late submission will be noted)"
+          fi
+        else
+          echo "✅ Submitted on time"
+          echo "is_late=false" >> $GITHUB_OUTPUT
+          echo "hours_late=0" >> $GITHUB_OUTPUT
+        fi
 
     - name: Check Tutorial Completion
       id: tutorial
@@ -105,6 +148,24 @@ jobs:
     - name: Generate Summary Report
       run: |
         echo "## 📊 Assignment Completion Report" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Deadline status
+        IS_LATE="${{ steps.deadline.outputs.is_late }}"
+        HOURS_LATE="${{ steps.deadline.outputs.hours_late }}"
+
+        if [ "$IS_LATE" = "true" ]; then
+          echo "### ⚠️ Submission Status: LATE" >> $GITHUB_STEP_SUMMARY
+          echo "Submitted **${HOURS_LATE} hours** after the deadline." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note:** Late submissions may be subject to grade penalties per course policy." >> $GITHUB_STEP_SUMMARY
+        else
+          echo "### ✅ Submission Status: On Time" >> $GITHUB_STEP_SUMMARY
+          echo "Submitted before the deadline (December 4, 2025 at 11:59 PM PST)." >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
 
         # Tutorial status
