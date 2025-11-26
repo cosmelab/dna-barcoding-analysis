@@ -18,7 +18,7 @@ By the end of this lab, you will:
 
 ## ⚠️ STEP 0: Complete the Tutorial FIRST (REQUIRED)
 
-**Before analyzing your own data, you MUST complete the interactive tutorial:**
+**Before analyzing the class data, you MUST complete the interactive tutorial:**
 
 ```bash
 ./tutorial.sh
@@ -37,11 +37,13 @@ By the end of this lab, you will:
 
 ## Part 1: Run the Analysis (60 points)
 
-### Your Data
+### Class Data
 
-Your `.ab1` chromatogram files are in: `data/student_sequences/`
+**Important:** Everyone will analyze the **same class dataset**. These are the pooled sequences from all students this semester. Sample names are initials only.
 
-You should have:
+The `.ab1` chromatogram files are in: `data/student_sequences/`
+
+The dataset includes:
 - Forward reads (sample names ending in F)
 - Reverse reads (sample names ending in R)
 - Example: AT-HV1F and AT-HV1R are a pair
@@ -81,7 +83,7 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
 
 ### Step 3: Combine with Reference Sequences (5 points)
 
-Add your consensus sequences to the database of known SoCal mosquitoes:
+Add the class consensus sequences to the database of known SoCal mosquitoes:
 
 ```bash
 cat results/my_analysis/consensus/consensus_sequences.fasta \
@@ -89,7 +91,7 @@ cat results/my_analysis/consensus/consensus_sequences.fasta \
     > results/my_analysis/consensus/combined_with_references.fasta
 ```
 
-This creates a file with YOUR sequences + 52 reference sequences.
+This creates a file with the CLASS sequences + 52 reference sequences.
 
 ### Step 4: Alignment (10 points)
 
@@ -133,7 +135,7 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
 
 ## Part 2: Results Table (20 points)
 
-Fill in this table with YOUR BLAST results:
+Fill in this table with the BLAST results for the class dataset:
 
 | Sample | Species Identified | % Identity | Common Name |
 |--------|-------------------|------------|-------------|
@@ -154,12 +156,15 @@ Fill in this table with YOUR BLAST results:
 
 ### Question 1: Quality Control (5 points)
 
-**a)** How many of your 30 sequences (.ab1 files) passed QC?
+**a)** How many of the 30 class sequences (.ab1 files) passed QC?
 **b)** How many samples had BOTH forward AND reverse reads pass?
 **c)** Why is it important to have both F and R reads?
 
 **Your answer:**
 ```
+a)
+b)
+c)
 
 
 
@@ -168,14 +173,17 @@ Fill in this table with YOUR BLAST results:
 
 ### Question 2: Phylogenetic Tree (7 points)
 
-Look at your phylogenetic tree (`results/my_analysis/phylogeny/tree.png`).
+Look at the phylogenetic tree (`results/my_analysis/phylogeny/tree.png`).
 
-**a)** Do your samples cluster together, or are they spread across different parts of the tree?
-**b)** Which reference species are your samples most closely related to?
-**c)** What does this tell you about mosquito diversity in your sampling locations?
+**a)** Do the class samples cluster together, or are they spread across different parts of the tree?
+**b)** Which reference species are the class samples most closely related to?
+**c)** What does this tell you about mosquito diversity in the class sampling locations?
 
 **Your answer:**
 ```
+a)
+b)
+c)
 
 
 
@@ -184,13 +192,17 @@ Look at your phylogenetic tree (`results/my_analysis/phylogeny/tree.png`).
 
 ### Question 3: Species Identification (8 points)
 
-**a)** What mosquito species did you identify? List all unique species found.
-**b)** Do your BLAST results (% identity) agree with where samples clustered on the tree?
+**a)** What mosquito species did the class identify? List all unique species found.
+**b)** Do the BLAST results (% identity) agree with where samples clustered on the tree?
 **c)** Are these species known to occur in Southern California? (You may need to Google this!)
-**d)** How confident are you in your species identifications? (Consider % identity scores)
+**d)** How confident are you in the species identifications? (Consider % identity scores)
 
 **Your answer:**
 ```
+a)
+b)
+c)
+d)
 
 
 
@@ -225,11 +237,12 @@ git push origin main
 - ✅ Tutorial completed (`results/tutorial/` has all reports)
 - ✅ Analysis completed (`results/my_analysis/` has all reports)
 - ✅ Assignment file exists (`assignment.md`)
+- ✅ Answers are correct (since everyone has the same data, answers should match!)
 
-**This does NOT grade your answers!** Your instructor will review your:
-- Species identifications (BLAST results)
-- Tree interpretation (phylogeny)
-- Written answers (questions below)
+**Auto-grading checks your:**
+- Species identifications (BLAST results table)
+- QC statistics (number of sequences that passed)
+- Written answers (keyword matching for concepts)
 
 ---
 
