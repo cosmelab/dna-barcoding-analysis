@@ -275,21 +275,19 @@ Upon completing this workflow, students will be able to:
 
 ## Adaptable for Other Projects
 
-This pipeline is generic — use it for any Sanger sequencing project.
+**Current implementation:** COI barcoding for mosquito identification
 
-### Different Organisms
+**Potential adaptations:** This pipeline could be modified for other Sanger sequencing projects by replacing reference sequences and .ab1 files. The workflow (QC → Consensus → Alignment → Tree → BLAST) works for any organism with GenBank data.
 
-- Insects, plants, fungi, bacteria, fish, mammals
-- Any organism with reference sequences in GenBank
+### Possible Barcode Regions
 
-### Different Barcode Regions
-
-- **COI** (animals) — current default
+Examples of what this pipeline could be adapted for:
 - **ITS** (fungi)
 - **rbcL, matK** (plants)
 - **16S rRNA** (bacteria)
+- **COI** (other animals)
 
-### How to Customize
+### How to Adapt
 
 ```bash
 # 1. Replace reference sequences
@@ -303,7 +301,7 @@ cp ~/my_chromatograms/*.ab1 data/student_sequences/
 ./run-analysis.sh
 ```
 
-BLAST automatically searches NCBI for any organism — species ID works for everything.
+BLAST automatically searches NCBI for any organism.
 
 ---
 
