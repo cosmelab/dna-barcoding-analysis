@@ -299,7 +299,7 @@ git push origin main
 2. **Read the visual workflow**: `docs/pipeline_workflow.md`
 3. **Understand IQ-TREE**: `docs/iqtree_guide.md`
 4. **Check your work**: Compare your results to the tutorial results
-5. **Ask your TA or instructor**
+5. **Ask your instructor**
 
 ---
 

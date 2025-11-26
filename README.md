@@ -23,7 +23,7 @@ A complete automated workflow for analyzing Sanger sequencing chromatograms (.ab
 ```
 Institution       University of California, Riverside
 Course            ENTM201L - Molecular Biology Laboratory
-Target Users      Undergraduate students (no coding required)
+Target Users      Graduate students (no coding required)
 Analysis Time     ~5 minutes (fully automated)
 Instructor        Luciano Cosme, Department of Entomology
 ```
@@ -378,7 +378,7 @@ docker run hello-world
 1. **Read [start_here.md](start_here.md)** — Complete beginner's guide
 2. **Check [docs/pipeline_workflow.md](docs/pipeline_workflow.md)** — Visual workflow
 3. **Read [docs/iqtree_guide.md](docs/iqtree_guide.md)** — Understanding trees
-4. **Ask your TA or instructor** — Office hours available
+4. **Ask your instructor** — Office hours available
 
 ---
 

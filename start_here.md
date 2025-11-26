@@ -154,4 +154,4 @@ git push origin main       # STEP 4: Submit (auto-graded!)
 **Need help?**
 - Re-run tutorial: `./tutorial.sh`
 - Read: `docs/pipeline_workflow.md`
-- Ask your TA
+- Ask your instructor
