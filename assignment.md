@@ -133,7 +133,39 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
 
 ---
 
-## Part 2: Results Table (20 points)
+## Part 2 & 3: Answer Questions Interactively (40 points)
+
+**After completing Steps 1-6 above, run the interactive question script:**
+
+```bash
+python3 answer_assignment.py
+```
+
+**What this script does:**
+- Asks you questions about your analysis results
+- Guides you through the HTML reports (QC, BLAST, phylogeny)
+- Collects your answers in a structured format
+- Saves to `answers.json` for automatic grading
+
+**Why use this script?**
+- ✓ No formatting errors (it creates perfect JSON)
+- ✓ Interactive and easy to use
+- ✓ Automatically graded when you push to GitHub
+- ✓ Immediate feedback on correctness
+
+**You will answer questions about:**
+1. Species identification (BLAST results)
+2. Quality control statistics
+3. Phylogenetic tree interpretation
+4. Mosquito diversity assessment
+
+---
+
+## (ALTERNATIVE) Part 2: Results Table (20 points)
+
+**NOTE:** If you prefer to fill in answers manually instead of using the interactive script, you can fill in the tables and questions below. However, the interactive script (`python3 answer_assignment.py`) is recommended!
+
+---
 
 Fill in this table with the BLAST results for the class dataset:
 
@@ -217,7 +249,7 @@ d)
 
 ```bash
 # Add your completed assignment and results
-git add assignment.md results/
+git add answers.json results/
 
 # Commit your work
 git commit -m "Complete DNA barcoding analysis and assignment"
@@ -225,6 +257,8 @@ git commit -m "Complete DNA barcoding analysis and assignment"
 # Push to GitHub
 git push origin main
 ```
+
+**Important:** Make sure to add `answers.json` (created by `python3 answer_assignment.py`)
 
 **Verify your submission:**
 

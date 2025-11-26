@@ -141,18 +141,60 @@ jobs:
         echo "**Note:** This auto-grading checks workflow completion, not scientific correctness." >> $GITHUB_STEP_SUMMARY
         echo "Your instructor will review your results and species identifications." >> $GITHUB_STEP_SUMMARY
 
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Grade Assignment Answers
+      id: grading
+      run: |
+        echo "Grading assignment answers..."
+
+        if [ ! -f "answers.json" ]; then
+          echo "❌ answers.json not found - Please run python3 answer_assignment.py"
+          echo "answers_graded=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Run grading script
+        python3 .github/grading/grade_answers.py answers.json .github/grading/answer_key.json
+        GRADE_EXIT_CODE=$?
+
+        if [ $GRADE_EXIT_CODE -eq 0 ]; then
+          echo "answers_graded=pass" >> $GITHUB_OUTPUT
+        else
+          echo "answers_graded=fail" >> $GITHUB_OUTPUT
+        fi
+
     - name: Set Completion Status
       run: |
         TUTORIAL_STATUS="${{ steps.tutorial.outputs.tutorial_completed }}"
         ANALYSIS_STATUS="${{ steps.analysis.outputs.analysis_completed }}"
+        ANSWERS_STATUS="${{ steps.grading.outputs.answers_graded }}"
 
-        if [ "$TUTORIAL_STATUS" = "true" ] && [ "$ANALYSIS_STATUS" = "true" ]; then
-          echo "✅ ASSIGNMENT COMPLETE - All workflows finished!"
+        echo ""
+        echo "==================================="
+        echo "FINAL STATUS:"
+        echo "==================================="
+        echo "Tutorial: $TUTORIAL_STATUS"
+        echo "Analysis: $ANALYSIS_STATUS"
+        echo "Answers: $ANSWERS_STATUS"
+        echo "==================================="
+
+        if [ "$TUTORIAL_STATUS" = "true" ] && [ "$ANALYSIS_STATUS" = "true" ] && [ "$ANSWERS_STATUS" = "pass" ]; then
+          echo "✅ ASSIGNMENT COMPLETE - All workflows finished and answers correct!"
           exit 0
         elif [ "$TUTORIAL_STATUS" = "false" ] && [ "$ANALYSIS_STATUS" = "false" ]; then
           echo "❌ ASSIGNMENT NOT STARTED - Please run tutorial.sh and run-analysis.sh"
           exit 1
+        elif [ "$ANSWERS_STATUS" = "false" ]; then
+          echo "❌ ANSWERS MISSING - Please run: python3 answer_assignment.py"
+          exit 1
+        elif [ "$ANSWERS_STATUS" = "fail" ]; then
+          echo "❌ ANSWERS INCORRECT - Please review the feedback above"
+          exit 1
         else
-          echo "⚠️ ASSIGNMENT PARTIAL - Continue working to complete both workflows"
+          echo "⚠️ ASSIGNMENT PARTIAL - Continue working to complete all parts"
           exit 1
         fi
