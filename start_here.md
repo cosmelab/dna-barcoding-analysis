@@ -207,7 +207,7 @@ docker run --rm -it -v $(pwd):/workspace -w /workspace \
 
 ---
 
-### STEP 1: Learn the Workflow (REQUIRED - 15 minutes)
+### STEP 1: Learn the Workflow (REQUIRED - 5 minutes)
 
 **Run the tutorial with test data:**
 ```bash
@@ -277,7 +277,7 @@ git push origin main
 
 **The complete workflow:**
 ```bash
-./tutorial.sh              # STEP 1: Learn (15 min)
+./tutorial.sh              # STEP 1: Learn (5 min)
 ./run-analysis.sh          # STEP 2: Analyze class data (5 min)
 python3 answer_assignment.py  # STEP 3: Answer questions (10 min)
 git add answers.json results/

@@ -39,7 +39,7 @@ See **[start_here.md](start_here.md)** for the complete beginner's guide.
 **IMPORTANT:** Run these commands **on your computer** (Mac/Windows/Linux), NOT inside Docker. The scripts automatically use Docker for you.
 
 ```bash
-# STEP 1: Learn with test data (15 min)
+# STEP 1: Learn with test data (5 min)
 ./tutorial.sh
 
 # STEP 2: Analyze the class mosquito sequences (5 min)
