@@ -199,15 +199,37 @@ Look at your phylogenetic tree (`results/my_analysis/phylogeny/tree.png`).
 
 ---
 
-## Part 4: Submission (Canvas)
+## Part 4: Submission (GitHub)
 
-Submit the following files:
+**Submit your work by committing and pushing to GitHub:**
 
-1. **This completed worksheet** (ASSIGNMENT.md with your answers filled in)
-2. **Results table** (filled in above)
-3. **BLAST HTML report** (`results/my_analysis/blast/identification_report.html`)
-4. **Phylogenetic tree image** (`results/my_analysis/phylogeny/tree.png`)
-5. **QC summary**: Brief statement of how many sequences passed QC
+```bash
+# Add your completed assignment and results
+git add assignment.md results/
+
+# Commit your work
+git commit -m "Complete DNA barcoding analysis and assignment"
+
+# Push to GitHub
+git push origin main
+```
+
+**Verify your submission:**
+
+1. Go to your GitHub repository
+2. Click the **"Actions"** tab
+3. Check that **"Auto-Grading"** workflow passed ✅
+4. If it failed ❌, read the error message and fix missing files
+
+**What auto-grading checks:**
+- ✅ Tutorial completed (`results/tutorial/` has all reports)
+- ✅ Analysis completed (`results/my_analysis/` has all reports)
+- ✅ Assignment file exists (`assignment.md`)
+
+**This does NOT grade your answers!** Your instructor will review your:
+- Species identifications (BLAST results)
+- Tree interpretation (phylogeny)
+- Written answers (questions below)
 
 ---
 
