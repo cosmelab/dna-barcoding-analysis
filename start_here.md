@@ -12,29 +12,20 @@
    ```
    Enter your Docker Hub username and password.
 
-3. **Login to GitHub (for private repos):**
-
-   **Option A - GitHub CLI (easiest):**
-   ```bash
-   gh auth login
-   ```
-   Follow the prompts to authenticate via browser.
-
-   **Option B - SSH key (if already set up):**
-   Use the SSH clone URL instead of HTTPS.
-
-4. **Pull the container:**
+3. **Pull the container:**
    ```bash
    docker pull cosmelab/dna-barcoding-analysis:latest
    ```
 
-5. **Get your assignment repository:**
+4. **Get your assignment repository:**
 
    **GitHub Classroom students:** Clone YOUR assignment repo (link from Canvas)
    ```bash
    git clone https://github.com/cosmelab/dna-barcoding-analysis-YOUR-GITHUB-USERNAME.git
    cd dna-barcoding-analysis-YOUR-GITHUB-USERNAME
    ```
+
+   **Note:** Git will automatically prompt you to login to GitHub when cloning the private repo.
 
    **Or if using the template directly:**
    ```bash
