@@ -133,6 +133,9 @@ RUN pip3 install --no-cache-dir \
     pandas \
     matplotlib \
     plotly \
+    seaborn \
+    scipy \
+    statsmodels \
     tqdm
 
 # Install and configure shell environment in a single layer

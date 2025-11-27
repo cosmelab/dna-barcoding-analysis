@@ -1,0 +1,21 @@
+Student,Team,Species,Concentration,Elution_Volume_uL,Total_DNA_ng
+JR,Spin,Aedes albopictus,8.19,30,245.7
+JR,Spin,Culex spp.,1.55,30,46.5
+MA,Magnet,Aedes albopictus,7.05,30,211.5
+MA,Magnet,Culex spp.,2.04,30,61.2
+WL,Spin,Aedes albopictus,2.54,30,76.2
+WL,Spin,Culex spp.,2.3,30,69.0
+BR,Magnet,Aedes albopictus,9.22,30,276.6
+BR,Magnet,Culex spp.,1.97,30,59.1
+HV,Spin,Aedes albopictus,1.67,30,50.099999999999994
+HV,Spin,Culex spp.,4.21,30,126.3
+WA,Magnet,Aedes albopictus,8.98,30,269.40000000000003
+WA,Magnet,Culex spp.,1.96,30,58.8
+KG,Magnet,Aedes albopictus,3.83,30,114.9
+KG,Magnet,Culex spp.,2.34,30,70.19999999999999
+TW,Spin,Aedes albopictus,6.96,30,208.8
+TW,Spin,Culex spp.,2.96,30,88.8
+JM,Spin,Aedes albopictus,6.12,30,183.6
+JM,Spin,Culex spp.,3.15,30,94.5
+JA,Magnet,Aedes albopictus,7.94,30,238.20000000000002
+JA,Magnet,Culex spp.,2.91,30,87.30000000000001

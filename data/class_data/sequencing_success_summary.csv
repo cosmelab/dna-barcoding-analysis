@@ -1,0 +1,8 @@
+Student,Total_Sequences,Passed_QC,Failed_QC,QC_Pass_Rate_%,Consensus_Generated,Species_Identified
+HV,6,5,1,83,2,Aedes albopictus; Culex spp.
+J,6,1,5,17,0,None
+JM,6,2,4,33,1,Culex spp.
+MA,4,0,4,0,0,None
+TW,2,1,1,50,0,None
+WA,2,0,2,0,0,None
+WL,4,3,1,75,1,Culex spp.

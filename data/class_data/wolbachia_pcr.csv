@@ -1,0 +1,21 @@
+Student,Team,Species,Amplified,Wolbachia_Positive
+JM,Spin,Aedes albopictus,Yes,1
+JM,Spin,Culex spp.,Yes,1
+WA,Magnet,Aedes albopictus,Yes,1
+WA,Magnet,Culex spp.,Yes,1
+HV,Spin,Aedes albopictus,Yes,1
+HV,Spin,Culex spp.,Yes,1
+JR,Spin,Aedes albopictus,Yes,1
+JR,Spin,Culex spp.,Yes,1
+BR,Magnet,Aedes albopictus,Yes,1
+BR,Magnet,Culex spp.,No,0
+TW,Spin,Aedes albopictus,Yes,1
+TW,Spin,Culex spp.,Yes,1
+WL,Spin,Aedes albopictus,Yes,1
+WL,Spin,Culex spp.,Yes,1
+JA,Magnet,Aedes albopictus,Yes,1
+JA,Magnet,Culex spp.,Yes,1
+KG,Magnet,Aedes albopictus,Yes,1
+KG,Magnet,Culex spp.,Yes,1
+MA,Magnet,Aedes albopictus,No,0
+MA,Magnet,Culex spp.,No,0

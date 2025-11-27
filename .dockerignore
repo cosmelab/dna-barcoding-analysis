@@ -89,3 +89,7 @@ temp/
 # Tracking
 .tracking/
 tracking/
+
+# Private instructor data
+student_data_raw/
+.instructor/

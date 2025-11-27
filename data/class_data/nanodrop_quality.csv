@@ -1,0 +1,51 @@
+Student,Extraction_Method,Sample_Type,Ratio_260_280,Ratio_260_230
+HV,Column,Aedes albopictus,1.37,0.04
+JR,Column,Aedes albopictus,2.22,0.53
+MA,Column,Aedes albopictus,1.94,0.7
+KG,Column,Aedes albopictus,2.47,0.51
+JA,Column,Aedes albopictus,2.12,0.8
+BR,Column,Aedes albopictus,3.12,0.18
+WA,Column,Aedes albopictus,2.1,1.51
+TW,Column,Aedes albopictus,2.18,1.01
+JM,Column,Aedes albopictus,2.11,0.54
+WL,Column,Aedes albopictus,1.5,0.01
+MA,Column,Culex spp.,2.73,0.16
+JR,Column,Culex spp.,2.44,0.12
+KG,Column,Culex spp.,2.47,0.33
+WA,Column,Culex spp.,8.08,0.05
+JA,Column,Culex spp.,3.47,0.18
+TW,Column,Culex spp.,3.65,0.36
+BR,Column,Culex spp.,2.09,0.43
+JM,Column,Culex spp.,8.49,0.21
+HV,Column,Culex spp.,1.8,0.03
+WL,Column,Culex spp.,2.67,0.03
+MA,Magnetic_Beads,Silica,3.03,0.25
+MA,Magnetic_Beads,Ethanol,0.65,0.34
+MA,Magnetic_Beads,Frozen,-7.45,0.29
+WA,Magnetic_Beads,Frozen,0.58,0.2
+WA,Magnetic_Beads,Ethanol,2.2,1.88
+WA,Magnetic_Beads,Frozen,2.5,1.31
+JR,Magnetic_Beads,Frozen,-2.57,-0.82
+JR,Magnetic_Beads,Ethanol,2.34,1.84
+JR,Magnetic_Beads,Silica,-0.21,-0.23
+BR,Magnetic_Beads,Silica,0.73,0.85
+BR,Magnetic_Beads,Ethanol,0.92,0.49
+BR,Magnetic_Beads,Frozen,0.79,0.36
+TW,Magnetic_Beads,Frozen,2.66,0.15
+TW,Magnetic_Beads,Ethanol,17.02,0.25
+TW,Magnetic_Beads,Silica,-0.83,-7.55
+KG,Magnetic_Beads,Silica,-3.24,0.09
+KG,Magnetic_Beads,Ethanol,2.59,1.48
+KG,Magnetic_Beads,Frozen,8.81,0.23
+HV,Magnetic_Beads,Frozen,3.06,1.69
+HV,Magnetic_Beads,Ethanol,2.19,1.28
+HV,Magnetic_Beads,Silica,2.32,1.63
+JA,Magnetic_Beads,Silica,1.05,0.59
+JA,Magnetic_Beads,Frozen,4.25,1.71
+JA,Magnetic_Beads,Ethanol,-4.3,0.81
+JM,Magnetic_Beads,Ethanol,7.68,2.13
+JM,Magnetic_Beads,Silica,-8.35,3.5
+JM,Magnetic_Beads,Frozen,-3.1,2.31
+WL,Magnetic_Beads,Frozen,2.41,1.25
+WL,Magnetic_Beads,Ethanol,17.05,0.51
+WL,Magnetic_Beads,Silica,2.44,1.07
