@@ -52,13 +52,10 @@ See **[start_here.md](start_here.md)** for the complete beginner's guide.
 # STEP 2: Analyze the class mosquito sequences (5 min)
 ./run-analysis-cs.sh
 
-# STEP 3: Take the lab quiz (OPTIONAL but recommended)
-python3 lab_quiz.py
-
-# STEP 4: Answer questions interactively (10 min)
+# STEP 3: Answer questions interactively (10 min)
 python3 answer_assignment.py
 
-# STEP 5: Submit to GitHub (auto-graded!)
+# STEP 4: Submit to GitHub (auto-graded!)
 git add answers.json results/
 git commit -m "Complete assignment"
 git push origin main
@@ -75,13 +72,10 @@ git push origin main
 # STEP 2: Analyze the class mosquito sequences (5 min)
 ./run-analysis.sh
 
-# STEP 3: Take the lab quiz (OPTIONAL but recommended)
-python3 lab_quiz.py
-
-# STEP 4: Answer questions interactively (10 min)
+# STEP 3: Answer questions interactively (10 min)
 python3 answer_assignment.py
 
-# STEP 5: Submit to GitHub (auto-graded!)
+# STEP 4: Submit to GitHub (auto-graded!)
 git add answers.json results/
 git commit -m "Complete assignment"
 git push origin main
@@ -261,7 +255,6 @@ dna-barcoding-analysis/
 ├── tutorial-cs.sh                # Learn with test data (Codespaces)
 ├── run-analysis.sh               # Analyze YOUR data (Docker)
 ├── run-analysis-cs.sh            # Analyze YOUR data (Codespaces)
-├── lab_quiz.py                   # Interactive quiz (learning tool)
 │
 ├── data/
 │   ├── student_sequences/        # PUT YOUR .ab1 FILES HERE
@@ -460,7 +453,6 @@ docker run hello-world
 | **Tree Layouts** | 4 visualizations (rectangular, circular, unrooted, radial) |
 | **HTML Reports** | 6 interactive dashboards + student reports |
 | **Container Size** | ~2.5GB (includes all tools) |
-| **Quiz Questions** | 13 multiple-choice (learning tool) |
 
 ---
 
@@ -617,7 +609,7 @@ You are free to:
 
 ---
 
-**Last Updated**: November 27, 2025
+**Last Updated**: November 29, 2025
 **Status**: Production Ready — Student Tested
 **Container**: `cosmelab/dna-barcoding-analysis:latest` (multi-arch: amd64 + arm64)
 **GitHub Classroom**: Template Ready

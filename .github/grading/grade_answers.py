@@ -19,7 +19,7 @@ class AnswerGrader:
         self.answers_path = Path(answers_path)
         self.answer_key_path = Path(answer_key_path)
         self.earned_points = 0
-        self.total_points = 40  # Part 2 (20) + Part 3 (20)
+        self.total_points = 36  # Species table (20) + Q1 (5) + Q2 (7) + Q3 (4)
         self.feedback = []
 
     def load_json(self, path: Path) -> Dict:
@@ -175,9 +175,9 @@ class AnswerGrader:
         return points
 
     def grade_question3(self, student: Dict, key: Dict) -> int:
-        """Grade Question 3 - Species Identification (8 points)."""
+        """Grade Question 3 - Species Identification (4 points)."""
         points = 0
-        max_points = 8
+        max_points = 4
 
         # Q3a: Species list (2 points)
         student_ans = student.get('q3a_species_list', '').lower()
@@ -192,35 +192,15 @@ class AnswerGrader:
                 f"❌ Q3(a): Missing species. Expected: {', '.join(key['q3a_species_list'])}"
             )
 
-        # Q3b: BLAST-tree agreement (2 points)
-        student_ans = student.get('q3b_blast_tree_agree', '').lower()
-        expected_ans = key['q3b_blast_tree_agree']
-
-        if student_ans == expected_ans:
-            points += 2
-            self.feedback.append("✓ Q3(b): Correct BLAST-tree comparison")
-        else:
-            self.feedback.append("❌ Q3(b): Incorrect BLAST-tree comparison")
-
-        # Q3c: SoCal occurrence (2 points)
-        student_ans = student.get('q3c_socal_species', '').lower()
-        expected_ans = key['q3c_socal_species']
-
-        if student_ans == expected_ans:
-            points += 2
-            self.feedback.append("✓ Q3(c): Correct geographic assessment")
-        else:
-            self.feedback.append("❌ Q3(c): Incorrect geographic assessment")
-
-        # Q3d: Confidence (2 points)
-        student_ans = student.get('q3d_confidence', '')
-        acceptable = key['q3d_confidence_acceptable']
+        # Q3b: Confidence (2 points)
+        student_ans = student.get('q3b_confidence', '')
+        acceptable = key['q3b_confidence_acceptable']
 
         if any(acc in student_ans for acc in acceptable):
             points += 2
-            self.feedback.append("✓ Q3(d): Appropriate confidence level")
+            self.feedback.append("✓ Q3(b): Appropriate confidence level")
         else:
-            self.feedback.append("⚠️  Q3(d): Confidence level should be 'Very confident' or 'Confident'")
+            self.feedback.append("⚠️  Q3(b): Confidence level should be 'Very confident' or 'Confident'")
 
         self.feedback.append(f"✓ Question 3: {points}/{max_points} points\n")
         return points
