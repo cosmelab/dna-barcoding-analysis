@@ -1,0 +1,37 @@
+{
+  "_comment": "Copy this content to GitHub Secret: ANSWER_KEY_JSON",
+  "_instructions": "Go to Settings > Secrets > Actions > New repository secret",
+
+  "q1a_sequences_passed": "12",
+  "q1b_pairs_passed": "4",
+  "num_samples": "4",
+
+  "species_table": [
+    {
+      "sample": "AT-HV1",
+      "species": "Aedes albopictus",
+      "percent_identity": "99.55"
+    },
+    {
+      "sample": "AT-HV3",
+      "species": "Culex pipiens",
+      "percent_identity": "98.12"
+    },
+    {
+      "sample": "AT-JM2",
+      "species": "Culex pipiens",
+      "percent_identity": "99.25"
+    },
+    {
+      "sample": "AT-WL2",
+      "species": "Culex pipiens",
+      "percent_identity": "98.67"
+    }
+  ],
+
+  "q2a_clustering": "Spread across different parts (multiple species)",
+
+  "q3a_species_list": ["Aedes albopictus", "Culex pipiens"],
+
+  "q3b_confidence": "Confident (97-99% identity)"
+}

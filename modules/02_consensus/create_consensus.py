@@ -12,8 +12,14 @@ Output: consensus_sequences.fasta
 
 import sys
 import argparse
+import warnings
 from pathlib import Path
 from datetime import datetime
+
+# Suppress ALL BioPython deprecation warnings before any Bio imports
+# pairwise2 shows warning on import, not on use
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -21,9 +27,19 @@ from Bio import pairwise2
 from Bio.Align import PairwiseAligner
 from collections import defaultdict
 
-# Add parent directory to path to import utils
-sys.path.append(str(Path(__file__).parent.parent))
-from utils import print_header, print_step, print_success, print_info, print_error, open_in_browser
+# Add parent directory to path to import Rich utilities
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from rich_utils import print_header, print_step, print_success, print_info, print_error, print_complete
+
+def open_in_browser(file_path):
+    """Open HTML file in default web browser"""
+    import webbrowser
+    try:
+        abs_path = Path(file_path).resolve()
+        webbrowser.open(f'file://{abs_path}')
+        return True
+    except Exception:
+        return False
 
 
 def extract_sample_name(seq_id):

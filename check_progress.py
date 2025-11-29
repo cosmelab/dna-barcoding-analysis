@@ -21,7 +21,8 @@ try:
     from rich.panel import Panel
     from rich.progress import Progress, BarColumn, TextColumn
     RICH_AVAILABLE = True
-    console = Console()
+    # force_terminal=True ensures colors work even when piped through tee
+    console = Console(force_terminal=True)
 except ImportError:
     RICH_AVAILABLE = False
     console = None

@@ -11,27 +11,86 @@ from pathlib import Path
 from Bio import SeqIO, AlignIO
 import json
 
-def run_mafft(input_fasta, output_aligned):
-    """Run MAFFT alignment"""
-    print(f"Running MAFFT alignment...")
+# Add parent directory to path to import Rich utilities
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from rich_utils import print_header, print_step, print_success, print_info, print_error, print_complete, get_spinner
 
+def run_mafft(input_fasta, output_aligned, num_sequences):
+    """Run MAFFT alignment with progress feedback"""
+    import time
+
+    # Import Rich console for live display
     try:
-        with open(output_aligned, 'w') as outfile:
-            result = subprocess.run(
-                ['mafft', '--auto', str(input_fasta)],
-                stdout=outfile,
-                stderr=subprocess.PIPE,
-                text=True,
-                check=True
-            )
-        print(f"✓ Alignment complete: {output_aligned}")
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"✗ MAFFT failed: {e.stderr}")
-        return False
-    except FileNotFoundError:
-        print("✗ MAFFT not found. Please install MAFFT.")
-        return False
+        from rich.console import Console
+        from rich.live import Live
+        from rich.spinner import Spinner
+        from rich.text import Text
+        console = Console(force_terminal=True)
+        RICH_AVAILABLE = True
+    except ImportError:
+        RICH_AVAILABLE = False
+
+    start_time = time.time()
+
+    if RICH_AVAILABLE:
+        # Show animated spinner during MAFFT
+        with Live(console=console, refresh_per_second=10) as live:
+            try:
+                # Update display while MAFFT runs
+                spinner_chars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+                frame = 0
+
+                # Start MAFFT process
+                with open(output_aligned, 'w') as outfile:
+                    process = subprocess.Popen(
+                        ['mafft', '--auto', str(input_fasta)],
+                        stdout=outfile,
+                        stderr=subprocess.PIPE,
+                        text=True
+                    )
+
+                    # Animate while waiting
+                    while process.poll() is None:
+                        elapsed = time.time() - start_time
+                        char = spinner_chars[frame % len(spinner_chars)]
+                        live.update(Text(f"  {char} 📐 Aligning {num_sequences} sequences... ({elapsed:.0f}s)", style="bold cyan"))
+                        frame += 1
+                        time.sleep(0.1)
+
+                    # Check result
+                    if process.returncode != 0:
+                        stderr = process.stderr.read()
+                        print_error(f"MAFFT failed: {stderr}")
+                        return False
+
+                elapsed = time.time() - start_time
+                print_success(f"Alignment complete in {elapsed:.1f}s: {output_aligned}")
+                return True
+
+            except FileNotFoundError:
+                print_error("MAFFT not found. Please install MAFFT.")
+                return False
+    else:
+        # Fallback without Rich
+        print(f"  📐 Aligning {num_sequences} sequences (please wait)...")
+        try:
+            with open(output_aligned, 'w') as outfile:
+                result = subprocess.run(
+                    ['mafft', '--auto', str(input_fasta)],
+                    stdout=outfile,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    check=True
+                )
+            elapsed = time.time() - start_time
+            print_success(f"Alignment complete in {elapsed:.1f}s: {output_aligned}")
+            return True
+        except subprocess.CalledProcessError as e:
+            print_error(f"MAFFT failed: {e.stderr}")
+            return False
+        except FileNotFoundError:
+            print_error("MAFFT not found. Please install MAFFT.")
+            return False
 
 def generate_alignment_stats(alignment_file):
     """Generate alignment statistics"""
@@ -454,7 +513,7 @@ def main():
 
     # Run MAFFT
     aligned_file = output_dir / "aligned_sequences.fasta"
-    if not run_mafft(input_fasta, aligned_file):
+    if not run_mafft(input_fasta, aligned_file, len(sequences)):
         sys.exit(1)
 
     # Generate statistics

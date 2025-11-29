@@ -16,10 +16,33 @@ By the end of this lab, you will:
 
 ---
 
+## 🖥️ Choose Your Environment
+
+### Option A: GitHub Codespaces (Recommended - No Installation)
+
+1. Click the green **"Code"** button on GitHub
+2. Select **"Codespaces"** tab
+3. Click **"Create codespace on main"**
+4. Wait for the environment to load (~2-3 minutes)
+5. You're ready! Use the `-cs` scripts (see below)
+
+### Option B: Local Docker (Advanced)
+
+If you have Docker installed locally, you can run the analysis on your own computer.
+See the README for Docker installation instructions.
+
+---
+
 ## ⚠️ STEP 0: Complete the Tutorial FIRST (REQUIRED)
 
 **Before analyzing the class data, you MUST complete the interactive tutorial:**
 
+**In Codespaces:**
+```bash
+./tutorial-cs.sh
+```
+
+**With local Docker:**
 ```bash
 ./tutorial.sh
 ```
@@ -53,16 +76,24 @@ The dataset includes:
 ### 💡 How to Run the Analysis
 
 **OPTION 1 (RECOMMENDED): Use the automated script**
+
+**In Codespaces:**
+```bash
+./run-analysis-cs.sh
+```
+
+**With local Docker:**
 ```bash
 ./run-analysis.sh
 ```
+
 This runs all 6 steps below automatically. **This is the easiest way!**
 
 **OPTION 2: Run each step individually (shown below)**
 
 The commands below show you what happens in each step. You can run them one by one if you want to understand the process better, or if you need to re-run just one step.
 
-**These commands run in your VSCode terminal on your computer** - Docker is called automatically.
+**Note:** The individual commands below use Docker. In Codespaces, you can run Python directly (e.g., `python3 modules/01_quality_control/qc_chromatograms.py ...`).
 
 ---
 
@@ -313,11 +344,12 @@ git push origin main
 
 ## 🆘 Need Help?
 
-1. **Re-run the tutorial**: `./tutorial.sh`
+1. **Re-run the tutorial**: `./tutorial-cs.sh` (Codespaces) or `./tutorial.sh` (Docker)
 2. **Read the visual workflow**: `docs/pipeline_workflow.md`
 3. **Understand IQ-TREE**: `docs/iqtree_guide.md`
 4. **Check your work**: Compare your results to the tutorial results
-5. **Ask your instructor**
+5. **Codespaces issues**: See `.devcontainer/README.md`
+6. **Ask your instructor**
 
 ---
 

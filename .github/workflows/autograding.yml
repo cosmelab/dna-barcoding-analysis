@@ -199,8 +199,14 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "---" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Note:** This auto-grading checks workflow completion, not scientific correctness." >> $GITHUB_STEP_SUMMARY
-        echo "Your instructor will review your results and species identifications." >> $GITHUB_STEP_SUMMARY
+        echo "### Answers Check" >> $GITHUB_STEP_SUMMARY
+        echo "Your answers have been submitted for grading." >> $GITHUB_STEP_SUMMARY
+        echo "Detailed results will be available from your instructor." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Note:** This auto-grading checks workflow completion." >> $GITHUB_STEP_SUMMARY
+        echo "Your instructor will review detailed results and provide feedback." >> $GITHUB_STEP_SUMMARY
 
     - name: Setup Python
       uses: actions/setup-python@v5
@@ -223,18 +229,35 @@ jobs:
         # Create answer key from secret
         echo "$ANSWER_KEY" > /tmp/answer_key.json
 
-        # Run grading script
-        python3 .github/grading/grade_answers.py answers.json /tmp/answer_key.json
+        # Run grading script (suppress detailed output from students)
+        # Detailed results are saved to a file for instructor review only
+        python3 .github/grading/grade_answers.py answers.json /tmp/answer_key.json > /tmp/grading_results.txt 2>&1
         GRADE_EXIT_CODE=$?
 
         # Clean up answer key
         rm /tmp/answer_key.json
+
+        # Extract just the final score line for student feedback
+        FINAL_SCORE=$(grep "FINAL SCORE" /tmp/grading_results.txt || echo "Score: Not available")
+        echo "score_line=$FINAL_SCORE" >> $GITHUB_OUTPUT
+
+        # Save full results for instructor (uploaded as artifact)
+        mkdir -p /tmp/grading_report
+        cp /tmp/grading_results.txt /tmp/grading_report/detailed_results.txt
 
         if [ $GRADE_EXIT_CODE -eq 0 ]; then
           echo "answers_graded=pass" >> $GITHUB_OUTPUT
         else
           echo "answers_graded=fail" >> $GITHUB_OUTPUT
         fi
+
+    - name: Upload Grading Details (Instructor Only)
+      uses: actions/upload-artifact@v4
+      with:
+        name: grading-details-${{ github.sha }}
+        path: /tmp/grading_report/
+        retention-days: 90
+        if-no-files-found: ignore
 
     - name: Set Completion Status
       run: |
@@ -244,26 +267,24 @@ jobs:
 
         echo ""
         echo "==================================="
-        echo "FINAL STATUS:"
+        echo "SUBMISSION STATUS:"
         echo "==================================="
         echo "Tutorial: $TUTORIAL_STATUS"
         echo "Analysis: $ANALYSIS_STATUS"
-        echo "Answers: $ANSWERS_STATUS"
+        echo "Answers submitted: $([ "$ANSWERS_STATUS" != "false" ] && echo "yes" || echo "no")"
         echo "==================================="
 
-        if [ "$TUTORIAL_STATUS" = "true" ] && [ "$ANALYSIS_STATUS" = "true" ] && [ "$ANSWERS_STATUS" = "pass" ]; then
-          echo "✅ ASSIGNMENT COMPLETE - All workflows finished and answers correct!"
+        if [ "$TUTORIAL_STATUS" = "true" ] && [ "$ANALYSIS_STATUS" = "true" ] && [ "$ANSWERS_STATUS" != "false" ]; then
+          echo "✅ SUBMISSION COMPLETE - All work has been submitted for grading!"
+          echo "Your instructor will review your detailed results."
           exit 0
         elif [ "$TUTORIAL_STATUS" = "false" ] && [ "$ANALYSIS_STATUS" = "false" ]; then
-          echo "❌ ASSIGNMENT NOT STARTED - Please run tutorial.sh and run-analysis.sh"
+          echo "❌ NOT STARTED - Please run tutorial.sh and run-analysis.sh"
           exit 1
         elif [ "$ANSWERS_STATUS" = "false" ]; then
           echo "❌ ANSWERS MISSING - Please run: python3 answer_assignment.py"
           exit 1
-        elif [ "$ANSWERS_STATUS" = "fail" ]; then
-          echo "❌ ANSWERS INCORRECT - Please review the feedback above"
-          exit 1
         else
-          echo "⚠️ ASSIGNMENT PARTIAL - Continue working to complete all parts"
+          echo "⚠️ INCOMPLETE - Continue working to complete all parts"
           exit 1
         fi

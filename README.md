@@ -9,6 +9,7 @@
 ![License](https://img.shields.io/badge/license-MIT-8be9fd?style=flat-square&labelColor=282a36)
 ![Platform](https://img.shields.io/badge/platform-macOS_|_Linux_|_Windows-ff79c6?style=flat-square&labelColor=282a36)
 ![Docker](https://img.shields.io/badge/docker-multi--arch-ffb86c?style=flat-square&labelColor=282a36)
+![Codespaces](https://img.shields.io/badge/Codespaces-ready-50fa7b?style=flat-square&labelColor=282a36)
 
 [Quick Start](start_here.md) · [Assignment](assignment.md) · [Documentation](docs/) · [Docker Hub](https://hub.docker.com/r/cosmelab/dna-barcoding-analysis)
 
@@ -36,7 +37,36 @@ Instructor        Luciano Cosme, Department of Entomology
 
 See **[start_here.md](start_here.md)** for the complete beginner's guide.
 
-**IMPORTANT:** Run these commands **on your computer** (Mac/Windows/Linux), NOT inside Docker. The scripts automatically use Docker for you.
+**Two ways to run:**
+
+#### Option A: GitHub Codespaces (No Installation!)
+
+1. Click the green **"Code"** button → **"Codespaces"** → **"Create codespace"**
+2. Wait 2-3 minutes for environment to load
+3. Run the `-cs` scripts:
+
+```bash
+# STEP 1: Learn with test data (5 min)
+./tutorial-cs.sh
+
+# STEP 2: Analyze the class mosquito sequences (5 min)
+./run-analysis-cs.sh
+
+# STEP 3: Take the lab quiz (OPTIONAL but recommended)
+python3 lab_quiz.py
+
+# STEP 4: Answer questions interactively (10 min)
+python3 answer_assignment.py
+
+# STEP 5: Submit to GitHub (auto-graded!)
+git add answers.json results/
+git commit -m "Complete assignment"
+git push origin main
+```
+
+#### Option B: Local Docker
+
+**IMPORTANT:** Run these commands **on your computer** (Mac/Windows/Linux), NOT inside Docker.
 
 ```bash
 # STEP 1: Learn with test data (5 min)
@@ -45,10 +75,13 @@ See **[start_here.md](start_here.md)** for the complete beginner's guide.
 # STEP 2: Analyze the class mosquito sequences (5 min)
 ./run-analysis.sh
 
-# STEP 3: Answer questions interactively (10 min)
+# STEP 3: Take the lab quiz (OPTIONAL but recommended)
+python3 lab_quiz.py
+
+# STEP 4: Answer questions interactively (10 min)
 python3 answer_assignment.py
 
-# STEP 4: Submit to GitHub (auto-graded!)
+# STEP 5: Submit to GitHub (auto-graded!)
 git add answers.json results/
 git commit -m "Complete assignment"
 git push origin main
@@ -68,7 +101,7 @@ git clone https://github.com/cosmelab/dna-barcoding-analysis.git
 
 ---
 
-## The 5-Step Pipeline
+## The 6-Step Pipeline
 
 <details>
 <summary><strong>Step 1: Quality Control</strong></summary>
@@ -162,6 +195,26 @@ git clone https://github.com/cosmelab/dna-barcoding-analysis.git
 
 </details>
 
+<details>
+<summary><strong>Step 6: Lab Data Analysis (Interactive Visualizations)</strong></summary>
+
+<br>
+
+**What it does:**
+- Analyzes class lab data (DNA extraction, PCR, sequencing)
+- Creates interactive Plotly visualizations
+- Generates personalized student reports
+- Compares Team Spin vs Team Magnet performance
+
+**Output:**
+- `lab_report.html` — Interactive dashboard with all class results
+- Individual student reports in `student_reports/`
+- DNA yield comparisons, PCR success rates, sequencing QC metrics
+
+**Why it matters:** Visualize and understand the entire lab workflow, from extraction to species ID.
+
+</details>
+
 ---
 
 ## What's Included
@@ -204,8 +257,11 @@ git clone https://github.com/cosmelab/dna-barcoding-analysis.git
 dna-barcoding-analysis/
 ├── start_here.md                 # Complete beginner's guide (START HERE!)
 ├── assignment.md                 # Student assignment questions
-├── tutorial.sh                   # Step 1: Learn with test data
-├── run-analysis.sh               # Step 2: Analyze YOUR data
+├── tutorial.sh                   # Learn with test data (Docker)
+├── tutorial-cs.sh                # Learn with test data (Codespaces)
+├── run-analysis.sh               # Analyze YOUR data (Docker)
+├── run-analysis-cs.sh            # Analyze YOUR data (Codespaces)
+├── lab_quiz.py                   # Interactive quiz (learning tool)
 │
 ├── data/
 │   ├── student_sequences/        # PUT YOUR .ab1 FILES HERE
@@ -214,24 +270,29 @@ dna-barcoding-analysis/
 │
 ├── results/
 │   ├── tutorial/                 # Tutorial output (test data)
-│   └── my_analysis/              # YOUR analysis output
-│       ├── 01_qc/                # Quality control results
-│       ├── 02_consensus/         # Consensus sequences
-│       ├── 03_alignment/         # MAFFT alignment
-│       ├── 04_phylogeny/         # Trees (4 layouts)
-│       └── 05_blast/             # Species identification
+│   ├── my_analysis/              # YOUR analysis output
+│   │   ├── 01_qc/                # Quality control results
+│   │   ├── 02_consensus/         # Consensus sequences
+│   │   ├── 03_alignment/         # MAFFT alignment
+│   │   ├── 04_phylogeny/         # Trees (4 layouts)
+│   │   └── 05_blast/             # Species identification
+│   ├── lab_analysis/             # Lab data visualizations
+│   └── student_reports/          # Individual student reports
 │
 ├── modules/                      # Python analysis scripts
 │   ├── 01_quality_control/
 │   ├── 02_consensus/
 │   ├── 03_alignment/
 │   ├── 04_phylogeny/
-│   └── 05_identification/
+│   ├── 05_identification/
+│   └── 06_lab_data_analysis/     # Lab data visualizations
 │
 ├── docs/                         # Documentation
 │   ├── pipeline_workflow.md
 │   ├── iqtree_guide.md
 │   └── reference_trimming.md
+│
+├── .devcontainer/                # Codespaces configuration
 │
 └── intro_to_cli/                 # Optional CLI tutorials
 ```
@@ -240,7 +301,11 @@ dna-barcoding-analysis/
 
 ## System Requirements
 
-### Required Software
+### Option A: GitHub Codespaces (Recommended - No Installation!)
+
+Just a web browser and GitHub account. Everything runs in the cloud.
+
+### Option B: Local Docker
 
 ```
 Docker Desktop      Windows 10+, macOS 10.15+, or Linux
@@ -388,13 +453,14 @@ docker run hello-world
 
 | Metric | Value |
 |--------|-------|
-| **Tutorial Time** | ~3 minutes (all 5 steps) |
+| **Tutorial Time** | ~3 minutes (all 6 steps) |
 | **Analysis Time** | ~5 minutes (automated) |
 | **Reference Sequences** | 52 mosquito COI sequences |
 | **Species Covered** | 19 species from 6 genera |
 | **Tree Layouts** | 4 visualizations (rectangular, circular, unrooted, radial) |
-| **HTML Reports** | 5 interactive dashboards |
+| **HTML Reports** | 6 interactive dashboards + student reports |
 | **Container Size** | ~2.5GB (includes all tools) |
+| **Quiz Questions** | 13 multiple-choice (learning tool) |
 
 ---
 
@@ -551,10 +617,11 @@ You are free to:
 
 ---
 
-**Last Updated**: November 25, 2025
+**Last Updated**: November 27, 2025
 **Status**: Production Ready — Student Tested
 **Container**: `cosmelab/dna-barcoding-analysis:latest` (multi-arch: amd64 + arm64)
 **GitHub Classroom**: Template Ready
+**GitHub Codespaces**: Fully Supported
 
 **Instructor**: Luciano Cosme | Department of Entomology | UC Riverside
 

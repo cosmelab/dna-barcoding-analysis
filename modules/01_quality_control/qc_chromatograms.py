@@ -19,26 +19,9 @@ from io import BytesIO
 import webbrowser
 import argparse
 
-def print_header(text):
-    """Print a formatted header"""
-    width = 70
-    print("\n" + "=" * width)
-    print(f"  {text}")
-    print("=" * width)
-
-def print_step(step_num, total_steps, description):
-    """Print a step indicator"""
-    print(f"\nStep {step_num}/{total_steps}: {description}")
-    print("-" * 70)
-
-def print_success(message):
-    """Print a success message"""
-    print(f"✓ {message}")
-
-def print_info(message, indent=True):
-    """Print an info message"""
-    prefix = "  " if indent else ""
-    print(f"{prefix}{message}")
+# Import Rich utilities (with fallback)
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from rich_utils import print_header, print_step, print_success, print_error, print_info, print_file, print_complete
 
 def open_in_browser(file_path):
     """Open HTML file in default web browser (cross-platform)"""
@@ -173,6 +156,62 @@ def plot_chromatogram(ab1_file, start_base=50, num_bases=150):
         print(f"  Warning: Could not generate chromatogram plot: {e}")
         return None
 
+def trim_low_quality_ends(sequence, quality_scores, min_quality=20, window_size=10):
+    """
+    Trim low-quality bases from sequence ends using a sliding window approach.
+
+    This is standard practice in Sanger sequencing because:
+    - 5' end often has primer/low signal artifacts
+    - 3' end degrades as the sequencing reaction progresses
+
+    Args:
+        sequence: DNA sequence string
+        quality_scores: List of Phred quality scores
+        min_quality: Minimum average quality in window (default Q20)
+        window_size: Size of sliding window (default 10bp)
+
+    Returns:
+        tuple: (trimmed_sequence, trimmed_qualities, trim_start, trim_end)
+    """
+    if not quality_scores or len(sequence) != len(quality_scores):
+        return sequence, quality_scores, 0, 0
+
+    seq_len = len(sequence)
+
+    # Find start position - slide window until avg quality >= min_quality
+    trim_start = 0
+    for i in range(seq_len - window_size):
+        window_avg = sum(quality_scores[i:i+window_size]) / window_size
+        if window_avg >= min_quality:
+            trim_start = i
+            break
+    else:
+        # No good quality region found
+        trim_start = 0
+
+    # Find end position - slide window from end until avg quality >= min_quality
+    trim_end = 0
+    for i in range(seq_len - 1, window_size - 1, -1):
+        window_avg = sum(quality_scores[i-window_size+1:i+1]) / window_size
+        if window_avg >= min_quality:
+            trim_end = seq_len - i - 1
+            break
+    else:
+        # No good quality region found at end
+        trim_end = 0
+
+    # Apply trimming
+    end_pos = seq_len - trim_end
+    trimmed_seq = sequence[trim_start:end_pos]
+    trimmed_qual = quality_scores[trim_start:end_pos]
+
+    # Don't trim if result is too short
+    if len(trimmed_seq) < 100:
+        return sequence, quality_scores, 0, 0
+
+    return trimmed_seq, trimmed_qual, trim_start, trim_end
+
+
 def analyze_chromatogram(ab1_file, output_dir=None):
     """Analyze a single .ab1 chromatogram file"""
     try:
@@ -197,6 +236,15 @@ def analyze_chromatogram(ab1_file, output_dir=None):
 
         qc_pass = len(fail_reasons) == 0
 
+        # Apply quality-based end trimming for passed sequences
+        original_seq = str(record.seq)
+        if qc_pass:
+            trimmed_seq, trimmed_qual, trim_start, trim_end = trim_low_quality_ends(
+                original_seq, quality_scores, min_quality=20, window_size=10
+            )
+        else:
+            trimmed_seq, trimmed_qual, trim_start, trim_end = original_seq, quality_scores, 0, 0
+
         result = {
             "file": ab1_file.name,
             "length": seq_length,
@@ -206,8 +254,14 @@ def analyze_chromatogram(ab1_file, output_dir=None):
             "percent_high_quality": round(100 * high_quality_bases / seq_length, 2),
             "qc_status": "PASS" if qc_pass else "FAIL",
             "fail_reason": "; ".join(fail_reasons) if fail_reasons else None,
-            "sequence": str(record.seq),
-            "quality_scores": quality_scores
+            "sequence": original_seq,
+            "quality_scores": quality_scores,
+            # Trimming info
+            "trimmed_sequence": trimmed_seq,
+            "trimmed_length": len(trimmed_seq),
+            "trim_start": trim_start,
+            "trim_end": trim_end,
+            "bases_trimmed": trim_start + trim_end
         }
 
         # Generate chromatogram plot if output_dir provided
@@ -960,15 +1014,29 @@ Examples:
         result = analyze_chromatogram(ab1_file, output_dir=output_dir)
         results.append(result)
 
-        # Save passed sequences to FASTA
-        if result['qc_status'] == "PASS" and 'sequence' in result:
+        # Save passed sequences to FASTA (using trimmed sequence)
+        if result['qc_status'] == "PASS" and 'trimmed_sequence' in result:
             passed_sequences.append({
                 'id': ab1_file.stem,
-                'seq': result['sequence']
+                'seq': result['trimmed_sequence']
             })
-            print_info(f"    ✓ PASSED (length: {result['length']} bp, avg quality: {result['avg_quality']:.1f})", indent=True)
+            # Log with trimming info
+            trim_info = ""
+            if result['bases_trimmed'] > 0:
+                trim_info = f", trimmed {result['bases_trimmed']}bp from ends"
+            print_info(f"    ✓ PASSED (length: {result['trimmed_length']} bp{trim_info}, avg quality: {result['avg_quality']:.1f})", indent=True)
         else:
             print_info(f"    ✗ FAILED ({result.get('fail_reason', 'Unknown reason')})", indent=True)
+
+    # Show trimming summary
+    total_trimmed = sum(r.get('bases_trimmed', 0) for r in results if r['qc_status'] == "PASS")
+    if total_trimmed > 0:
+        print_info("")
+        print_info("📋 End Trimming Summary:", indent=False)
+        print_info("   Low-quality bases were trimmed from sequence ends.", indent=False)
+        print_info("   This is normal for Sanger sequencing (quality drops at 3' end).", indent=False)
+        print_info(f"   Total bases trimmed: {total_trimmed} bp", indent=False)
+        print_info("")
 
     # Step 3: Generate outputs
     print_step(3, 3, "Generating reports")

@@ -12,9 +12,29 @@ from Bio.Blast import NCBIWWW, NCBIXML
 import time
 import json
 
-def blast_sequence(sequence, seq_id):
+# Add modules directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+try:
+    from pipeline_ui import print_success, print_error, print_info, print_warning, RICH_AVAILABLE
+    if RICH_AVAILABLE:
+        from rich.console import Console
+        from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn, BarColumn
+        from rich.panel import Panel
+        # force_terminal=True ensures colors work even when piped through tee
+        console = Console(force_terminal=True)
+    else:
+        console = None
+except ImportError:
+    RICH_AVAILABLE = False
+    console = None
+    def print_success(msg): print(f"✓ {msg}")
+    def print_error(msg): print(f"✗ {msg}")
+    def print_info(msg): print(f"ℹ {msg}")
+    def print_warning(msg): print(f"⚠ {msg}")
+
+def blast_sequence(sequence, seq_id, show_progress=True):
     """BLAST a single sequence against GenBank"""
-    print(f"  BLASTing {seq_id}...", end=" ")
+    start_time = time.time()
 
     try:
         # Run BLAST (this takes time - it's querying NCBI)
@@ -43,20 +63,22 @@ def blast_sequence(sequence, seq_id):
                 })
                 break  # Only get first HSP per alignment
 
-        print(f"Done ({len(hits)} hits)")
+        elapsed = time.time() - start_time
         return {
             "sequence_id": seq_id,
             "status": "SUCCESS",
             "top_hit": hits[0] if hits else None,
-            "all_hits": hits
+            "all_hits": hits,
+            "elapsed_time": elapsed
         }
 
     except Exception as e:
-        print(f"Error: {str(e)}")
+        elapsed = time.time() - start_time
         return {
             "sequence_id": seq_id,
             "status": "ERROR",
-            "error": str(e)
+            "error": str(e),
+            "elapsed_time": elapsed
         }
 
 def extract_species_name(definition):
@@ -370,55 +392,131 @@ def main():
     output_dir.mkdir(exist_ok=True)
 
     if not input_fasta.exists():
-        print(f"Input file not found: {input_fasta}")
+        print_error(f"Input file not found: {input_fasta}")
         sys.exit(1)
 
     # Read sequences
     sequences = list(SeqIO.parse(input_fasta, "fasta"))
-    print(f"Found {len(sequences)} sequences to identify")
+    total = len(sequences)
 
-    # BLAST each sequence
+    if RICH_AVAILABLE and console:
+        console.print(f"\n[bold cyan]🔬 BLAST Species Identification[/]")
+        console.print(f"[dim]Querying NCBI GenBank database...[/]\n")
+        console.print(f"Found [bold]{total}[/] sequence(s) to identify\n")
+    else:
+        print(f"\n🔬 BLAST Species Identification")
+        print(f"Querying NCBI GenBank database...\n")
+        print(f"Found {total} sequence(s) to identify\n")
+
+    # BLAST each sequence with progress feedback
     results = []
+    total_time = 0
+
     for i, record in enumerate(sequences, 1):
-        print(f"\n[{i}/{len(sequences)}] Processing {record.id}")
-        result = blast_sequence(str(record.seq), record.id)
+        seq_id = record.id
+
+        # Show progress with Rich if available
+        if RICH_AVAILABLE and console:
+            console.print(f"[bold cyan]━━━ Sequence {i}/{total}: {seq_id} ━━━[/]")
+
+            # Use spinner while BLASTing
+            with console.status(f"[bold purple]BLASTing {seq_id}...[/] [dim](this may take 10-30 seconds)[/]", spinner="dots"):
+                result = blast_sequence(str(record.seq), seq_id)
+        else:
+            print(f"━━━ Sequence {i}/{total}: {seq_id} ━━━")
+            print(f"  BLASTing {seq_id}... (this may take 10-30 seconds)")
+            result = blast_sequence(str(record.seq), seq_id)
+
         results.append(result)
+        elapsed = result.get('elapsed_time', 0)
+        total_time += elapsed
+
+        # Show result for this sequence
+        if result['status'] == "SUCCESS" and result['top_hit']:
+            top = result['top_hit']
+            species = extract_species_name(top['definition'])
+            identity = top['percent_identity']
+
+            if RICH_AVAILABLE and console:
+                badge_color = "green" if identity >= 97 else "yellow" if identity >= 90 else "red"
+                console.print(f"  [bold green]✓[/] Found: [italic]{species}[/] [{badge_color}]{identity}%[/] [dim]({elapsed:.1f}s)[/]")
+            else:
+                print(f"  ✓ Found: {species} ({identity}%) [{elapsed:.1f}s]")
+        elif result['status'] == "ERROR":
+            if RICH_AVAILABLE and console:
+                console.print(f"  [bold red]✗[/] Error: {result['error']} [dim]({elapsed:.1f}s)[/]")
+            else:
+                print(f"  ✗ Error: {result['error']} [{elapsed:.1f}s]")
+        else:
+            if RICH_AVAILABLE and console:
+                console.print(f"  [bold yellow]⚠[/] No hits found [dim]({elapsed:.1f}s)[/]")
+            else:
+                print(f"  ⚠ No hits found [{elapsed:.1f}s]")
 
         # Be nice to NCBI - wait between queries
-        if i < len(sequences):
-            print("  Waiting 3 seconds before next query...")
-            time.sleep(3)
+        if i < total:
+            wait_time = 3
+            if RICH_AVAILABLE and console:
+                console.print(f"  [dim]Waiting {wait_time}s before next query (NCBI rate limit)...[/]\n")
+            else:
+                print(f"  Waiting {wait_time}s before next query (NCBI rate limit)...\n")
+            time.sleep(wait_time)
 
     # Generate outputs
-    print("\n\nGenerating reports...")
+    if RICH_AVAILABLE and console:
+        console.print(f"\n[bold cyan]━━━ Generating Reports ━━━[/]")
+    else:
+        print(f"\n━━━ Generating Reports ━━━")
 
     # HTML report
     html_file = output_dir / "identification_report.html"
     generate_html_report(results, html_file)
-    print(f"HTML report: {html_file}")
+    print_success(f"HTML report: {html_file}")
 
     # JSON report
     json_file = output_dir / "identification_results.json"
     with open(json_file, 'w') as f:
         json.dump(results, f, indent=2)
-    print(f"JSON report: {json_file}")
+    print_success(f"JSON report: {json_file}")
 
     # Summary
     success = sum(1 for r in results if r['status'] == "SUCCESS" and r['top_hit'])
     errors = sum(1 for r in results if r['status'] == "ERROR")
 
-    print(f"\nSummary:")
-    print(f"  Total sequences: {len(results)}")
-    print(f"  Successfully identified: {success}")
-    print(f"  Errors: {errors}")
+    if RICH_AVAILABLE and console:
+        console.print(f"\n[bold cyan]━━━ Summary ━━━[/]")
+        console.print(f"  Total sequences: [bold]{len(results)}[/]")
+        console.print(f"  Successfully identified: [bold green]{success}[/]")
+        if errors > 0:
+            console.print(f"  Errors: [bold red]{errors}[/]")
+        console.print(f"  Total BLAST time: [bold]{total_time:.1f}s[/]")
+    else:
+        print(f"\n━━━ Summary ━━━")
+        print(f"  Total sequences: {len(results)}")
+        print(f"  Successfully identified: {success}")
+        print(f"  Errors: {errors}")
+        print(f"  Total BLAST time: {total_time:.1f}s")
 
     if success > 0:
-        print(f"\nTop matches:")
+        if RICH_AVAILABLE and console:
+            console.print(f"\n[bold cyan]🦟 Species Identified:[/]")
+        else:
+            print(f"\n🦟 Species Identified:")
+
         for result in results:
             if result['status'] == "SUCCESS" and result['top_hit']:
                 top = result['top_hit']
-                species_name = " ".join(top['definition'].split()[1:3])
-                print(f"  {result['sequence_id']}: {species_name} ({top['percent_identity']}%)")
+                species = extract_species_name(top['definition'])
+                identity = top['percent_identity']
+                common = get_common_name(species)
+
+                if RICH_AVAILABLE and console:
+                    badge_color = "green" if identity >= 97 else "yellow" if identity >= 90 else "red"
+                    common_str = f" [dim]({common})[/]" if common else ""
+                    console.print(f"  [bold]{result['sequence_id']}[/]: [italic]{species}[/]{common_str} [{badge_color}]{identity}%[/]")
+                else:
+                    common_str = f" ({common})" if common else ""
+                    print(f"  {result['sequence_id']}: {species}{common_str} ({identity}%)")
 
 if __name__ == "__main__":
     main()

@@ -41,33 +41,86 @@ def print_progress_bar(message, steps=20, delay=0.05):
     print("\n")
 
 def run_iqtree(alignment_file, output_prefix):
-    """Run IQ-TREE for phylogenetic inference"""
-    print("Running IQ-TREE (this may take a few minutes)...")
-
+    """Run IQ-TREE for phylogenetic inference with spinner"""
+    # Import Rich for spinner
     try:
-        result = subprocess.run(
-            [
-                'iqtree',
-                '-s', str(alignment_file),
-                '-pre', str(output_prefix),
-                '-m', 'MFP',  # Model Finder Plus - auto-select best model
-                '-bb', '1000',  # 1000 ultrafast bootstrap replicates
-                '-nt', 'AUTO',  # Auto-detect number of threads
-                '-redo'  # Redo analysis (overwrite existing files)
-            ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            check=True
-        )
-        print("✓ Tree construction complete")
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"✗ IQ-TREE failed: {e.stderr}")
-        return False
-    except FileNotFoundError:
-        print("✗ IQ-TREE not found. Please install IQ-TREE.")
-        return False
+        from rich.console import Console
+        from rich.live import Live
+        from rich.text import Text
+        console = Console(force_terminal=True)
+        RICH_AVAILABLE = True
+    except ImportError:
+        RICH_AVAILABLE = False
+
+    start_time = time.time()
+
+    if RICH_AVAILABLE:
+        with Live(console=console, refresh_per_second=10) as live:
+            try:
+                spinner_chars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+                frame = 0
+
+                process = subprocess.Popen(
+                    [
+                        'iqtree',
+                        '-s', str(alignment_file),
+                        '-pre', str(output_prefix),
+                        '-m', 'MFP',
+                        '-bb', '1000',
+                        '-nt', 'AUTO',
+                        '-redo'
+                    ],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True
+                )
+
+                while process.poll() is None:
+                    elapsed = time.time() - start_time
+                    char = spinner_chars[frame % len(spinner_chars)]
+                    live.update(Text(f"  {char} 🌳 Building phylogenetic tree... ({elapsed:.0f}s)", style="bold cyan"))
+                    frame += 1
+                    time.sleep(0.1)
+
+                if process.returncode != 0:
+                    stderr = process.stderr.read()
+                    print(f"✗ IQ-TREE failed: {stderr}")
+                    return False
+
+                elapsed = time.time() - start_time
+                print(f"✓ Tree construction complete in {elapsed:.1f}s")
+                return True
+
+            except FileNotFoundError:
+                print("✗ IQ-TREE not found. Please install IQ-TREE.")
+                return False
+    else:
+        print("🌳 Building phylogenetic tree (this may take 1-2 minutes)...")
+        try:
+            result = subprocess.run(
+                [
+                    'iqtree',
+                    '-s', str(alignment_file),
+                    '-pre', str(output_prefix),
+                    '-m', 'MFP',
+                    '-bb', '1000',
+                    '-nt', 'AUTO',
+                    '-redo'
+                ],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=True
+            )
+            elapsed = time.time() - start_time
+            print(f"✓ Tree construction complete in {elapsed:.1f}s")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"✗ IQ-TREE failed: {e.stderr}")
+            return False
+        except FileNotFoundError:
+            print("✗ IQ-TREE not found. Please install IQ-TREE.")
+            return False
 
 def visualize_tree(tree_file, output_image):
     """Generate tree visualization with Bio.Phylo with color-coded samples"""

@@ -4,25 +4,26 @@
 
 set -e
 
-# No colors for clean logs
-GREEN=''
-BLUE=''
-YELLOW=''
-NC=''
+CONTAINER="cosmelab/dna-barcoding-analysis:latest"
+OUTPUT_DIR="results/my_analysis"
 
 # Create output directories automatically
 mkdir -p results/my_analysis/{01_qc,02_consensus,03_alignment,04_phylogeny,05_blast}
+mkdir -p results/lab_analysis
 
 # Start logging
 LOG_FILE="results/my_analysis/student.log"
 exec > >(tee "$LOG_FILE") 2>&1
-echo "=== Student Analysis Pipeline Started: $(date) ==="
+echo "=== Student Analysis Pipeline Started ==="
+echo "🖥️  Environment: Local (Docker)"
+echo "📝 Log file: $LOG_FILE"
+echo ""
 
-echo "╔══════════════════════════════════════════════════════════════════════╗"
-echo "║                   DNA BARCODING ANALYSIS                             ║"
-echo "║                                                                      ║"
-echo "║  This script runs all 5 steps automatically on your sequences       ║"
-echo "╚══════════════════════════════════════════════════════════════════════╝"
+# Show beautiful welcome banner using Rich
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  $CONTAINER \
+  python3 modules/show_welcome.py --welcome --mode analysis
+
 echo ""
 echo "REQUIREMENTS:"
 echo "  1. Your .ab1 files must be in: data/student_sequences/"
@@ -30,14 +31,10 @@ echo "  2. You must have completed the tutorial first: ./tutorial.sh"
 echo ""
 echo "Starting analysis..."
 
-CONTAINER="cosmelab/dna-barcoding-analysis:latest"
-OUTPUT_DIR="results/my_analysis"
-
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 1 of 5: Quality Control"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
+# Show Step 1 banner
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  $CONTAINER \
+  python3 modules/show_welcome.py --step 1
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   $CONTAINER \
@@ -47,26 +44,24 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
 
 echo "✓ Step 1 complete!"
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 2 of 5: Create Consensus Sequences"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
+# Show Step 2 banner
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  $CONTAINER \
+  python3 modules/show_welcome.py --step 2
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   $CONTAINER \
-  python3 modules/02_consensus/create_consensus.py \
+  python3 -W ignore::DeprecationWarning modules/02_consensus/create_consensus.py \
   $OUTPUT_DIR/01_qc/passed_sequences.fasta \
   $OUTPUT_DIR/02_consensus/ \
-  --pairs-only
+  --pairs-only 2>&1 | grep -v "BiopythonDeprecationWarning\|Bio.pairwise2\|warnings.warn"
 
 echo "✓ Step 2 complete!"
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 3 of 5: Combine with Reference Sequences"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
+# Show Step 3 banner
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  $CONTAINER \
+  python3 modules/show_welcome.py --step 3
 
 cat $OUTPUT_DIR/02_consensus/consensus_sequences.fasta \
     data/reference_sequences/socal_mosquitoes.fasta \
@@ -77,12 +72,11 @@ echo "Combined $NUM_SEQS sequences (your samples + references)"
 
 echo "✓ Step 3 complete!"
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 4 of 5: Alignment & Phylogenetic Tree"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "This step takes ~2-3 minutes..."
+# Show Step 4 banner
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  $CONTAINER \
+  python3 modules/show_welcome.py --step 4
+
 echo ""
 
 # Alignment
@@ -102,11 +96,10 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
 
 echo "✓ Step 4 complete!"
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 5 of 5: Species Identification (BLAST)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
+# Show Step 5 banner
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  $CONTAINER \
+  python3 modules/show_welcome.py --step 5
 
 docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   $CONTAINER \
@@ -114,10 +107,27 @@ docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
   $OUTPUT_DIR/02_consensus/consensus_sequences.fasta \
   $OUTPUT_DIR/05_blast/
 
+echo "✓ Step 5 complete!"
+
+# Show Step 6 banner
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  $CONTAINER \
+  python3 modules/show_welcome.py --step 6
+
+echo "Generating lab analysis report (extraction, PCR, sequencing results)..."
 echo ""
-echo "╔══════════════════════════════════════════════════════════════════════╗"
-echo "║                     ✓ ANALYSIS COMPLETE! ✓                          ║"
-echo "╚══════════════════════════════════════════════════════════════════════╝"
+
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace/modules/06_lab_data_analysis \
+  $CONTAINER \
+  bash -c "python3 plot_extraction.py && python3 plot_quality.py && python3 plot_pcr.py && python3 plot_sequencing.py && python3 plot_teams.py && python3 generate_report.py"
+
+echo "✓ Step 6 complete!"
+
+# Show completion banner using Rich
+docker run --rm --entrypoint="" -v $(pwd):/workspace -w /workspace \
+  $CONTAINER \
+  python3 modules/show_welcome.py --complete
+
 echo ""
 echo "Your results are in: $OUTPUT_DIR/"
 echo ""
@@ -127,10 +137,16 @@ echo "  03_alignment/   - Sequence alignment"
 echo "  04_phylogeny/   - Phylogenetic tree"
 echo "  05_blast/       - Species identification"
 echo ""
+echo "Lab analysis report: results/lab_analysis/"
+echo ""
 echo "Open these files:"
 echo "  • $OUTPUT_DIR/01_qc/qc_report.html"
 echo "  • $OUTPUT_DIR/04_phylogeny/tree.png"
 echo "  • $OUTPUT_DIR/05_blast/identification_report.html"
+echo "  • results/lab_analysis/lab_report.html"
 echo ""
-echo "=== Student Analysis Pipeline Completed: $(date) ==="
+echo "=== Student Analysis Pipeline Completed ==="
+
+# Clean ANSI color codes from log file for readability in text editors
+sed 's/\x1b\[[0-9;]*m//g' "$LOG_FILE" > "${LOG_FILE}.clean" && mv "${LOG_FILE}.clean" "$LOG_FILE"
 echo "Log saved to: $LOG_FILE"
