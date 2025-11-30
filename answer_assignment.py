@@ -424,7 +424,9 @@ def run_assignment():
     # ========================================================================
     # SAVE ANSWERS
     # ========================================================================
-    output_file = Path("answers.json")
+    output_dir = Path("submission")
+    output_dir.mkdir(exist_ok=True)
+    output_file = output_dir / "answers.json"
     with open(output_file, 'w') as f:
         json.dump(answers, f, indent=2)
 
@@ -434,7 +436,7 @@ def run_assignment():
             "[bold green]Assignment Complete![/]\n\n"
             f"Answers saved to: [cyan]{output_file}[/]\n\n"
             "[dim]Next steps:[/]\n"
-            "  1. git add answers.json\n"
+            "  1. git add submission/answers.json\n"
             "  2. git commit -m 'Complete assignment'\n"
             "  3. git push",
             border_style="green",
@@ -446,7 +448,7 @@ def run_assignment():
         print("=" * 60)
         print(f"\nAnswers saved to: {output_file}")
         print("\nNext steps:")
-        print("  1. git add answers.json")
+        print("  1. git add submission/answers.json")
         print("  2. git commit -m 'Complete assignment'")
         print("  3. git push")
 

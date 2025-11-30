@@ -90,7 +90,7 @@ See **[start_here.md](start_here.md)** for the complete beginner's guide.
 python3 answer_assignment.py
 
 # STEP 4: Submit to GitHub (auto-graded!)
-git add answers.json results/
+git add submission/answers.json
 git commit -m "Complete assignment"
 git push origin main
 
@@ -124,7 +124,7 @@ python3 check_progress.py
 python3 answer_assignment.py
 
 # STEP 4: Submit to GitHub (auto-graded!)
-git add answers.json results/
+git add submission/answers.json
 git commit -m "Complete assignment"
 git push origin main
 

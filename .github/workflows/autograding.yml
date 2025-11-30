@@ -220,8 +220,8 @@ jobs:
       run: |
         echo "Grading assignment answers..."
 
-        if [ ! -f "answers.json" ]; then
-          echo "❌ answers.json not found - Please run python3 answer_assignment.py"
+        if [ ! -f "submission/answers.json" ]; then
+          echo "❌ submission/answers.json not found - Please run python3 answer_assignment.py"
           echo "answers_graded=false" >> $GITHUB_OUTPUT
           exit 0
         fi
@@ -231,7 +231,7 @@ jobs:
 
         # Run grading script (suppress detailed output from students)
         # Detailed results are saved to a file for instructor review only
-        python3 .github/grading/grade_answers.py answers.json /tmp/answer_key.json > /tmp/grading_results.txt 2>&1
+        python3 .github/grading/grade_answers.py submission/answers.json /tmp/answer_key.json > /tmp/grading_results.txt 2>&1
         GRADE_EXIT_CODE=$?
 
         # Clean up answer key
