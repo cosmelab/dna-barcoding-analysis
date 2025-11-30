@@ -14,9 +14,10 @@ architecture.md
 github_classroom.md
 tracking/
 .tracking/
-.devcontainer/
 docs/student_ux_demo.md
 student_data_raw/
+
+# Note: .devcontainer/ MUST be tracked - Codespaces needs it!
 
 # Note: container/ is kept in git for GitHub Actions auto-build
 # Students don't need to interact with it
