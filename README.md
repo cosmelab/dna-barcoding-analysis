@@ -73,6 +73,14 @@ See **[start_here.md](start_here.md)** for the complete beginner's guide.
 
 **Once Codespaces opens**, run these commands in the terminal:
 
+> **Tip: Nice Terminal** — Type `zsh` for a colorful terminal with the Dracula theme!
+
+> **Viewing HTML Reports** — In the Explorer panel, right-click any `.html` file:
+> - **"Open with Live Server"** → Opens in a new browser tab (recommended)
+> - **"Download"** → Save to your computer and open locally
+>
+> All reports are standalone files with embedded CSS, so downloading works fine.
+
 ```bash
 # STEP 1: Learn with test data (5 min)
 ./tutorial-cs.sh
@@ -100,6 +108,12 @@ python3 check_progress.py
 **IMPORTANT:** Run these commands **on your computer** (Mac/Windows/Linux), NOT inside Docker.
 
 **Requirements:** Docker Desktop must be running!
+
+> **Tip: Nice Terminal** — Want to explore inside the container? Run:
+> ```bash
+> docker run --rm -it -v $(pwd):/workspace -w /workspace cosmelab/dna-barcoding-analysis:latest zsh
+> ```
+> This gives you a colorful Dracula-themed terminal with the analysis tools.
 
 ```bash
 # STEP 1: Learn with test data (5 min)

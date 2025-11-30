@@ -37,9 +37,9 @@
     }
   },
 
-  "postCreateCommand": "echo '🧬 DNA Barcoding container ready! Run ./tutorial.sh to get started.'",
+  "postCreateCommand": "echo '🧬 DNA Barcoding container ready! Run ./tutorial-cs.sh to get started.'",
 
-  "postStartCommand": "echo '\n=== GitHub Codespaces Quick Start ===\n1. Run: ./tutorial.sh (to learn with test data)\n2. Run: ./run-analysis.sh (to analyze class sequences)\n3. View HTML reports:\n   - Right-click any .html file in results/ → Open with Live Server\n   - Or run: python -m http.server 8000 -d results/\n   - Then open forwarded port 8000 in browser\n4. Answer questions: python3 answer_assignment.py\n5. Submit: git add . && git commit -m \"Complete assignment\" && git push\n'",
+  "postStartCommand": "echo '\n=== GitHub Codespaces Quick Start ===\n1. Run: ./tutorial-cs.sh\n2. Run: ./run-analysis-cs.sh\n3. View HTML reports: Right-click .html file → Open with Live Server\n4. Answer questions: python3 answer_assignment.py\n5. Submit: git add . && git commit -m \"Complete\" && git push\n\nTip: Type zsh for a colorful terminal!\n'",
 
   "remoteUser": "root",
 
