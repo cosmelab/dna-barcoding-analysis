@@ -1,0 +1,13 @@
+# Normalize all text files
+* text=auto
+
+# Shell scripts MUST use LF (for Linux/Codespaces)
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Python scripts use LF
+*.py text eol=lf
+
+# Windows batch files use CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf

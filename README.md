@@ -39,11 +39,39 @@ See **[start_here.md](start_here.md)** for the complete beginner's guide.
 
 **Two ways to run:**
 
-#### Option A: GitHub Codespaces (No Installation!)
+#### Option A: GitHub Codespaces (Recommended - No Installation!)
 
-1. Click the green **"Code"** button → **"Codespaces"** → **"Create codespace"**
-2. Wait 2-3 minutes for environment to load
-3. Run the `-cs` scripts:
+**Step-by-step to open Codespaces:**
+
+1. Go to your repository page on GitHub
+2. Look for the green **"<> Code"** button near the top-right of the page
+3. Click it to open a dropdown menu
+4. You'll see two tabs: **"Local"** and **"Codespaces"** — click **"Codespaces"**
+5. Click the green **"Create codespace on main"** button
+6. Wait 2-3 minutes while GitHub builds your environment (you'll see a loading screen)
+7. When ready, you'll see VS Code in your browser with a terminal at the bottom
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  [Your Repository Name]                                     │
+│                                                             │
+│  ┌──────────────────────────────────────┐                   │
+│  │  <> Code ▼  │  (green button)        │   ← CLICK HERE    │
+│  └──────────────────────────────────────┘                   │
+│                                                             │
+│  ┌──────────────────────────────────────┐                   │
+│  │  Local    │  Codespaces             │   ← SELECT TAB    │
+│  ├──────────────────────────────────────┤                   │
+│  │                                      │                   │
+│  │  ┌────────────────────────────────┐  │                   │
+│  │  │ + Create codespace on main     │  │   ← CLICK THIS   │
+│  │  └────────────────────────────────┘  │                   │
+│  │                                      │                   │
+│  └──────────────────────────────────────┘                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Once Codespaces opens**, run these commands in the terminal:
 
 ```bash
 # STEP 1: Learn with test data (5 min)
@@ -59,11 +87,19 @@ python3 answer_assignment.py
 git add answers.json results/
 git commit -m "Complete assignment"
 git push origin main
+
+# OPTIONAL: Generate your personal lab report
+./student_report-cs.sh YOUR_CODE    # e.g., ./student_report-cs.sh HV
+
+# OPTIONAL: Check your progress
+python3 check_progress.py
 ```
 
-#### Option B: Local Docker
+#### Option B: Local Docker (Mac/Windows/Linux)
 
 **IMPORTANT:** Run these commands **on your computer** (Mac/Windows/Linux), NOT inside Docker.
+
+**Requirements:** Docker Desktop must be running!
 
 ```bash
 # STEP 1: Learn with test data (5 min)
@@ -79,7 +115,26 @@ python3 answer_assignment.py
 git add answers.json results/
 git commit -m "Complete assignment"
 git push origin main
+
+# OPTIONAL: Generate your personal lab report
+./student_report.sh YOUR_CODE    # e.g., ./student_report.sh HV
+
+# OPTIONAL: Check your progress
+python3 check_progress.py
 ```
+
+### Script Reference Table
+
+| Script | Codespaces | Local Docker | Purpose |
+|--------|------------|--------------|---------|
+| `tutorial-cs.sh` | ✓ | | Learn pipeline with test data |
+| `tutorial.sh` | | ✓ | Learn pipeline with test data |
+| `run-analysis-cs.sh` | ✓ | | Analyze class sequences |
+| `run-analysis.sh` | | ✓ | Analyze class sequences |
+| `student_report-cs.sh` | ✓ | | Generate personal lab report |
+| `student_report.sh` | | ✓ | Generate personal lab report |
+| `answer_assignment.py` | ✓ | ✓ | Answer assignment questions |
+| `check_progress.py` | ✓ | ✓ | Check your progress |
 
 ### For Instructors
 
