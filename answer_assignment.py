@@ -233,9 +233,9 @@ def check_analysis_complete() -> bool:
     """Check if analysis has been run."""
     results_dir = Path("results/my_analysis")
     required = [
-        results_dir / "qc" / "qc_report.html",
-        results_dir / "blast" / "identification_report.html",
-        results_dir / "phylogeny" / "tree.png"
+        results_dir / "01_qc" / "qc_report.html",
+        results_dir / "05_blast" / "identification_report.html",
+        results_dir / "04_phylogeny" / "tree.png"
     ]
 
     missing = [f for f in required if not f.exists()]
@@ -281,7 +281,7 @@ def run_assignment():
     # ========================================================================
     print_section(
         "PART 1: Quality Control",
-        "Open: results/my_analysis/qc/qc_report.html"
+        "Open: results/my_analysis/01_qc/qc_report.html"
     )
 
     # Q1a: Sequences passed (validated)
@@ -317,7 +317,7 @@ def run_assignment():
     # ========================================================================
     print_section(
         "PART 2: Species Identification",
-        "Open: results/my_analysis/blast/identification_report.html"
+        "Open: results/my_analysis/05_blast/identification_report.html"
     )
 
     # Number of samples (validated)
@@ -368,7 +368,7 @@ def run_assignment():
     # ========================================================================
     print_section(
         "PART 3: Phylogenetic Analysis",
-        "Open: results/my_analysis/phylogeny/tree.png"
+        "Open: results/my_analysis/04_phylogeny/tree.png"
     )
 
     # Q2a: Clustering pattern

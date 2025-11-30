@@ -75,11 +75,9 @@ See **[start_here.md](start_here.md)** for the complete beginner's guide.
 
 > **Tip: Nice Terminal** — Type `zsh` for a colorful terminal with the Dracula theme!
 
-> **Viewing HTML Reports** — In the Explorer panel, right-click any `.html` file:
-> - **"Open with Live Server"** → Opens in a new browser tab (recommended)
-> - **"Download"** → Save to your computer and open locally
->
-> All reports are standalone files with embedded CSS, so downloading works fine.
+> **Refresh Files** — After running scripts, click the 🔄 refresh icon in the Explorer panel to see new results.
+
+> **Viewing HTML Reports** — Right-click any `.html` file → **"Download"** → Open in your browser. All reports work offline.
 
 ```bash
 # STEP 1: Learn with test data (5 min)
