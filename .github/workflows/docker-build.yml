@@ -23,6 +23,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.repository == 'cosmelab/dna-barcoding-analysis'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
