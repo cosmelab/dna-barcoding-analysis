@@ -5,10 +5,12 @@ on:
     branches: [ main ]
     paths:
       - 'results/**'
+      - 'submission/**'
   pull_request:
     branches: [ main ]
     paths:
       - 'results/**'
+      - 'submission/**'
   workflow_dispatch:
 
 jobs:

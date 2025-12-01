@@ -2,8 +2,18 @@ name: Build and Push Docker Image
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'container/**'
+      - 'scripts/**'
+      - 'modules/**'
+      - '.github/workflows/docker-build.yml'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'container/**'
+      - 'scripts/**'
+      - 'modules/**'
+      - '.github/workflows/docker-build.yml'
   workflow_dispatch:
 
 permissions:
