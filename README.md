@@ -605,27 +605,56 @@ docker pull ghcr.io/cosmelab/dna-barcoding-analysis:latest
 
 Full documentation: [GitHub CLI Setup Guide](docs/github_cli_setup.md)
 
-### Container Development
+### Container Development (Instructors Only)
 
-Modify the Docker container:
+The container build workflow uses **manual triggers only** (`workflow_dispatch`) to prevent students from seeing permission errors when they push to their repos.
+
+#### Modify and Build Container
 
 ```bash
-# Edit container/Dockerfile
+# 1. Edit the Dockerfile
 vim container/Dockerfile
 
-# Build locally (test before pushing)
-cd container
-./build.sh
+# 2. Test locally first (optional)
+cd container && ./build.sh
 
-# Push to main branch → GitHub Actions auto-builds and publishes
+# 3. Commit and push changes
 git add container/Dockerfile
-git commit -m "Update container"
+git commit -m "Update container: description of changes"
 git push origin main
+
+# 4. Trigger the build via CLI (requires gh CLI)
+gh workflow run docker-build.yml --ref main
+
+# 5. Watch the build progress
+gh run watch
+
+# Or list recent runs
+gh run list --workflow=docker-build.yml
 ```
 
-Auto-publish to:
-- Docker Hub: `docker.io/cosmelab/dna-barcoding-analysis:latest`
-- GitHub Packages: `ghcr.io/cosmelab/dna-barcoding-analysis:latest`
+#### Other Useful Commands
+
+```bash
+# View build logs if failed
+gh run view --workflow=docker-build.yml --log-failed
+
+# Trigger with specific inputs (if defined)
+gh workflow run docker-build.yml --ref main -f version=1.0.0
+```
+
+#### Why Manual Triggers?
+
+Students fork this repo via GitHub Classroom. If builds triggered on push, students would see confusing "permission denied" errors because they can't push to the cosmelab registry. Manual triggers (`workflow_dispatch`) mean:
+- Students never see the docker-build workflow
+- Instructors have full control over when builds happen
+- No confusing error messages for students
+
+#### Container Registries
+
+Built images are published to:
+- **Docker Hub:** `docker.io/cosmelab/dna-barcoding-analysis:latest`
+- **GitHub Packages:** `ghcr.io/cosmelab/dna-barcoding-analysis:latest`
 
 ### Contributing
 
@@ -676,7 +705,7 @@ You are free to:
 
 ---
 
-**Last Updated**: November 29, 2025
+**Last Updated**: December 3, 2025
 **Status**: Production Ready — Student Tested
 **Container**: `cosmelab/dna-barcoding-analysis:latest` (multi-arch: amd64 + arm64)
 **GitHub Classroom**: Template Ready
