@@ -19,8 +19,8 @@ jobs:
 
     env:
       # CONFIGURE DEADLINE HERE (Format: YYYY-MM-DD HH:MM:SS UTC)
-      # December 13, 2025 at 11:59 PM PST = December 14, 2025 at 07:59 AM UTC
-      ASSIGNMENT_DEADLINE: "2025-12-14 07:59:00"
+      # December 12, 2025 at 11:59 PM PST = December 13, 2025 at 07:59 AM UTC
+      ASSIGNMENT_DEADLINE: "2025-12-13 07:59:00"
       # Set to 'true' to enforce deadline (reject late submissions)
       # Set to 'false' to allow late submissions but mark them
       STRICT_DEADLINE: "false"
@@ -163,7 +163,7 @@ jobs:
           echo "**Note:** Late submissions may be subject to grade penalties per course policy." >> $GITHUB_STEP_SUMMARY
         else
           echo "### ✅ Submission Status: On Time" >> $GITHUB_STEP_SUMMARY
-          echo "Submitted before the deadline (December 13, 2025 at 11:59 PM PST)." >> $GITHUB_STEP_SUMMARY
+          echo "Submitted before the deadline (December 12, 2025 at 11:59 PM PST)." >> $GITHUB_STEP_SUMMARY
         fi
 
         echo "" >> $GITHUB_STEP_SUMMARY
