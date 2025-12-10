@@ -1,17 +1,13 @@
 # DNA Barcoding Analysis
 
-## MANDATORY STARTUP CHECKLIST
+## MANDATORY - READ FIRST
 
-Read these files IN ORDER:
+```
+~/Projects/tracking-hub/tracking/rules.yaml   # AGENT INSTRUCTIONS, credentials, common errors
+tracking/state.yaml                            # THIS repo's current state
+```
 
-| # | File | Contains |
-|---|------|----------|
-| 1 | `tracking/state.yaml` | This project's state, container build instructions |
-| 2 | `~/Projects/tracking-hub/tracking/state.yaml` | ALL APIs, credentials, security |
-
-### In hub state.yaml, find:
-- `all_apis_available.github` → gh CLI commands
-- `credentials.security` → Security hooks (don't expose credentials)
+After EVERY prompt: Update tracking/state.yaml with what you did and if it worked.
 
 ### Container build (no GUI needed):
 ```bash
@@ -33,6 +29,21 @@ This repo is tracked by the central **tracking-hub** at:
 ## Rules
 
 Follow rules in ~/Projects/tracking-hub/CLAUDE.md
+
+## USE RAG TO FIND CONTEXT
+
+Before starting any task, search RAG for relevant history:
+```bash
+python3 ~/Projects/tracking-hub/scripts/51_search_rag.py "your query"
+python3 ~/Projects/tracking-hub/scripts/51_search_rag.py "topic" --project dna-barcoding-analysis
+```
+
+## SEND EMAILS (Cosme Lab Template v21)
+
+Read template instructions first:
+```bash
+cat ~/Projects/tracking-hub/templates/email/agent-instructions.md
+```
 
 ## HOW TO USE APIs
 
@@ -67,6 +78,23 @@ Full API docs: `~/Projects/tracking-hub/tracking/state.yaml` → `all_apis_avail
 
 **HPC Note:** On HPC, use Singularity container. Paths inside container may differ.
 
-### GitHub Authentication
+### Authentication Commands (MEMORIZE THESE)
 
-Always use `gh auth login --web` - NEVER use local tokens
+**GitHub CLI:**
+```bash
+gh auth login
+# Opens browser, follow prompts
+```
+
+**Docker (GHCR container registry):**
+```bash
+docker login
+# Uses saved credentials (Username: cosmelab)
+```
+
+**Google Cloud:**
+```bash
+gcloud auth application-default login
+```
+
+NEVER expose tokens - use these simple commands.
