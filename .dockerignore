@@ -93,3 +93,6 @@ tracking/
 # Private instructor data
 student_data_raw/
 .instructor/
+
+# Grading data (private - student grades)
+results/grading/

@@ -8,6 +8,7 @@ Generates trees with full names and abbreviated names in different layouts
 import os
 import sys
 import subprocess
+import base64
 from pathlib import Path
 from Bio import Phylo
 import matplotlib
@@ -483,6 +484,17 @@ def generate_html_report(tree_file, image_file, log_file, output_file, toytree_f
         except:
             pass
 
+    # Helper function to embed images as base64
+    def embed_image(image_path):
+        """Convert image file to base64 data URI for embedding in HTML"""
+        if not Path(image_path).exists():
+            return ""
+        with open(image_path, 'rb') as f:
+            data = base64.b64encode(f.read()).decode('utf-8')
+        suffix = Path(image_path).suffix.lower()
+        mime = {'png': 'image/png', 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'svg': 'image/svg+xml', 'pdf': 'application/pdf'}.get(suffix.lstrip('.'), 'image/png')
+        return f"data:{mime};base64,{data}"
+
     # Read CSS files and embed them
     project_root = Path(__file__).parent.parent.parent
     base_css = (project_root / "modules/styles/base.css").read_text()
@@ -564,7 +576,7 @@ def generate_html_report(tree_file, image_file, log_file, output_file, toytree_f
             <!-- Bio.Phylo Traditional Tree -->
             <div class="figure-container" style="margin-bottom: 2rem;">
                 <h4 style="margin-top: 1rem; color: var(--primary-color);">📊 Traditional Layout (Bio.Phylo)</h4>
-                <img src="{Path(image_file).name}" alt="Traditional Tree" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
+                <img src="{embed_image(image_file)}" alt="Traditional Tree" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
                 <div class="figure-caption">
                     <strong>Figure 1:</strong> Traditional rectangular tree layout with bootstrap values.
                 </div>
@@ -592,7 +604,7 @@ def generate_html_report(tree_file, image_file, log_file, output_file, toytree_f
             toytree_html += f"""
             <div class="figure-container" style="margin-bottom: 2rem;">
                 <h4 style="margin-top: 1rem; color: var(--primary-color);">{icon} {title}</h4>
-                <img src="{tf['png'].name}" alt="{title}" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
+                <img src="{embed_image(tf['png'])}" alt="{title}" style="max-width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
                 <div class="figure-caption">
                     <strong>Figure {i}:</strong> {tf['description']}.
                     <br><small>Download: <a href="{tf['png'].name}">PNG</a> | <a href="{tf['svg'].name}">SVG</a> | <a href="{tf['pdf'].name}">PDF</a></small>

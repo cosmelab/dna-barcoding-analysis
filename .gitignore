@@ -15,6 +15,9 @@ tracking/
 docs/student_ux_demo.md
 student_data_raw/
 
+# Grading data (private - student grades)
+results/grading/
+
 # Note: .devcontainer/ MUST be tracked - Codespaces needs it!
 
 # Note: container/ is kept in git for GitHub Actions auto-build
